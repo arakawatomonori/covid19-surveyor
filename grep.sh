@@ -18,12 +18,30 @@ words=`cat <<EOM
 延長
 学校
 授業
-リモート
+労働
+特例
+措置
+雇用
+事業
+休業
+リモートワーク
+テレワーク
 EOM
 `
 
 for word in ${words}; do
 	echo $word
-	grep -r コロナ --include="*.html" ./ | grep $word > grep_コロナ_$word.txt
+	grep -r コロナ --include="*.html" ./ |\
+	# AND 条件で絞り込み
+	grep $word |\
+	# 半角スペース除去
+	sed 's/ //g' |\
+	# 全角スペース除去
+	sed 's/　//g' |\
+	# タブ除去
+	sed 's/^[ \t]*//g' |\
+	# HTMLタグ除去
+	sed -e 's/<[^>]*>//g' >\
+	grep_コロナ_$word.txt
 done
 
