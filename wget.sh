@@ -65,23 +65,23 @@ wget -l 1 -r --no-check-certificate https://j-net21.smrj.go.jp/
 
 
 
-# hokkaido
+# 北海道
 wget -l 1 -r --no-check-certificate http://www.pref.hokkaido.lg.jp/
-# tohoku
+# 東北
 wget -l 1 -r --no-check-certificate http://www.pref.aomori.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.iwate.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.miyagi.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.akita.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.yamagata.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.fukushima.lg.jp/
-# kanto
+# 関東
 wget -l 1 -r --no-check-certificate http://www.pref.ibaraki.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.tochigi.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.gunma.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.saitama.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.metro.tokyo.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.kanagawa.jp/
-# chibu
+# 中部
 wget -l 1 -r --no-check-certificate http://www.pref.niigata.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.toyama.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.ishikawa.lg.jp/
@@ -91,7 +91,7 @@ wget -l 1 -r --no-check-certificate http://www.pref.nagano.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.gifu.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.shizuoka.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.aichi.jp/
-# kinki
+# 近畿
 wget -l 1 -r --no-check-certificate http://www.pref.mie.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.shiga.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.kyoto.jp/
@@ -99,18 +99,18 @@ wget -l 1 -r --no-check-certificate http://www.pref.osaka.lg.jp/
 wget -l 1 -r --no-check-certificate http://web.pref.hyogo.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.nara.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.wakayama.lg.jp/
-# chugoku
+# 中国
 wget -l 1 -r --no-check-certificate http://www.pref.tottori.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.shimane.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.okayama.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.hiroshima.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.yamaguchi.lg.jp/
-# shikoku
+# 四国
 wget -l 1 -r --no-check-certificate http://www.pref.kagawa.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.ehime.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.kochi.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.tokushima.lg.jp/
-# kyushu
+# 九州
 wget -l 1 -r --no-check-certificate http://www.pref.fukuoka.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.saga.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.nagasaki.lg.jp/
@@ -118,5 +118,5 @@ wget -l 1 -r --no-check-certificate http://www.pref.kumamoto.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.oita.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.miyazaki.lg.jp/
 wget -l 1 -r --no-check-certificate http://www.pref.kagoshima.jp/
-# okinawa
+# 沖縄
 wget -l 1 -r --no-check-certificate http://www.pref.okinawa.jp/
