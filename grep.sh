@@ -1,17 +1,29 @@
-grep -r コロナ --include="*.html" ./ > grep_コロナ.txt
-grep -r 助成金 --include="*.html" ./ > grep_助成金.txt
-grep -r 補助金 --include="*.html" ./ > grep_補助金.txt
-grep -r 給付金 --include="*.html" ./ > grep_給付金.txt
-grep -r 税金 --include="*.html" ./ > grep_税金.txt
-grep -r 税制 --include="*.html" ./ > grep_税制.txt
-grep -r 納税 --include="*.html" ./ > grep_納税.txt
-grep -r 融資 --include="*.html" ./ > grep_融資.txt
-grep -r 貸付 --include="*.html" ./ > grep_貸付.txt
-grep -r 制度 --include="*.html" ./ > grep_制度.txt
-grep -r 窓口 --include="*.html" ./ > grep_窓口.txt
-grep -r 猶予 --include="*.html" ./ > grep_猶予.txt
-grep -r 延長 --include="*.html" ./ > grep_延長.txt
-grep -r 学校 --include="*.html" ./ > grep_学校.txt
-grep -r 授業 --include="*.html" ./ > grep_授業.txt
-grep -r COVID --include="*.html" ./ > grep_COVID.txt
-grep -r リモートワーク --include="*.html" ./ > grep_リモートワーク.txt
+words=`cat <<EOM
+助成
+補助
+給付
+収入
+減額
+支援
+資金
+税金
+税制
+納税
+融資
+貸付
+制度
+相談
+窓口
+猶予
+延長
+学校
+授業
+リモート
+EOM
+`
+
+for word in ${words}; do
+	echo $word
+	grep -r コロナ --include="*.html" ./ | grep $word > grep_コロナ_$word.txt
+done
+
