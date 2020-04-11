@@ -34,12 +34,14 @@ for word in ${words}; do
 	grep -r コロナ --include="*.html" ./ |\
 	# AND 条件で絞り込み
 	grep $word |\
+	# 長過ぎる行は無視
+	sed '/^.\{1,200\}$/!d' |\
 	# 半角スペース除去
 	sed 's/ //g' |\
 	# 全角スペース除去
 	sed 's/　//g' |\
 	# タブ除去
-	sed 's/^[ \t]*//g' |\
+	sed 's/[ \t]*//g' |\
 	# HTMLタグ除去
 	sed -e 's/<[^>]*>//g' >\
 	grep_コロナ_$word.txt
