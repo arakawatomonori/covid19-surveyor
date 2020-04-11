@@ -1,6 +1,3 @@
-
-
-
 domains=`cat <<EOM
 www.kantei.go.jp
 www.cao.go.jp
@@ -80,10 +77,6 @@ www.pref.okinawa.jp
 EOM
 `
 
-for domain in ${domains}; do
-	echo $domain
-	wget -nc -l 2 -r --no-check-certificate $domain
-	cp -f robots.txt $domain
-done
+echo $domains | xargs -n 1 echo | xargs -P 4 -I{} wget -nc -l 2 -r --no-check-certificate {}
+echo $domains | xargs -n 1 echo | xargs -P 4 -I{} cp -f robots.txt {}
 
-exit
