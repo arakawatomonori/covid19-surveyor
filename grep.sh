@@ -1,0 +1,11 @@
+grep -r コロナ --include="*.html" ./ > grep_コロナ.txt
+grep -r 助成金 --include="*.html" ./ > grep_助成金.txt
+grep -r 補助金 --include="*.html" ./ > grep_補助金.txt
+grep -r 給付金 --include="*.html" ./ > grep_給付金.txt
+grep -r 税金 --include="*.html" ./ > grep_税金.txt
+grep -r 税制 --include="*.html" ./ > grep_税制.txt
+grep -r 納税 --include="*.html" ./ > grep_納税.txt
+grep -r 融資 --include="*.html" ./ > grep_融資.txt
+grep -r 貸付 --include="*.html" ./ > grep_貸付.txt
+grep -r 制度 --include="*.html" ./ > grep_制度.txt
+grep -r COVID --include="*.html" ./ > grep_COVID.txt
