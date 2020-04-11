@@ -4,14 +4,14 @@
 ## Usage
 
 ### Setup
-`sudo apt install wget squid`
-`cp -f squid.conf /etc/squid/`
-`cp .wgetrc ~/`
+- `sudo apt install wget squid`
+- `cp -f squid.conf /etc/squid/`
+- `cp .wgetrc ~/`
 
 ### Run
-`./wget.sh`
-`./grep.sh`
-`./index.sh > index.html`
+- `./wget.sh`
+- `./grep.sh`
+- `./index.sh > index.html`
 
 ## TODO
 市区町村のサイトもミラーリングしたい
