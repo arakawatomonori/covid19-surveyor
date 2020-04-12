@@ -12,6 +12,7 @@ done
 
 
 js=`cat <<EOM
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <script type="text/javascript">
 function quotemeta (string) {
 	return string.replace(/(\W)/, "\\$1");
@@ -23,7 +24,7 @@ function isearch (pattern) {
 	for (var i = 0; i < length; i++) {
 		var e = spans[i];
 		if (e.className == "line") {
-			if (pattern !== "" && e.innerHTML.match(regex)) {
+			if (e.innerHTML.match(regex)) {
 				e.style.display = "block";
 			} else {
 				e.style.display = "none";
@@ -38,20 +39,23 @@ echo $js
 
 form=`cat <<EOM
 <form onsubmit="return false;">
-	<input type="text" name="pattern" onkeyup="isearch(this.value)">
+	<input type="text" name="pattern" placeholder="キーワードで絞り込み" onkeyup="isearch(this.value)" style="font-size:2em;">
 </form>
 EOM
 `
 echo $form
 
 
-echo "<div>"
+echo "<div style='height:300px;overflow:scroll;'>"
 while read line; do
 	url=$(cut -d':' -f 1 <<< $line)
-	url="//${url:2:-1}"
+	url="//${url:2:-1}l"
+	domain=$(cut -d'/' -f 3 <<< $url)
 	text=$(cut -d':' -f 2 <<< $line)
-	echo "<span class='line' style='display: none;'>"
+	echo "<span class='line' style='display: block;'>"
 	echo "<a href='${url}'>"
+	echo $domain
+	echo ": "
 	echo $text
 	echo "</a>"
 	echo "</span>"

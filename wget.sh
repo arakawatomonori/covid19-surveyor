@@ -77,9 +77,9 @@ www.pref.okinawa.jp
 EOM
 `
 
-echo $domains | xargs -n 1 echo | xargs -P 4 -I{} wget -nc -l 2 -r --no-check-certificate {}
+echo $domains | xargs -n 1 echo | xargs -P 4 -I{} wget -l 2 -r --no-check-certificate {}
 echo $domains | xargs -n 1 echo | xargs -P 4 -I{} cp -f robots.txt {}
 
 
 ./grep.sh
-./index.sh
+./index.sh > index.html
