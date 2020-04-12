@@ -46,7 +46,7 @@ EOM
 echo $form
 
 
-echo "<div style='height:300px;overflow:scroll;'>"
+echo "<div style='height:600px;overflow:scroll;'>"
 while read line; do
 	url=$(cut -d':' -f 1 <<< $line)
 	url="//${url:2:-1}l"
