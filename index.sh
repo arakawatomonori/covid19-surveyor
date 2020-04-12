@@ -48,6 +48,7 @@ echo $form
 echo "<div>"
 while read line; do
 	url=$(cut -d':' -f 1 <<< $line)
+	url="//${url:2:-1}"
 	text=$(cut -d':' -f 2 <<< $line)
 	echo "<span class='line' style='display: none;'>"
 	echo "<a href='${url}'>"
