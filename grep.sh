@@ -58,10 +58,10 @@ for word in ${words}; do
 	# HTMLタグ除去
 	sed -e 's/<[^>]*>//g' >\
 	grep_コロナ_$word.txt.tmp &
-        if [ $NUM_PROCESS -ge $CONCURRENT_COUNT ]; then
-          wait
-          NUM_PROCESS=0
-        fi
+	if [ $NUM_PROCESS -ge $CONCURRENT_COUNT ]; then
+		wait
+		NUM_PROCESS=0
+	fi
 done
 
 wait
