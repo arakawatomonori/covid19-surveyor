@@ -32,6 +32,7 @@ words=`cat <<EOM
 EOM
 `
 
+rm index.html
 for word in ${words}; do
 	echo $word
 	grep -r コロナ --include="*.html" ./www-data |\

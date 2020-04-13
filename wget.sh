@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-files=("data/gov.csv data/pref.csv")
+files=("data/gov.csv data/pref.csv data/city.csv")
 echo $files
 urls=()
 domains=()
