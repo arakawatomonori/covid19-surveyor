@@ -1,5 +1,5 @@
-
 #!/bun/bash
+set -e
 
 urls=`cat data/gov.csv data/pref.csv`
 domains=${urls//http:\/\//}
