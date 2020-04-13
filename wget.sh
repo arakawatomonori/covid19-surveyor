@@ -1,5 +1,5 @@
 
-urls=`cat gov.csv pref.csv`
+urls=`cat data/gov.csv data/pref.csv`
 domains=${urls//http:\/\//}
 domains=${domains//https:\/\//}
 
