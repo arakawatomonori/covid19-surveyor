@@ -33,9 +33,17 @@ words=`cat <<EOM
 EOM
 `
 
-rm index.html
+<<EOM
+EOM
+
+rm -f index.html
+
+CONCURRENT_COUNT=4
+NUM_PROCESS=0
+
 for word in ${words}; do
 	echo $word
+	NUM_PROCESS=$(($NUM_PROCESS + 1))
 	grep -r コロナ --include="*.html" ./www-data |\
 	# AND 条件で絞り込み
 	grep $word |\
@@ -49,5 +57,12 @@ for word in ${words}; do
 	sed 's/[ \t]*//g' |\
 	# HTMLタグ除去
 	sed -e 's/<[^>]*>//g' >\
-	grep_コロナ_$word.txt.tmp
+	grep_コロナ_$word.txt.tmp &
+        if [ $NUM_PROCESS -ge $CONCURRENT_COUNT ]; then
+          wait
+          NUM_PROCESS=0
+        fi
 done
+
+wait
+
