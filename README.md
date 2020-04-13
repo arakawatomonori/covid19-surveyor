@@ -8,6 +8,16 @@
 
 ### Setup
 - `sudo apt install wget nginx squid`
+
+#### macOS
+
+Install GNU xargs in macOS
+
+```
+$ brew install findutils
+$ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
+```
+
 #### nginx
 - `cp nginx_config /etc/nginx/site-available/`
 - `ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config`
