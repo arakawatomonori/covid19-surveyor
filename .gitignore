@@ -1,4 +1,5 @@
 www.*
+/www-data/
 web.*
 *.jp
 grep_*
