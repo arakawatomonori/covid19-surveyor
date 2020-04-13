@@ -1,10 +1,6 @@
 files="./*"
-filearray=()
 dirarray=()
 for path in $files; do
-	if [[ -f $path && $path =~ ^\.\/.*\.txt*$ ]] ; then
-		filearray+=("$path")
-	fi
 	if [ -d $path ] ; then
 		dirarray+=("$path")
 	fi
