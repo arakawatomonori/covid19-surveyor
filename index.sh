@@ -58,7 +58,7 @@ while read line; do
 	echo $text
 	echo "</a>"
 	echo "</span>"
-done < uniq.txt
+done < uniq.txt.tmp
 echo "</div>"
 
 echo "<hr />"
