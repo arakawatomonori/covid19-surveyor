@@ -1,4 +1,4 @@
-#!/bun/bash
+#!/bin/bash
 set -e
 files=("data/gov.csv data/pref.csv")
 echo $files
