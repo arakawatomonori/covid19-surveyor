@@ -2,6 +2,6 @@ www.*
 web.*
 *.jp
 grep_*
-*.txt
 *.swp
+*.tmp
 index.html

@@ -45,6 +45,6 @@ for word in ${words}; do
 	sed 's/[ \t]*//g' |\
 	# HTMLタグ除去
 	sed -e 's/<[^>]*>//g' >\
-	grep_コロナ_$word.txt
+	grep_コロナ_$word.txt.tmp
 done
 
