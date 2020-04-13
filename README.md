@@ -35,9 +35,10 @@ $ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 - `cp .wgetrc ~/`
 
 ### Run
-- `./wget.sh`
-- `./grep.sh`
-- `./index.sh > index.html`
+
+```
+$ make
+```
 
 ## TODO
 - grepを並列処理にする

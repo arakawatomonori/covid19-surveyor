@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 words=`cat <<EOM
 助成

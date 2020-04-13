@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 files="./*"
 dirarray=()
 for path in $files; do
