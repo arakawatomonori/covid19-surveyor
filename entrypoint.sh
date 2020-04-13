@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+$(which nginx) -t
 /etc/init.d/nginx start
 
 
