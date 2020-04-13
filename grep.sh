@@ -1,3 +1,5 @@
+#!/bin/bash
+
 words=`cat <<EOM
 助成
 補助
@@ -32,7 +34,7 @@ EOM
 
 for word in ${words}; do
 	echo $word
-	grep -r コロナ --include="*.html" ./ |\
+	grep -r コロナ --include="*.html" ./www-data |\
 	# AND 条件で絞り込み
 	grep $word |\
 	# 長過ぎる行は無視
