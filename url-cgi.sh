@@ -10,18 +10,19 @@ type=`echo $json | jq .type`
 type=${type:1:-1}
 echo $type > /home/ubuntu/wget/tmp/url-cgi.type.log
 
-if [ $type == "url_verification" ]; then
+if [ "$type" == "url_verification" ]; then
 	challenge=`echo $json | jq .challenge`
 	challenge=${challenge:1:-1}
 	echo 'Content-type: text/plain'
 	echo ''
 	echo $challenge
+	exit
 fi
 
 # vscovid-crawler:offered-membersからIDをDEL
 # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
 # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-if [ $type == "block_actions" ]; then
+if [ "$type" == "block_actions" ]; then
 	user_id=`echo $json | jq .user.id`
 	user_id=${user_id:1:-1}
 	url=`echo $json | jq .message.text`
@@ -34,14 +35,13 @@ if [ $type == "block_actions" ]; then
 	redis-cli SREM vscovid-crawler:offered-members $user_id
 	redis-cli DEL vscovid-crawler:job-$md5
 	redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}"
-	json='{"replace_original": "true", "text": "解答ありがとうございます！"}'
+	json='{"text": "解答ありがとうございます！"}'
 	echo 'Content-type: application/json'
 	echo ''
 	echo $json
-	wget -q -O - --post-data "$json" \
-        --header="Content-type: application/json" \
-        --header="Authorization: Bearer ${slack_token}" \
-        $response_url
-
+	exit
 fi
 
+echo 'Content-type: text/plain'
+echo ''
+echo 'hello'
