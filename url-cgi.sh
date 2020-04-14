@@ -1,16 +1,20 @@
 #!/bin/bash
 urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+# HTTP POSTされてきたリクエストボディが標準入力に入っている
 json=`cat`
+# urlencodeされているのでdecodeする
 json=$(urldecode $json)
+# payload=を消してJSONとして読めるようにする
 json=${json:8:-1}}
 echo $json > /home/ubuntu/wget/tmp/url-cgi.json.log
+
 token=`echo $json | jq .token`
 token=${token:1:-1}
-type=`echo $json | jq .type`
-type=${type:1:-1}
-echo $type > /home/ubuntu/wget/tmp/url-cgi.type.log
+event_type=`echo $json | jq .type`
+event_type=${event_type:1:-1}
+echo $event_type > /home/ubuntu/wget/tmp/url-cgi.type.log
 
-if [ "$type" == "url_verification" ]; then
+if [ "$event_type" == "url_verification" ]; then
 	challenge=`echo $json | jq .challenge`
 	challenge=${challenge:1:-1}
 	echo 'Content-type: text/plain'
@@ -19,10 +23,7 @@ if [ "$type" == "url_verification" ]; then
 	exit
 fi
 
-# vscovid-crawler:offered-membersからIDをDEL
-# vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
-# vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-if [ "$type" == "block_actions" ]; then
+if [ "$event_type" == "block_actions" ]; then
 	user_id=`echo $json | jq .user.id`
 	user_id=${user_id:1:-1}
 	url=`echo $json | jq .message.text`
@@ -32,9 +33,12 @@ if [ "$type" == "block_actions" ]; then
 	result=`echo $json | jq .actions.value`
 	result=${result:1:-1}
 	response_url=`echo $json | jq .response_url`
-	redis-cli SREM vscovid-crawler:offered-members $user_id
-	redis-cli DEL vscovid-crawler:job-$md5
-	redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}"
+	# vscovid-crawler:offered-membersからIDをDEL
+	redis-cli SREM vscovid-crawler:offered-members $user_id > /dev/null
+	# vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
+	redis-cli DEL vscovid-crawler:job-$md5 > /dev/null
+	# vscovid-crawler:result-{URLのMD5ハッシュ} をSET
+	redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}" > /dev/null
 	json='{"text": "解答ありがとうございます！"}'
 	echo 'Content-type: application/json'
 	echo ''
