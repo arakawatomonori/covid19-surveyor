@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-files="./*"
+files="./www-data/*"
 dirarray=()
 for path in $files; do
 	if [ -d $path ] ; then
@@ -58,7 +58,7 @@ while read line; do
 	echo $text
 	echo "</a>"
 	echo "</span>"
-done < uniq.txt
+done < result.txt
 echo "</div>"
 
 echo "<hr />"
