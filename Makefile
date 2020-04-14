@@ -1,10 +1,10 @@
-.PHONY: all wget grep index
+.PHONY: all wget grep aggregate index
 
 
 all:
 	./wget.sh
 	./grep.sh
-	./result.sh
+	./aggregate.sh
 	./index.sh > ./index.html
 
 wget:
@@ -13,8 +13,8 @@ wget:
 grep:
 	./grep.sh
 
-result:
-	./result.sh
+aggregate:
+	./aggregate.sh
 
 index:
 	./index.sh > ./index.html
