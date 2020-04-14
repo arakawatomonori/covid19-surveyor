@@ -33,36 +33,26 @@ words=`cat <<EOM
 EOM
 `
 
-<<EOM
-EOM
 
-rm -f index.html
+rm -f www-data/index.html
 
-CONCURRENT_COUNT=4
-NUM_PROCESS=0
+# www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
+grep -r コロナ --include="*.html" ./www-data |\
+# 長過ぎる行は無視
+sed '/^.\{1,200\}$/!d' |\
+# 半角スペース除去
+sed 's/ //g' |\
+# 全角スペース除去
+sed 's/　//g' |\
+# タブ除去
+sed 's/[ \t]*//g' |\
+# HTMLタグ除去
+sed -e 's/<[^>]*>//g' >\
+./grep-data/grep_コロナ.txt.tmp
+
 
 for word in ${words}; do
 	echo $word
-	NUM_PROCESS=$(($NUM_PROCESS + 1))
-	grep -r コロナ --include="*.html" ./www-data |\
-	# AND 条件で絞り込み
-	grep $word |\
-	# 長過ぎる行は無視
-	sed '/^.\{1,200\}$/!d' |\
-	# 半角スペース除去
-	sed 's/ //g' |\
-	# 全角スペース除去
-	sed 's/　//g' |\
-	# タブ除去
-	sed 's/[ \t]*//g' |\
-	# HTMLタグ除去
-	sed -e 's/<[^>]*>//g' >\
-	grep_コロナ_$word.txt.tmp &
-	if [ $NUM_PROCESS -ge $CONCURRENT_COUNT ]; then
-		wait
-		NUM_PROCESS=0
-	fi
+	# 中間ファイルを各キーワードでgrepして結果を出力
+	grep $word ./grep-data/grep_コロナ.txt.tmp > ./grep-data/grep_コロナ_$word.txt.tmp
 done
-
-wait
-
