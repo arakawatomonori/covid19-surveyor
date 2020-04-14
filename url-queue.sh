@@ -1,7 +1,6 @@
 # urls.txtの内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 
-
 for url in `cat urls.txt`; do
 	# URLの整形
 	url=${url:9:-1}l
