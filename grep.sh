@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 words=`cat <<EOM
 助成
@@ -32,9 +33,9 @@ words=`cat <<EOM
 EOM
 `
 
+
 rm -f www-data/index.html
 
-<<EOF
 # www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
 grep -r コロナ --include="*.html" ./www-data |\
 # 長過ぎる行は無視
@@ -48,7 +49,7 @@ sed 's/[ \t]*//g' |\
 # HTMLタグ除去
 sed -e 's/<[^>]*>//g' >\
 ./grep-data/grep_コロナ.txt.tmp
-EOF
+
 
 for word in ${words}; do
 	echo $word
