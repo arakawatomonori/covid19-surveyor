@@ -5,7 +5,7 @@ all:
 	./wget.sh
 	./grep.sh
 	./aggregate.sh
-	./index.sh > ./index.html
+	./index.sh > ./www-data/index.html
 
 wget:
 	./wget.sh
@@ -17,4 +17,4 @@ aggregate:
 	./aggregate.sh
 
 index:
-	./index.sh > ./index.html
+	./index.sh > ./www-data/index.html
