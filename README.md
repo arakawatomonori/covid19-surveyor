@@ -7,7 +7,7 @@
 ## Usage
 
 ### Setup
-- `sudo apt install wget nginx squid`
+- `sudo apt install wget jq nginx fcgiwrap squid`
 
 #### macOS
 
