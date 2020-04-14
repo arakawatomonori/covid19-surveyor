@@ -1,4 +1,9 @@
+# urls.txtの内容をredisのqueueとして投入する
+# すでに投入済みの場合はスキップする
+
+
 for url in `cat urls.txt`; do
+	# URLの整形
 	url=${url:9:-1}l
 	domain=$(cut -d'/' -f 1 <<< $url)
 	host=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
@@ -6,6 +11,7 @@ for url in `cat urls.txt`; do
 	host=${host:0:-1}
 	url=${url/$domain/$host}
 	echo $url
+	# md5を計算
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
 	echo $md5
 	# redisに存在しないことを確認する
