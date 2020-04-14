@@ -1,14 +1,15 @@
 #!/bin/bash
 set -e
 
-files="./www-data/*"
+cd www-data
+files="./*"
 dirarray=()
 for path in $files; do
 	if [ -d $path ] ; then
 		dirarray+=("$path")
 	fi
 done
-
+cd -
 
 js=`cat <<EOM
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -48,7 +49,7 @@ echo $form
 echo "<div style='height:600px;overflow:scroll;'>"
 while read line; do
 	url=$(cut -d':' -f 1 <<< $line)
-	url="//${url:2:-1}l"
+	url="//${url:11:-1}l"
 	domain=$(cut -d'/' -f 3 <<< $url)
 	text=$(cut -d':' -f 2 <<< $line)
 	echo "<span class='line' style='display: block;'>"
