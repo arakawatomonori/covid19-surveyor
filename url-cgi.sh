@@ -26,15 +26,22 @@ if [ $type == "block_actions" ]; then
 	user_id=${user_id:1:-1}
 	url=`echo $json | jq .message.text`
 	url=${url:2:-2}
-	action_id=`echo $json | jq .actions.action_id`
-	action_id=${action_id:1:-1}
+	md5=`echo $url | md5sum | cut -d' ' -f 1`
+	timestamp=`date '+%s'`
 	result=`echo $json | jq .actions.value`
 	result=${result:1:-1}
+	response_url=`echo $json | jq .response_url`
 	redis-cli SREM vscovid-crawler:offered-members $user_id
-	redis-cli DEL vscovid-crawler:job-$action_id
-	redis-cli SET vscovid-crawler:result-$action_id "${url},${user_id},${timestamp},${result}"
+	redis-cli DEL vscovid-crawler:job-$md5
+	redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}"
+	json='{"replace_original": "true", "text": "解答ありがとうございます！"}'
 	echo 'Content-type: application/json'
 	echo ''
-	echo '{"replace_original": "true", "text": "解答ありがとうございます！"}'
+	echo $json
+	wget -q -O - --post-data "$json" \
+        --header="Content-type: application/json" \
+        --header="Authorization: Bearer ${slack_token}" \
+        $response_url
+
 fi
 

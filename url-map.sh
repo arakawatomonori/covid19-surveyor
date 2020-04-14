@@ -65,7 +65,7 @@ for member in $channels_members; do
 		"elements": [
 			{
 				"type": "button",
-				"action_id": "hogehoge",
+				"action_id": "${md5}-true",
 				"value": "true",
 				"style": "primary",
 				"text": {
@@ -76,7 +76,7 @@ for member in $channels_members; do
 			},
 	{
 				"type": "button",
-				"action_id": "hugahuga",
+				"action_id": "${md5}-false",
 				"value": "false",
 				"style": "danger",
 				"text": {
@@ -92,7 +92,8 @@ for member in $channels_members; do
 EOF
 `
 
-	wget -q -O /dev/null --post-data "$json" \
+	#wget -q -O /dev/null --post-data "$json" \
+	wget -q -O - --post-data "$json" \
 	--header="Content-type: application/json" \
 	--header="Authorization: Bearer ${slack_token}" \
 	https://slack.com/api/chat.postMessage
