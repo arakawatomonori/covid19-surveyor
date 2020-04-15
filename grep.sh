@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+###
+### About
+### ./www-dataに収集した全サイトから新型コロナウイルスに関連するHTMLファイルの一覧を取得するスクリプト
+###
+### Usage
+### ./grep.sh
+###
+
 words=`cat <<EOM
 助成
 補助
