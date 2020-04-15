@@ -52,7 +52,7 @@ fi
 
 # 一秒に一回でいい
 # 各メンバーにDMを送る
-members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
+#members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
 for member in $members_list; do
 	member_id=${member:1:-1}
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
@@ -70,7 +70,6 @@ for member in $members_list; do
 	fi
 	url=`redis-cli GET ${key}`
 	echo $url
-	exit
 	# ドメイン名から都道府県名または市区町村名を得る
 	domain=`echo $url | cut -d'/' -f 3`
 	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
@@ -102,7 +101,11 @@ for member in $members_list; do
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*このURLは${govname}独自の新型コロナウイルスについての経済支援制度の情報を含んでいますか？*"
+			"text": "
+*このURLは、以下の2つの条件を満たしていますか？*
+- 新型コロナウイルスについての経済支援制度である
+- ${govname}が独自に実施しているものである
+"
 		}
 	},
 	{

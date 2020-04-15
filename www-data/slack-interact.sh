@@ -42,8 +42,9 @@ if [ "$event_type" == "block_actions" ]; then
 	"token": "${slack_token}",
 	"channel": "${channel_id}",
 	"ts": "${ts}",
-        "text": "解答ありがとうございます！",
-	"blocks": null
+        "text": "回答ありがとうございます！",
+	"blocks": null,
+	"attachments": null
 }
 EOF
 `
