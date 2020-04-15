@@ -44,7 +44,7 @@ $ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 
 
 
-### Developmenth
+### Development
 
 ```
 $ make test
