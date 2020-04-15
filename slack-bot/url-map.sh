@@ -74,8 +74,11 @@ for member in $members_list; do
 	# URLを得る
 	url=`redis-cli GET ${key}`
 	echo $url
+	# URLからmd5を得る
+	md5=`echo $url | md5sum | cut -d' ' -f 1`
 	# URLが404でないことを確認
 	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
+	echo url_not_found $url_not_found
 	# 404だった場合
 	if [ $url_not_found = "1" ]; then
 		# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
@@ -86,8 +89,6 @@ for member in $members_list; do
 	domain=`echo $url | cut -d'/' -f 3`
 	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
 	echo $govname
-	# URLからmd5を得る
-	md5=`echo $url | md5sum | cut -d' ' -f 1`
 	# unixtime
 	timestamp=`date '+%s'`
 	# vscovid-crawler:offered-members をSADD
@@ -120,7 +121,9 @@ for member in $members_list; do
 *このURLは、以下の2つの条件を満たしていますか？*
 - 新型コロナウイルスについての経済支援制度である
 - ${govname}が独自に実施しているものである
-他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
+※経済支援制度とは、お金が貰える|お金が借りられる|お金が節約できる制度です
+※このURLが他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
+※このURLがリンク集の場合は「いいえ」と答えてください
 "
 		}
 	},
