@@ -4,12 +4,13 @@
 for url in `cat urls.txt`; do
 	# URLの整形
 	url=${url:9:-1}l
+	echo path $url
 	domain=$(cut -d'/' -f 1 <<< $url)
+	echo domain $domain
 	host=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
-	echo $host
-	host=${host:0:-1}
+	echo host $host
 	url=${url/$domain/$host}
-	echo $url
+	echo url $url
 	# md5を計算
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
 	echo $md5

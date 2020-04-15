@@ -13,13 +13,14 @@ channels_name=vscovid19-arkw
 # channels_infoからメンバー一覧を取り出す
 #channels_members=`echo $channels_info | jq .channel.members[]`
 # 各メンバーにDMを送る
-channels_members="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx"
+channels_members="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
 for member in $channels_members; do
 	# vscovid-crawler:queue-* を一件GET
 	scan=`redis-cli SCAN 0 COUNT 1 MATCH vscovid-crawler:queue-*`
 	key=`echo $scan | grep vscovid-crawler:queue| cut -d' ' -f 2 `
 	url=`redis-cli GET ${key}`
 	echo $url
+	# ドメイン名から都道府県名または市区町村名を得る
 	domain=`echo $url | cut -d'/' -f 3`
 	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
 	echo $govname
@@ -57,7 +58,7 @@ for member in $channels_members; do
 		"type": "section",
 		"text": {
 			"type": "mrkdwn",
-			"text": "*この制度は${govname}独自の経済支援制度ですか？*"
+			"text": "*この情報は${govname}独自の経済支援制度ですか？*"
 		}
 	},
 	{

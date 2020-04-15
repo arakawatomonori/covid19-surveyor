@@ -1,11 +1,12 @@
 #!/bin/bash
-urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 # HTTP POSTされてきたリクエストボディが標準入力に入っている
-json=`cat`
+formdata=`cat`
+echo $formdata > /home/ubuntu/wget/tmp/url-cgi.form.log
 # urlencodeされているのでdecodeする
-json=$(urldecode $json)
-# payload=を消してJSONとして読めるようにする
-json=${json:8:-1}}
+urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+decoded_data=$(urldecode $formdata)
+# payload=JSONなので消してJSONとして読めるようにする
+json=${decoded_data:8:-1}}
 echo $json > /home/ubuntu/wget/tmp/url-cgi.json.log
 
 token=`echo $json | jq .token`
@@ -30,7 +31,7 @@ if [ "$event_type" == "block_actions" ]; then
 	url=${url:2:-2}
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
 	timestamp=`date '+%s'`
-	result=`echo $json | jq .actions.value`
+	result=`echo $json | jq .actions[0].value`
 	result=${result:1:-1}
 	response_url=`echo $json | jq .response_url`
 	# vscovid-crawler:offered-membersからIDをDEL
@@ -39,7 +40,14 @@ if [ "$event_type" == "block_actions" ]; then
 	redis-cli DEL vscovid-crawler:job-$md5 > /dev/null
 	# vscovid-crawler:result-{URLのMD5ハッシュ} をSET
 	redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}" > /dev/null
-	json='{"text": "解答ありがとうございます！"}'
+	json=`cat <<EOF
+{
+	"text": "解答ありがとうございます！",
+	"replace_original": true,
+	"delete_original": true
+}
+EOF
+`
 	echo 'Content-type: application/json'
 	echo ''
 	echo $json
