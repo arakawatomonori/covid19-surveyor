@@ -1,3 +1,4 @@
+.env
 www.*
 web.*
 www-data/www*
@@ -11,4 +12,3 @@ grep_*
 *.tmp
 *.log
 index.html
-*.env
