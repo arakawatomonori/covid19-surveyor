@@ -26,6 +26,7 @@ cp .wgetrc ~/
 ```
 
 ## Setup for macOS
+- `brew install wget jq nginx fcgiwrap squid`
 
 ### Install GNU xargs in macOS
 
@@ -44,7 +45,7 @@ $ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 
 
 
-### Developmenth
+## Development
 
 ```
 $ make test
