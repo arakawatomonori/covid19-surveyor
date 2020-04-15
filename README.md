@@ -5,7 +5,7 @@
 このスクリプトを実行すると50GBくらいのディスク容量を消費します
 
 ## Setup for Ubuntu
-- `sudo apt install wget jq nginx fcgiwrap squid`
+- `sudo apt install make wget jq nginx fcgiwrap squid`
 
 ### copy nginx config
 ```
