@@ -4,13 +4,13 @@ test:
 	./crawler/wget.sh data/test.csv
 	./crawler/grep.sh
 	./crawler/aggregate.sh
-	./crawler/index.sh > ./www-data/index.html
+	./crawler/publish.sh > ./www-data/index.html
 
 all:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
 	./crawler/grep.sh
 	./crawler/aggregate.sh
-	./crawler/index.sh > ./www-data/index.html
+	./crawler/publis.sh > ./www-data/index.html
 
 wget:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
@@ -22,4 +22,4 @@ aggregate:
 	./crawler/aggregate.sh
 
 index:
-	./crawler/index.sh > ./www-data/index.html
+	./crawler/publish.sh > ./www-data/index.html
