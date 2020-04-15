@@ -60,8 +60,10 @@ sed -e 's/<[^>]*>//g' >\
 ./tmp/grep_コロナ.txt.tmp
 
 
+unset -e
 for word in ${words}; do
 	echo $word
 	# 中間ファイルを各キーワードでgrepして結果を出力
 	grep $word ./tmp/grep_コロナ.txt.tmp > ./tmp/grep_コロナ_$word.txt.tmp
 done
+set -e
