@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+###
+### About
+### gov.yuiseki.net/index.htmlを生成するスクリプト
+###
+### Usage
+### ./index.sh
+###
+
+
 cd www-data
 files="./*"
 dirarray=()
