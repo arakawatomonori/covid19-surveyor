@@ -56,11 +56,11 @@ sed 's/　//g' |\
 sed 's/[ \t]*//g' |\
 # HTMLタグ除去
 sed -e 's/<[^>]*>//g' >\
-./grep-data/grep_コロナ.txt.tmp
+./tmp/grep_コロナ.txt.tmp
 
 
 for word in ${words}; do
 	echo $word
 	# 中間ファイルを各キーワードでgrepして結果を出力
-	grep $word ./grep-data/grep_コロナ.txt.tmp > ./grep-data/grep_コロナ_$word.txt.tmp
+	grep $word ./tmp/grep_コロナ.txt.tmp > ./tmp/grep_コロナ_$word.txt.tmp
 done

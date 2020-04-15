@@ -3,14 +3,14 @@ set -e
 
 ###
 ### About
-### grep.shで./grep-dataに収集した情報を結合し、ソートし、重複を取り除くスクリプト
+### grep.shで./tmpに収集した情報を結合し、ソートし、重複を取り除くスクリプト
 ###
 ### Usage
 ### ./aggregate.sh
 ###
 
 
-cat ./grep-data/grep_コロナ_*.txt.tmp > ./tmp/cat.txt.tmp
+cat ./tmp/grep_コロナ_*.txt.tmp > ./tmp/cat.txt.tmp
 sort ./tmp/cat.txt.tmp > ./tmp/sort.txt.tmp
 uniq -d ./tmp/sort.txt.tmp > result.txt
 
