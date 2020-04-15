@@ -1,7 +1,15 @@
 #!/bin/bash
 set -e
 
-#files=("data/gov.csv data/pref.csv data/city.csv")
+###
+### About
+### 引数で指定されたCSVファイルを対象にミラーリングするシェルスクリプト
+### CSVのフォーマットは
+### 組織名,略称,URL
+###
+### Usage
+### ./wget.sh data/test.csv
+###
 
 urls=()
 domains=()
@@ -16,8 +24,6 @@ do
 	done
 	shift
 done
-
-
 
 cd www-data
 echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
