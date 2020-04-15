@@ -4,41 +4,37 @@
 ## Warning
 このスクリプトを実行すると50GBくらいのディスク容量を消費します
 
-## Usage
-
-### Setup
-
-#### Setup for Ubuntu
+## Setup for Ubuntu
 - `sudo apt install wget jq nginx fcgiwrap squid`
 
-##### copy nginx config
+### copy nginx config
 ```
 cp nginx_config /etc/nginx/site-available/
 ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config
 sudo service nginx restart
 ```
 
-##### copy squid config
+### copy squid config
 ```
 cp -f squid.conf /etc/squid/
 sudo service squid restart
 ```
 
-##### copy wget config
+### copy wget config
 ```
 cp .wgetrc ~/
 ```
 
-#### Setup for macOS
+## Setup for macOS
 
-##### Install GNU xargs in macOS
+### Install GNU xargs in macOS
 
 ```
 $ brew install findutils
 $ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 ```
 
-##### Intall GNU grep in macOS
+### Intall GNU grep in macOS
 
 ```
 $ brew install grep
