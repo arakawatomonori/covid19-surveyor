@@ -45,6 +45,7 @@ EOM
 
 rm -f www-data/index.html
 
+unset -e
 # www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
 grep -r コロナ --include="*.html" ./www-data |\
 # 長過ぎる行は無視
@@ -58,6 +59,7 @@ sed 's/[ \t]*//g' |\
 # HTMLタグ除去
 sed -e 's/<[^>]*>//g' >\
 ./tmp/grep_コロナ.txt.tmp
+set -e
 
 
 unset -e
