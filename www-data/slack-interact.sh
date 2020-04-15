@@ -32,11 +32,11 @@ if [ "$event_type" == "block_actions" ]; then
         result=${result:1:-1}
         response_url=`echo $json | jq .response_url`
         # vscovid-crawler:offered-membersからIDをDEL
-        #redis-cli SREM vscovid-crawler:offered-members $user_id > /dev/null
+        redis-cli SREM "vscovid-crawler:offered-members" $user_id > /dev/null
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
-        #redis-cli DEL vscovid-crawler:job-$md5 > /dev/null
+        redis-cli DEL "vscovid-crawler:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-        #redis-cli SET vscovid-crawler:result-$md5 "${url},${user_id},${timestamp},${result}" > /dev/null
+        redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
         res=`cat <<EOF
 {
 	"token": "${slack_token}",

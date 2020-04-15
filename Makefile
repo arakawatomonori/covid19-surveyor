@@ -1,4 +1,4 @@
-.PHONY: test all wget grep aggregate index
+.PHONY: test all wget grep aggregate index slack-map slack-check-jobs slack-check-results
 
 test:
 	./crawler/wget.sh data/test.csv
@@ -23,3 +23,15 @@ aggregate:
 
 index:
 	./crawler/publish.sh > ./www-data/index.html
+
+slack-map:
+	./slack-bot/url-map.sh
+
+slack-check-offer:
+	redis-cli SMEMBERS vscovid-crawler:offered-members
+
+slack-check-jobs:
+	redis-cli KEYS vscovid-crawler:job-*
+
+slack-check-results:
+	redis-cli KEYS vscovid-crawler:result-*

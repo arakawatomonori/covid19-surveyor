@@ -19,6 +19,6 @@ for url in `cat urls.txt`; do
 	job_num=`redis-cli GET vscovid-crawler:job-${md5}`
 	result_num=`redis-cli GET vscovid-crawler:result-${md5}`
 	if [ ${#queue_num} = "0" ] && [ ${#job_num} = "0" ] && [ ${#result_num} = "0" ]; then
-		redis-cli SET vscovid-crawler:queue-$md5 $url
+		redis-cli SET "vscovid-crawler:queue-$md5" $url
 	fi
 done

@@ -1,4 +1,6 @@
-
+#!/bin/bash
+cat .env
+source .env
 echo $slack_token
 channels_name=vscovid19-arkw
 
@@ -33,12 +35,12 @@ for member in $channels_members; do
 	fi
 	echo $member_id
 	# vscovid-crawler:offered-members をSET
-	#redis-cli SADD vscovid-crawler:offered-members $member_id
+	redis-cli SADD "vscovid-crawler:offered-members" $member_id
 	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-	#redis-cli DEL vscovid-crawler:queue-$md5
+	redis-cli DEL "vscovid-crawler:queue-$md5"
 	# vscovid-crawler:job-{URLのMD5ハッシュ} をSET
 	timestamp=`date '+%s'`
-	#redis-cli ADD vscovid-crawler:job-$md5 "${url},${member_id},${timestamp}"
+	redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
 	im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
 	im_id=`echo $im_open | jq .channel.id`
 	im_id=${im_id:1:-1}
@@ -93,8 +95,7 @@ for member in $channels_members; do
 EOF
 `
 
-	#wget -q -O /dev/null --post-data "$json" \
-	wget -q -O - --post-data "$json" \
+	wget -q -O /dev/null --post-data "$json" \
 	--header="Content-type: application/json" \
 	--header="Authorization: Bearer ${slack_token}" \
 	https://slack.com/api/chat.postMessage
