@@ -52,6 +52,7 @@ fi
 
 # 一秒に一回でいい
 # 各メンバーにDMを送る
+# テスターのID
 #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
 for member in $members_list; do
 	member_id=${member:1:-1}
@@ -62,26 +63,40 @@ for member in $members_list; do
 	fi
 	echo $member_id
 	# vscovid-crawler:queue-* を一件GET
+	# TODO SCANが0件になることがある
 	scan=`redis-cli SCAN 100000000 COUNT 100 MATCH vscovid-crawler:queue-*`
+	# 0件の場合はスキップ
 	key=`echo $scan | grep vscovid-crawler:queue| cut -d' ' -f 2 `
 	echo $key
 	if [ -z "$key" ]; then
 		continue
 	fi
+	# URLを得る
 	url=`redis-cli GET ${key}`
 	echo $url
-	# ドメイン名から都道府県名または市区町村名を得る
+	# URLが404でないことを確認
+	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
+	# 404だった場合
+	if [ $url_not_found = "1" ]; then
+		# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
+		redis-cli DEL "vscovid-crawler:queue-$md5"
+		continue
+	fi
+	# ドメイン名から自治体名を得る
 	domain=`echo $url | cut -d'/' -f 3`
 	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
 	echo $govname
+	# URLからmd5を得る
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
-	# vscovid-crawler:offered-members をSET
+	# unixtime
+	timestamp=`date '+%s'`
+	# vscovid-crawler:offered-members をSADD
 	redis-cli SADD "vscovid-crawler:offered-members" $member_id
 	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
 	redis-cli DEL "vscovid-crawler:queue-$md5"
 	# vscovid-crawler:job-{URLのMD5ハッシュ} をSET
-	timestamp=`date '+%s'`
 	redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
+	# Slack DM送信
 	im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
 	im_id=`echo $im_open | jq .channel.id`
 	im_id=${im_id:1:-1}
@@ -105,6 +120,7 @@ for member in $members_list; do
 *このURLは、以下の2つの条件を満たしていますか？*
 - 新型コロナウイルスについての経済支援制度である
 - ${govname}が独自に実施しているものである
+他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
 "
 		}
 	},
