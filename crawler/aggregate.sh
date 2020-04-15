@@ -10,8 +10,11 @@ set -e
 ###
 
 
+# ファイルを結合して一つにまとめる
 cat ./tmp/grep_コロナ_*.txt.tmp > ./tmp/cat.txt.tmp
+# ソートする
 sort ./tmp/cat.txt.tmp > ./tmp/sort.txt.tmp
+# 重複を取り除く
 uniq -d ./tmp/sort.txt.tmp > result.txt
 
 urls=""

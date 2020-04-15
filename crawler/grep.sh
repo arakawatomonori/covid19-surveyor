@@ -9,6 +9,7 @@ set -e
 ### ./grep.sh
 ###
 
+# 配列初期化
 words=`cat <<EOM
 助成
 補助
