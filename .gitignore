@@ -11,4 +11,5 @@ grep_*
 *.swp
 *.tmp
 *.log
+tmp/*
 index.html
