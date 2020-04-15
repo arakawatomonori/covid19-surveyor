@@ -14,7 +14,7 @@ server {
                 try_files $uri $uri/ =404;
         }
         location ~ \.sh$ {
-		root   /home/ubuntu/wget/;
+		root   /home/ubuntu/wget/www-data/;
 		fastcgi_pass      unix:/var/run/fcgiwrap.socket;
 		include           /etc/nginx/fastcgi_params;
 		fastcgi_param     SCRIPT_FILENAME   $document_root$fastcgi_script_name;

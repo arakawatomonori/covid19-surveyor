@@ -1,10 +1,14 @@
 www.*
-/www-data/
 web.*
-www-data/
+www-data/www*
+www-data/*.com
+www-data/*.net
+www-data/*.tv
+www-data/*.jp
 *.jp
 grep_*
 *.swp
 *.tmp
 *.log
 index.html
+*.env
