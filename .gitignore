@@ -6,4 +6,5 @@ www-data/
 grep_*
 *.swp
 *.tmp
+*.log
 index.html
