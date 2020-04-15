@@ -1,0 +1,37 @@
+USAGE
+
+    make wget
+        data/ 内のすべてのURLに対してwget -rを実行します
+
+    make grep
+        www-data/ 内のすべてのHTMLファイルに対してgrepを実行します
+        make wgetを先に実行しておく必要があります
+
+    make aggregate
+        grepした結果を集計します
+        make grepを先に実行しておく必要があります
+
+    make publish
+        集計結果を元にwww-data/index.htmlに出力します
+        make aggregateを先に実行しておく必要があります
+
+    make release
+        wget, grep, aggregate, publishを順に実行します
+
+    make slack-queue
+        集計結果を元にSlackで質問DMを送るためのキューを追加します
+        make aggregateを先に実行しておく必要があります
+
+    make slack-map
+        slack-queueからURLを取り出してSlackのメンバーにDMを送信します
+        make slack-queueを先に実行しておく必要があります
+
+    make slack-check-offer
+        slackで質問DMを送って回答待ちのメンバーのID一覧を表示します
+
+    make slack-check-jobs
+        slackで質問DMを送って回答待ちのjob一覧を表示します
+
+    make slack-check-results
+        slackで質問DMを送って回答された結果の一覧を表示します
+
