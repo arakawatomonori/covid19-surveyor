@@ -24,15 +24,15 @@ else
 fi
 
 # チャンネルのメンバー取得
-# 一時間に一回でいい
+# 十分間に一回でいい
 members_list_file="tmp/members_list.json"
 members_list_ts=0
 if [ -e $members_list_file ]; then
 	members_list_ts=`date '+%s' -r $members_list_file`
 fi
-# ファイルのタイムスタンプが一時間経過しているか
+# ファイルのタイムスタンプが十分間経過しているか
 members_list_diff=$((ts - members_list_ts))
-if [ $members_list_diff -gt 3600 ]; then
+if [ $members_list_diff -gt 600 ]; then
 	echo get channels info
 	# channels_listをchannels_nameで絞り込んでchannels_idを得る
 	channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channels_name}'")' | jq .id`
