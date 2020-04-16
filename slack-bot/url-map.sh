@@ -106,7 +106,6 @@ send_message() {
 	title=`get_title_by_url ${url}`
 	govname=`get_govname_by_url ${url}`
 	echo $govname
-	abs=`get_abs_by_url ${url}`
 	# unixtime
 	timestamp=`date '+%s'`
 	# vscovid-crawler:offered-members をSADD
