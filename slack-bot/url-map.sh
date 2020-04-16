@@ -61,10 +61,7 @@ for member in $members_list; do
 	fi
 	echo $member_id
 	# vscovid-crawler:queue-* を一件GET
-	# TODO SCANが0件になることがある
-	scan=`redis-cli SCAN 100000000 COUNT 100 MATCH vscovid-crawler:queue-*`
-	# 0件の場合はスキップ
-	key=`echo $scan | grep vscovid-crawler:queue| cut -d' ' -f 2 `
+	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
 	echo $key
 	if [ -z "$key" ]; then
 		continue
@@ -117,8 +114,10 @@ for member in $members_list; do
 			"type": "mrkdwn",
 			"text": "
 *このURLは、以下の2つの条件を満たしていますか？*
-- 新型コロナウイルスについての経済支援制度である
-- ${govname}が独自に実施しているものである
+
+• 新型コロナウイルスについての経済支援制度である
+• ${govname}が独自に実施しているものである
+
 ※経済支援制度とは、お金が貰える|お金が借りられる|お金が節約できる制度です
 ※上記以外でも、住宅の支援、食料の支援、子育ての支援などの場合は「はい」と答えてください
 ※このURLが他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
