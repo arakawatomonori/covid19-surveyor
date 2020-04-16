@@ -134,7 +134,7 @@ send_message() {
                         "type": "section",
                         "text": {
                                 "type": "mrkdwn",
-                                "text": "${title}"
+                                "text": "タイトル: ${title}"
                         }
                 },
                 {
