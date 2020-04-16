@@ -66,6 +66,19 @@ get_govname_by_url() {
 	return 0
 }
 
+get_title_by_res() {
+	res=$1
+	title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
+	echo $title
+}
+
+get_title_by_url() {
+	url=$1
+	res=`wget -q -O - $url`
+	title=`get_title_by_res "$res"`
+	echo $title
+}
+
 send_message() {
 	member_id=$1
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
@@ -88,10 +101,12 @@ send_message() {
 	if [ $url_not_found = "1" ]; then
 		# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
 		redis-cli DEL "vscovid-crawler:queue-$md5"
-		continue
+		return 0
 	fi
+	title=`get_title_by_url ${url}`
 	govname=`get_govname_by_url ${url}`
 	echo $govname
+	abs=`get_abs_by_url ${url}`
 	# unixtime
 	timestamp=`date '+%s'`
 	# vscovid-crawler:offered-members をSADD
@@ -114,6 +129,13 @@ send_message() {
                         "text": {
                                 "type": "mrkdwn",
                                 "text": "${url}"
+                        }
+                },
+                {
+                        "type": "section",
+                        "text": {
+                                "type": "mrkdwn",
+                                "text": "${title}"
                         }
                 },
                 {
