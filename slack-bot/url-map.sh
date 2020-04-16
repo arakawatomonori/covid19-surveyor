@@ -150,7 +150,8 @@ for member in $members_list; do
 					"type": "plain_text",
 					"text": "いいえ",
 					"emoji": false
-				},
+				}
+			},
 			{
 				"type": "button",
 				"action_id": "${md5}-undefined",
