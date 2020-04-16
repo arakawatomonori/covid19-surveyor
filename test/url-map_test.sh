@@ -32,7 +32,7 @@ fi
 res=`wget -q -O - https://www.pref.oita.jp/soshiki/14040/sodanmadoguti1.html`
 title=`get_title_by_res "$res"`
 echo actual $title
-title_expect_result="新型コロナウイルスの流行に伴う経営・金融相談窓口の開設について"
+title_expect_result="新型コロナウイルスの流行に伴う経営・金融相談窓口の開設について - 大分県ホームページ"
 echo expect $title_expect_result
 if [ "$title" = "$title_expect_result" ]; then
 	echo "passed"
