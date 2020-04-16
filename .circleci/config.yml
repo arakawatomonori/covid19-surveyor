@@ -5,5 +5,5 @@ jobs:
       - image: ubuntu:18.04
     steps:
       - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - run: make test
 
