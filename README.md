@@ -4,27 +4,63 @@
 ## Warning
 このスクリプトを実行すると50GBくらいのディスク容量を消費します
 
-## Usage
+## Setup for Ubuntu
+- `sudo apt install make wget jq nginx fcgiwrap squid`
 
-### Setup
-- `sudo apt install wget nginx squid`
-#### nginx
-- `cp nginx_config /etc/nginx/site-available/`
-- `ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config`
-- `sudo service nginx restart`
-#### squid
-- `cp -f squid.conf /etc/squid/`
-- `sudo service squid restart`
-#### wget
-- `cp .wgetrc ~/`
+### copy nginx config
+```
+cp nginx_config /etc/nginx/site-available/
+ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config
+sudo service nginx restart
+```
 
-### Run
-- `./wget.sh`
-- `./grep.sh`
-- `./index.sh > index.html`
+### copy squid config
+```
+cp -f squid.conf /etc/squid/
+sudo service squid restart
+```
 
-## TODO
-- grepを並列処理にする
-- grep結果をインクリメンタル検索
-- HTML以外のファイルの文字列も検索したい
-- 市区町村のサイトもミラーリングしたい
+### copy wget config
+```
+cp .wgetrc ~/
+```
+
+## Setup for macOS
+- `brew install wget jq nginx fcgiwrap squid`
+
+### Install GNU xargs in macOS
+
+```
+$ brew install findutils
+$ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
+```
+
+### Intall GNU grep in macOS
+
+```
+$ brew install grep
+$ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
+```
+
+### Intall GNU sed in macOS
+
+```
+$ brew install gnu-sed
+$ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+```
+
+
+## Development
+
+```
+$ make test
+```
+
+## Run with docker
+
+```
+cd docker
+docker build -t vscovid-crawler .
+cd ..
+docker run --rm -d -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh -it vscovid-crawler
+```

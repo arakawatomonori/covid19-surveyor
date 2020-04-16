@@ -1,7 +1,16 @@
+.env
 www.*
 web.*
+www-data/www*
+www-data/*.com
+www-data/*.net
+www-data/*.tv
+www-data/*.jp
+www-data/wget-log*
 *.jp
 grep_*
-*.txt
 *.swp
+*.tmp
+*.log
+tmp/*
 index.html
