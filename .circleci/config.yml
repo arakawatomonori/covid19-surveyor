@@ -7,5 +7,6 @@ jobs:
       - checkout # check out the code in the project directory
       - run: cp ./.env.sample ./.env
       - run: apt-get update && apt-get install -y make wget jq redis-tools
+      # - run: ./test/test.sh
       - run: make test
 
