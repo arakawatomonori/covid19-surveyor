@@ -3,7 +3,7 @@ set -e
 
 ###
 ### About
-### gov.yuiseki.net/index.htmlを生成するスクリプト
+### help.stopcovid19.jp/index.htmlを生成するスクリプト
 ###
 ### Usage
 ### ./index.sh
@@ -57,24 +57,21 @@ echo $form
 
 echo "<div style='height:600px;overflow:scroll;'>"
 while read line; do
-	url=$(cut -d':' -f 1 <<< $line)
-	url="//${url:11:-1}l"
 	domain=$(cut -d'/' -f 3 <<< $url)
-	text=$(cut -d':' -f 2 <<< $line)
 	echo "<span class='line' style='display: block;'>"
 	echo "<a href='${url}'>"
 	echo $domain
 	echo ": "
-	echo $text
+	echo $url
 	echo "</a>"
 	echo "</span>"
-done < result.txt
+done < ./www-data/result.sh
 echo "</div>"
 
 echo "<hr />"
 
 for i in ${dirarray[@]}; do
 	domain=$(cut -d'/' -f 2 <<< $i)
-	link="<a href='http://${domain}.gov.yuiseki.net'>${domain}</a><br />"
+	link="<a href='http://${domain}.help.stopcovid19.jp'>${domain}</a><br />"
 	echo $link
 done
