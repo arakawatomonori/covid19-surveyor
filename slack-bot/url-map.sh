@@ -155,7 +155,7 @@ for member in $members_list; do
 				"type": "button",
 				"action_id": "${md5}-undefined",
 				"value": "undefined",
-				"style": "danger",
+				"style": "default",
 				"text": {
 					"type": "plain_text",
 					"text": "迷う",
