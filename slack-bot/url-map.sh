@@ -165,7 +165,6 @@ for member in $members_list; do
 			}
 		]
 	}
-  ]
 }
 EOF
 `
