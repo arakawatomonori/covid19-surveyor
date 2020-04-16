@@ -103,18 +103,18 @@ for member in $members_list; do
   "channel": "${im_id}",
   "text": "<${url}>",
   "blocks": [
-	{
-		"type": "section",
-		"text": {
-			"type": "mrkdwn",
-			"text": "${url}"
-		}
-	},
-	{
-		"type": "section",
-		"text": {
-			"type": "mrkdwn",
-			"text": "
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "${url}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "
 *このURLは、以下の2つの条件を満たしていますか？*
 
 • 新型コロナウイルスについての経済支援制度である
@@ -125,51 +125,52 @@ for member in $members_list; do
 ※このURLが他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
 ※このURLがトップページやリンク集の場合は「いいえ」と答えてください
 "
-		}
-	},
-	{
-		"type": "actions",
-		"elements": [
-			{
-				"type": "button",
-				"action_id": "${md5}-true",
-				"value": "true",
-				"style": "primary",
-				"text": {
-					"type": "plain_text",
-					"text": "はい",
-					"emoji": false
-				}
-			},
-			{
-				"type": "button",
-				"action_id": "${md5}-false",
-				"value": "false",
-				"style": "danger",
-				"text": {
-					"type": "plain_text",
-					"text": "いいえ",
-					"emoji": false
-				}
-			},
-			{
-				"type": "button",
-				"action_id": "${md5}-undefined",
-				"value": "undefined",
-				"style": "default",
-				"text": {
-					"type": "plain_text",
-					"text": "迷う",
-					"emoji": false
-				}
 			}
-		]
-	}
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"action_id": "${md5}-true",
+					"value": "true",
+					"style": "primary",
+					"text": {
+						"type": "plain_text",
+						"text": "はい",
+						"emoji": false
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "${md5}-false",
+					"value": "false",
+					"style": "danger",
+					"text": {
+						"type": "plain_text",
+						"text": "いいえ",
+						"emoji": false
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "${md5}-undefined",
+					"value": "undefined",
+					"style": "default",
+					"text": {
+						"type": "plain_text",
+						"text": "迷う",
+						"emoji": false
+					}
+				}
+			]
+		}
+	]
 }
 EOF
 `
 
-	wget -q -O /dev/null --post-data "$json" \
+	wget -q -O - --post-data "$json" \
 	--header="Content-type: application/json" \
 	--header="Authorization: Bearer ${slack_token}" \
 	https://slack.com/api/chat.postMessage
