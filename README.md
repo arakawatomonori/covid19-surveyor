@@ -42,7 +42,12 @@ $ brew install grep
 $ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 ```
 
+### Intall GNU sed in macOS
 
+```
+$ brew install gnu-sed
+$ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+```
 
 
 ## Development
