@@ -17,6 +17,7 @@ sort ./tmp/cat.txt.tmp > ./tmp/sort.txt.tmp
 # 重複を取り除く
 uniq -d ./tmp/sort.txt.tmp > result.txt
 
+# result.txtからurlのみを抜き出す
 urls=""
 for line in `cat result.txt`; do
 	url=`echo ${line} | cut -d':' -f 1`
