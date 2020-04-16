@@ -9,10 +9,7 @@ usage:
 release: wget grep aggregate publish
 
 test:
-	./crawler/wget.sh data/test.csv
-	./crawler/grep.sh
-	./crawler/aggregate.sh
-	./crawler/publish.sh > ./www-data/index.html
+	ls -ld test/* | grep -E "\.sh$$" | awk '{print $$NF}' | xargs -n 1 bash
 
 wget:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
