@@ -63,11 +63,11 @@ for key in $keys; do
         bool=`echo $result| cut -d',' -f 4`
 				# ドメイン名から自治体名を得る
 				domain=$(cut -d'/' -f 3 <<< $url)
-				govname=`grep $domain --include="*.csv" ../data/*|cut -d',' -f 1|cut -d':' -f 2`
+				govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
 				# urlから詳細を得る
 				path=${url//http:\/\//}
 				path=${path//https:\/\//}
-				title=`grep $path ../results.txt |cut -d':' -f 2`
+				title=`grep $path ./results.txt |cut -d':' -f 2`
 
         if [ $bool = "true" ]; then
                 echo "<span class='line' style='display: block;'>"
