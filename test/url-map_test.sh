@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 . ./slack-bot/url-map.sh
 
