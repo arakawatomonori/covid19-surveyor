@@ -141,7 +141,7 @@ for member in $members_list; do
 					"emoji": false
 				}
 			},
-	{
+			{
 				"type": "button",
 				"action_id": "${md5}-false",
 				"value": "false",
@@ -149,6 +149,16 @@ for member in $members_list; do
 				"text": {
 					"type": "plain_text",
 					"text": "いいえ",
+					"emoji": false
+				},
+			{
+				"type": "button",
+				"action_id": "${md5}-undefined",
+				"value": "undefined",
+				"style": "danger",
+				"text": {
+					"type": "plain_text",
+					"text": "迷う",
 					"emoji": false
 				}
 			}
