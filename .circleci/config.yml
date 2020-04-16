@@ -5,10 +5,6 @@ jobs:
       - image: ubuntu:18.04
     steps:
       - checkout # check out the code in the project directory
-      - run:
-        name: Install Ubuntu Packages
-        command: apt-get update && apt-get install -y make wget jq redis-tools
-      - run:
-        name: Run `make test`
-        command: make test
+      - run: apt-get update && apt-get install -y make wget jq redis-tools
+      - run: make test
 
