@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  webapp:
+    build: ./
+    volumes:
+      - ./config/nginx_config:/etc/nginx/site-enabled/vscovid-crawler.conf
+      - ./config/squid.conf:/etc/squid/squid.conf
+      - ./entrypoint.sh:/sbin/entrypoint.sh
+    ports:
+      - 80:80
+    entrypoint: []
+    command: ["/sbin/entrypoint.sh"]
