@@ -62,6 +62,8 @@ get_govname_by_url() {
 	url=$1
 	domain=`echo $url | cut -d'/' -f 3`
 	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
+	echo $govname
+	return 0
 }
 
 send_message() {
@@ -191,5 +193,5 @@ echo members num ${#members_list[@]}
 #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
 for member in $members_list; do
 	member_id=${member:1:-1}
-	$(send_message member_id)
+	send_message $member_id
 done
