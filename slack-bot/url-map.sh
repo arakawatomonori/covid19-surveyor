@@ -12,7 +12,7 @@ if [ -e $channels_list_file ]; then
 fi
 # ファイルのタイムスタンプが一日経過しているか
 channels_list_diff=$((ts - channels_list_ts))
-echo $channels_list_diff
+echo channels_list_diff $channels_list_diff
 if [ $channels_list_diff -gt 86400 ]; then
 	# 全チャンネルの一覧を取得
 	channels_list=`wget -q -O - --post-data "token=${slack_token}&exclude_archived=true" https://slack.com/api/channels.list`
@@ -32,7 +32,7 @@ if [ -e $members_list_file ]; then
 fi
 # ファイルのタイムスタンプが一時間経過しているか
 members_list_diff=$((ts - members_list_ts))
-echo $members_list_diff
+echo members_list_diff $members_list_diff
 if [ $members_list_diff -gt 3600 ]; then
 	# channels_listをchannels_nameで絞り込んでchannels_idを得る
 	channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channels_name}'")' | jq .id`
@@ -47,6 +47,8 @@ else
 	# キャッシュから復元
 	members_list=`cat $members_list_file`
 fi
+
+echo members num ${#members_list[@]}
 
 # 一秒に一回でいい
 # 各メンバーにDMを送る
