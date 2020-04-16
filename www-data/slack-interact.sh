@@ -1,21 +1,21 @@
 #!/bin/bash
 
-eval "$(cat ../.env <(echo) <(declare -x))"
+eval "$(cat /home/ubuntu/vscovid-crawler/.env <(echo) <(declare -x))"
 
 formdata=`cat`
-echo $formdata > /home/ubuntu/wget/tmp/slack-interact.formdata.log
+echo $formdata > /home/ubuntu/vscovid-crawler/tmp/slack-interact.formdata.log
 # urlencodeされているのでdecodeする
 urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 decoded_data=$(urldecode $formdata)
 # payload=JSONなので消してJSONとして読めるようにする
 json=${decoded_data:8:-1}}
-echo $json > /home/ubuntu/wget/tmp/slack-interact.json.log
+echo $json > /home/ubuntu/vscovid-crawler/tmp/slack-interact.json.log
 
 token=`echo $json | jq .token`
 token=${token:1:-1}
 event_type=`echo $json | jq .type`
 event_type=${event_type:1:-1}
-echo $event_type > /home/ubuntu/wget/tmp/slack-interact.event-type.log
+echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.log
 
 if [ "$event_type" == "block_actions" ]; then
         channel_id=`echo $json | jq .channel.id`
@@ -51,7 +51,7 @@ EOF
         echo 'Content-type: application/json'
         echo ''
         echo $res
-	wget -q -O /home/ubuntu/wget/tmp/slack-interact.res.log --post-data "$res" \
+	wget -q -O /home/ubuntu/vscovid-crawler/tmp/slack-interact.res.log --post-data "$res" \
         --header="Content-type: application/json" \
         --header="Authorization: Bearer ${slack_token}" \
         https://slack.com/api/chat.update

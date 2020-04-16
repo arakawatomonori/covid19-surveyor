@@ -59,7 +59,6 @@ for member in $members_list; do
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
 	already_offered=`redis-cli SISMEMBER vscovid-crawler:offered-members ${member_id}`
 	if [ $already_offered = "1" ]; then
-		echo $member_id already offered
 		continue
 	fi
 	echo offer to $member_id

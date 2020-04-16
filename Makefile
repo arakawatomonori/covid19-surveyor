@@ -32,6 +32,9 @@ slack-queue:
 slack-map:
 	while true; do ./slack-bot/url-map.sh; sleep 1; done
 
+slack-clear-offer:
+	redis-cli DEL vscovid-crawler:offered-members
+
 slack-check-offer:
 	redis-cli SMEMBERS vscovid-crawler:offered-members
 
