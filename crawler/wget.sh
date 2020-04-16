@@ -11,27 +11,44 @@ set -e
 ### ./wget.sh data/test.csv
 ###
 
-# 配列の初期化
-urls=()
-domains=()
-# $#は引数の個数
-while (( $# > 0 ))
-do
-	# $1は1つ目の引数
-	for line in `cat $1`; do
-		# CSVファイルの行の3番めを取り出す
-		url=`echo ${line} | cut -d',' -f 3`
-		# urls配列に追加
-		urls=("${urls} $url")
+get_target_urls() {
+	urls=()
+	# $#は引数の個数
+	while (( $# > 0 ))
+	do
+		# $1は1つ目の引数
+		for line in `cat $1`; do
+			# CSVファイルの行の3番めを取り出す
+			url=`echo ${line} | cut -d',' -f 3`
+			# urls配列に追加
+			urls=("${urls} $url")
+		done
+		# shiftで次の引数を$1に入れている
+		shift
+	done
+	echo $urls
+	return 0
+}
+
+get_target_domains() {
+	domains=()
+	while (( $# > 0 ))
+	do
+		url=$1
 		# urlからhttp://とhttps://を削る
 		domain=${url//http:\/\//}
 		domain=${domain//https:\/\//}
 		# domains配列に追加
 		domains=("${domains} $domain")
+		shift
 	done
-	# shiftで次の引数を$1に入れている
-	shift
-done
+	echo $domains
+	return 0
+}
+
+args=$*
+urls=`get_target_urls $args`
+domains=`get_target_domains $urls`
 
 cd www-data
 # urls配列の中身をwgetに渡している
