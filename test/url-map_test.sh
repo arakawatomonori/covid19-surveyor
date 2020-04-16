@@ -30,7 +30,7 @@ fi
 
 # test get_title_by_url
 res=`wget -q -O - https://www.pref.oita.jp/soshiki/14040/sodanmadoguti1.html`
-title=`get_h1_by_res "$res"`
+title=`get_title_by_res "$res"`
 echo actual $title
 title_expect_result="新型コロナウイルスの流行に伴う経営・金融相談窓口の開設について"
 echo expect $title_expect_result
