@@ -12,8 +12,8 @@ if [ -e $channels_list_file ]; then
 fi
 # ファイルのタイムスタンプが一日経過しているか
 channels_list_diff=$((ts - channels_list_ts))
-echo channels_list_diff $channels_list_diff
 if [ $channels_list_diff -gt 86400 ]; then
+	echo get channels list
 	# 全チャンネルの一覧を取得
 	channels_list=`wget -q -O - --post-data "token=${slack_token}&exclude_archived=true" https://slack.com/api/channels.list`
 	# ファイルにキャッシュ
@@ -32,8 +32,8 @@ if [ -e $members_list_file ]; then
 fi
 # ファイルのタイムスタンプが一時間経過しているか
 members_list_diff=$((ts - members_list_ts))
-echo members_list_diff $members_list_diff
 if [ $members_list_diff -gt 3600 ]; then
+	echo get channels info
 	# channels_listをchannels_nameで絞り込んでchannels_idを得る
 	channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channels_name}'")' | jq .id`
 	channels_id=${channels_id:1:-1}
@@ -59,9 +59,10 @@ for member in $members_list; do
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
 	already_offered=`redis-cli SISMEMBER vscovid-crawler:offered-members ${member_id}`
 	if [ $already_offered = "1" ]; then
+		echo $member_id already offered
 		continue
 	fi
-	echo $member_id
+	echo offer to $member_id
 	# vscovid-crawler:queue-* を一件GET
 	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
 	echo $key
