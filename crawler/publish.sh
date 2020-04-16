@@ -56,17 +56,31 @@ echo $form
 
 
 echo "<div style='height:600px;overflow:scroll;'>"
-while read line; do
-	domain=$(cut -d'/' -f 3 <<< $url)
-	echo "<span class='line' style='display: block;'>"
-	echo "<a href='${url}'>"
-	echo $domain
-	echo ": "
-	echo $url
-	echo "</a>"
-	echo "</span>"
-done < ./www-data/result.sh
+keys=`redis-cli KEYS "vscovid-crawler:result-*"`
+for key in $keys; do
+        result=`redis-cli GET $key`
+        url=`echo $result| cut -d',' -f 1`
+        bool=`echo $result| cut -d',' -f 4`
+				# ドメイン名から自治体名を得る
+				domain=$(cut -d'/' -f 3 <<< $url)
+				govname=`grep $domain --include="*.csv" ../data/*|cut -d',' -f 1|cut -d':' -f 2`
+				# urlから詳細を得る
+				path=${url//http:\/\//}
+				path=${path//https:\/\//}
+				title=`grep $path ../results.txt |cut -d':' -f 2`
+
+        if [ $bool = "true" ]; then
+                echo "<span class='line' style='display: block;'>"
+                echo "<a href='${url}'>"
+                echo $govname
+                echo ": "
+                echo $title
+                echo "</a>"
+                echo "</span>"
+        fi
+done
 echo "</div>"
+
 
 echo "<hr />"
 
