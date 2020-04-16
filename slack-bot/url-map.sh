@@ -69,7 +69,7 @@ send_message() {
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
 	already_offered=`redis-cli SISMEMBER vscovid-crawler:offered-members ${member_id}`
 	if [ $already_offered = "1" ]; then
-		continue
+		return 0
 	fi
 	echo offer to $member_id
 	# vscovid-crawler:queue-* を一件GET
