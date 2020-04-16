@@ -2,9 +2,9 @@ server {
         listen 80;
         listen [::]:80;
 
-        server_name gov.yuiseki.net;
+        server_name help.stopcovid19.jp;
 
-        root /home/ubuntu/wget/www-data/;
+        root /home/ubuntu/vscovid-crawler/www-data/;
 
         autoindex on;
         autoindex_exact_size off;
@@ -14,7 +14,7 @@ server {
                 try_files $uri $uri/ =404;
         }
         location ~ \.sh$ {
-		root   /home/ubuntu/wget/www-data/;
+		root   /home/ubuntu/vscovid-crawler/www-data/;
 		fastcgi_pass      unix:/var/run/fcgiwrap.socket;
 		include           /etc/nginx/fastcgi_params;
 		fastcgi_param     SCRIPT_FILENAME   $document_root$fastcgi_script_name;
@@ -25,9 +25,9 @@ server {
         listen 80;
         listen [::]:80;
 
-        server_name ~^(?<domain>.+)\.gov\.yuiseki\.net$;
+        server_name ~^(?<domain>.+)\.help\.stopcovid19\.jp$;
 
-        root /home/ubuntu/wget/www-data/$domain;
+        root /home/ubuntu/vscovid-crawler/www-data/$domain;
 
         location / {
                 try_files $uri $uri/ =404;
