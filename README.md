@@ -56,4 +56,11 @@ $ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 $ make test
 ```
 
+## Run with docker
 
+```
+cd docker
+docker build -t vscovid-crawler .
+cd ..
+docker run --rm -d -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh -it vscovid-crawler
+```
