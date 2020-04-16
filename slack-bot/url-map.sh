@@ -102,7 +102,76 @@ send_message() {
 	im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
 	im_id=`echo $im_open | jq .channel.id`
 	im_id=${im_id:1:-1}
-	json=`eval "echo \"$(cat url-map-message.json)\""`
+	json=`cat <<EOF
+{
+  "channel": "${im_id}",
+  "text": "<${url}>",
+  "blocks": [
+                {
+                        "type": "section",
+                        "text": {
+                                "type": "mrkdwn",
+                                "text": "${url}"
+                        }
+                },
+                {
+                        "type": "section",
+                        "text": {
+                                "type": "mrkdwn",
+                                "text": "
+*このURLは、以下の2つの条件を満たしていますか？*
+
+• 新型コロナウイルスについての経済支援制度である
+• ${govname}が独自に実施しているものである
+
+※経済支援制度とは、お金が貰える|お金が借りられる|お金が節約できる制度です
+※上記以外でも、住宅の支援、食料の支援、子育ての支援などの場合は「はい」と答えてください
+※このURLが他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
+※このURLがトップページやリンク集の場合は「いいえ」と答えてください
+"
+                        }
+                },
+                {
+                        "type": "actions",
+                        "elements": [
+                                {
+                                        "type": "button",
+                                        "action_id": "${md5}-true",
+                                        "value": "true",
+                                        "style": "primary",
+                                        "text": {
+                                                "type": "plain_text",
+                                                "text": "はい",
+                                                "emoji": false
+                                        }
+                                },
+                                {
+                                        "type": "button",
+                                        "action_id": "${md5}-false",
+                                        "value": "false",
+                                        "style": "danger",
+                                        "text": {
+                                                "type": "plain_text",
+                                                "text": "いいえ",
+                                                "emoji": false
+                                        }
+                                },
+                                {
+                                        "type": "button",
+                                        "action_id": "${md5}-undefined",
+                                        "value": "undefined",
+                                        "text": {
+                                                "type": "plain_text",
+                                                "text": "迷う",
+                                                "emoji": false
+                                        }
+                                }
+                        ]
+                }
+        ]
+}
+EOF
+`
 
 	wget -q -O - --post-data "$json" \
 	--header="Content-type: application/json" \
