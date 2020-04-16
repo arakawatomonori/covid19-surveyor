@@ -9,7 +9,7 @@ usage:
 release: wget grep aggregate publish
 
 test:
-	find ./test/ -regex '.*\.sh$$' | xargs -n 1 bash
+	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
 
 wget:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
