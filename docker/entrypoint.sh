@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# import all
+cd /home/ubuntu/vscovid-crawler
+make test
+
 $(which nginx) -t
 /etc/init.d/nginx start
 
