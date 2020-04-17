@@ -22,6 +22,7 @@ aggregate:
 
 publish:
 	./crawler/publish.sh > ./www-data/index.html
+	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 
 slack-queue:
 	./slack-bot/url-queue.sh
