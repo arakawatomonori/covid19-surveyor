@@ -46,13 +46,18 @@ get_target_domains() {
 	return 0
 }
 
-args=$*
-urls=`get_target_urls $args`
-domains=`get_target_domains $urls`
+main() {
+	args=$*
+	urls=`get_target_urls $args`
+	domains=`get_target_domains $urls`
 
-cd www-data
-# urls配列の中身をwgetに渡している
-echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
-echo $domains | xargs -n 1 echo | xargs -I{} cp -f robots.txt {}
-cd -
+	cd www-data
+	# urls配列の中身をwgetに渡している
+	echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
+	echo $domains | xargs -n 1 echo | xargs -I{} cp -f robots.txt {}
+	cd -
+}
 
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main $@
+fi
