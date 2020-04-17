@@ -1,5 +1,4 @@
 .env
-www.*
 web.*
 www-data/www*
 www-data/*.com
