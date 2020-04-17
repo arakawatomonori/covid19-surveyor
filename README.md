@@ -1,8 +1,8 @@
 # covid19-surveryor
-シェルスクリプト書かれた主要省庁と都道府県のWebサイトをミラーリングするスクリプト
+シェルスクリプト書かれた主要省庁と都道府県のWebサイトを収集し分類するシステム
 
 ## Warning
-このスクリプトを実行すると50GBくらいのディスク容量を消費します
+このスクリプトを実行するとかなりのディスク容量を消費します
 
 ## Setup for Ubuntu
 - `sudo apt install make wget jq nginx fcgiwrap squid`
