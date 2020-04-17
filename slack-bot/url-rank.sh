@@ -10,7 +10,6 @@ for key in $keys; do
   fi
   count=${users[${user}]}
   users[${user}]=$(( count + 1 ))
-  count=${users[${user}]}
 done
 
 for k in "${!users[@]}"; do
