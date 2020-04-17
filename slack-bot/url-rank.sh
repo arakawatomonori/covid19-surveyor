@@ -24,14 +24,11 @@ for line in `cat tmp/rank.txt`; do
   rank=$rank"\r\n<@$user_id> さん、 $count 回"
 done
 
-echo $rank
-
 source .env
 channels_name=vscovid19
 
 . ./slack-bot/url-map.sh
 channels_id=`get_channels_id`
-echo $channels_id
 
 json=`cat <<EOF
 {
