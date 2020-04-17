@@ -128,7 +128,7 @@ head=`cat <<EOM
             text-align: center;
         }
 
-        .header > .search > input#searchbox {
+        .header > .search > form > input#searchbox {
             width: 80vw;
             max-width: 600px;
             height: 50px;
@@ -141,13 +141,13 @@ head=`cat <<EOM
         }
 
         @media (min-width: 650px) {
-            .header > .search > input#searchbox {
+            .header > .search > form > input#searchbox {
                 font-size: 26px;
             }
         }
 
         @media (max-width: 450px) {
-            .header > .search > input#searchbox {
+            .header > .search > form > input#searchbox {
                 width: 80vw;
                 font-size: 4.5vw;
             }
@@ -162,7 +162,7 @@ head=`cat <<EOM
                 font-size: 9.5vw;
             }
 
-            .header .search > input {
+            .header .search > form > input {
                 width: 100%;
                 margin: 0.5em 0.2em 8px 0.5em;
                 font-size: 16px;
