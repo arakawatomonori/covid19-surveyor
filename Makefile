@@ -1,5 +1,9 @@
 .PHONY: all usage release test wget grep aggregate publish slack-map slack-check-jobs slack-check-results
 
+include .env
+export $(shell sed 's/=.*//' .env)
+ENV=$(environment)
+
 all: usage
 
 usage:
@@ -22,7 +26,9 @@ aggregate:
 
 publish:
 	./crawler/publish.sh > ./www-data/index.html
+ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
+endif
 
 slack-queue:
 	./slack-bot/url-queue.sh
