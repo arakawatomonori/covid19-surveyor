@@ -64,3 +64,10 @@ docker build -t vscovid-crawler .
 cd ..
 docker run --rm -d -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh -it vscovid-crawler
 ```
+
+## Run with docker-compose 
+
+```
+$ docker-compose build
+$ docker-compose up
+```

@@ -203,16 +203,22 @@ EOF
 	echo ""
 }
 
-channels_id=`get_channels_id`
-members_list=`get_members_list $channels_id`
+main() {
+	channels_id=`get_channels_id`
+	members_list=`get_members_list $channels_id`
 
-echo members num ${#members_list[@]}
+	echo members num ${#members_list[@]}
 
-# 一秒に一回でいい
-# 各メンバーにDMを送る
-# テスターのID
-#members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
-for member in $members_list; do
-	member_id=${member:1:-1}
-	send_message $member_id
-done
+	# 一秒に一回でいい
+	# 各メンバーにDMを送る
+	# テスターのID
+	#members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
+	for member in $members_list; do
+		member_id=${member:1:-1}
+		send_message $member_id
+	done
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main $@
+fi

@@ -8,6 +8,7 @@ make test
 $(which nginx) -t
 /etc/init.d/nginx start
 
+/etc/init.d/fcgiwrap start
 
 mkdir -p /var/spool/squid
 chown -R proxy:proxy /var/spool/squid

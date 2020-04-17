@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 ADD config/nginx_config /etc/nginx/sites-available/vscovid-crawler.conf
-RUN ln -s /etc/nginx/site-available/vscovid-crawler.conf /etc/nginx/sites-enabled/vscovid-crawler.conf
+RUN ln -s /etc/nginx/sites-available/vscovid-crawler.conf /etc/nginx/sites-enabled/vscovid-crawler.conf
 
 ADD config/squid.conf /etc/squid/squid.conf
 
