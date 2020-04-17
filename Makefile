@@ -4,7 +4,10 @@ all: usage
 
 usage:
 	@cat USAGE
-	
+
+###
+### crawler
+###
 
 release: wget grep aggregate publish
 
@@ -23,17 +26,27 @@ aggregate:
 publish:
 	./crawler/publish.sh > ./www-data/index.html
 
-slack-queue:
+###
+### slack-bot
+###
+
+# start
+slack-start-queue:
 	./slack-bot/url-queue.sh
 
-slack-map:
+slack-start-map:
 	while true; do ./slack-bot/url-map.sh; sleep 1; done
 
+# clear
 slack-clear-offer:
 	redis-cli DEL vscovid-crawler:offered-members
 
+# check
 slack-check-offer:
 	redis-cli SMEMBERS vscovid-crawler:offered-members
+
+slack-check-queue:
+	redis-cli KEYS vscovid-crawler:queue-*
 
 slack-check-jobs:
 	redis-cli KEYS vscovid-crawler:job-*
