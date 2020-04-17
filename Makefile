@@ -1,4 +1,8 @@
 
+include .env
+export $(shell sed 's/=.*//' .env)
+ENV=$(environment)
+
 .PHONY: all
 all: usage
 
@@ -32,6 +36,9 @@ aggregate:
 .PHONY: publish
 publish:
 	./crawler/publish.sh > ./www-data/index.html
+ifeq ($(ENV),production)
+	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
+endif
 
 ###
 ### slack-bot
