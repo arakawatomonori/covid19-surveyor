@@ -122,6 +122,7 @@ head=`cat <<EOM
         .header {
             background-color:  #bf0025;
             padding-bottom: 25px;
+            text-align: center;
         }
 
         .header > .title {
@@ -212,6 +213,10 @@ head=`cat <<EOM
             word-break: break-all;
         }
 
+        iframe.twitter-widget-0 {
+            transform: scale(3.0, 3.0) ;
+        }
+
     </style>
 
     <script>
@@ -286,14 +291,13 @@ header=`cat <<EOM
             data-url="https://help.stopcovid19.jp/"
             data-via="codeforJP"
             data-size="large"
-            style="transform:scale(3.0, 3.0);"
             >
             Tweet
         </a>
         <div class="search">
-						<form onsubmit="return false;">
-							<input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
-						</form>
+            <form onsubmit="return false;">
+                <input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
+            </form>
         </div>
     </div>
 EOM
