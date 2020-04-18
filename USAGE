@@ -18,6 +18,9 @@ USAGE
     make release
         wget, grep, aggregate, publishを順に実行します
 
+    make test
+        test/ 配下にある単体テストを実行します
+
     make slack-queue
         集計結果を元にSlackで質問DMを送るためのキューを追加します
         make aggregateを先に実行しておく必要があります
