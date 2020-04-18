@@ -15,6 +15,14 @@ head=`cat <<EOM
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <title>新型コロナウイルス各自治体の経済支援制度まとめ</title>
+    <meta property="og:title" content="新型コロナウイルス各自治体の経済支援制度まとめ">
+    <meta property="og:site_name" content="新型コロナウイルス各自治体の経済支援制度まとめ">
+    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://help.stopcovid19.jp/">
+    <meta property="og:image" content="https://help.stopcovid19.jp/ogimg.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
         .card-content {
@@ -242,7 +250,6 @@ head=`cat <<EOM
             applicable()
         }
     </script>
-    <title>新型コロナウイルス各自治体の経済支援制度まとめ</title>
 </head>
 EOM
 `
