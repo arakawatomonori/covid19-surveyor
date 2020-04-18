@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
+# 色替え echo
 echo_green(){
-    echo -e "\t\e[32m $1 \e[m"
+    echo -e "\e[32m$1\e[m"
     return 0
 }
-
 echo_red() {
-    echo -e "\t\e[31m $1 \e[m"
+    echo -e "\e[31m$1\e[m"
     return 0
 }
 

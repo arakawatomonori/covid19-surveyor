@@ -11,9 +11,9 @@ input="foo.html:あいうえお　かきくけこ さしすせそ	たちつて�
 actual=$(echo $input | sanitize_grep_result)
 expect="foo.html:あいうえおかきくけこさしすせそたちつてと"
 if [ "$actual" = "$expect" ]; then
-	echo_green passed
+	echo_green "\tpassed"
 else
-	echo_red failed
+	echo_red "\tfailed"
 	echo_indent expect $expect
 	echo_indent actual $actual
 	exit 1
@@ -25,9 +25,9 @@ input="foo.html:$(seq 100 | xargs)"
 actual=$(echo $input | sanitize_grep_result)
 expect=""
 if [ "$actual" = "$expect" ]; then
-	echo_green passed
+	echo_green "\tpassed"
 else
-	echo_red failed
+	echo_red "\tfailed"
 	echo_indent expect $expect
 	echo_indent actual $actual
 	exit 1
@@ -39,9 +39,9 @@ input="foo.html:<p><a href=\"bar.html\">テキストテキスト<br>テキスト
 actual=$(echo $input | sanitize_grep_result)
 expect="foo.html:テキストテキストテキスト"
 if [ "$actual" = "$expect" ]; then
-	echo_green passed
+	echo_green "\tpassed"
 else
-	echo_red failed
+	echo_red "\tfailed"
 	echo_indent expect $expect
 	echo_indent actual $actual
 	exit 1

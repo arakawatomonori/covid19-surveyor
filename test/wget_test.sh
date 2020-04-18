@@ -9,7 +9,7 @@ echo test get_target_urls
 actual=`get_target_urls data/test.csv`
 expect="http://www.kantei.go.jp https://www.cao.go.jp http://www.bousai.go.jp https://www.mhlw.go.jp https://www.meti.go.jp"
 if [ "$actual" = "$expect" ]; then
-	echo_green passed
+	echo_green "\tpassed"
 else
 	echo_red failed
 	echo_indent expect $expect
@@ -21,7 +21,7 @@ echo test get_target_domains
 actual=`get_target_domains $actual`
 expect="www.kantei.go.jp www.cao.go.jp www.bousai.go.jp www.mhlw.go.jp www.meti.go.jp"
 if [ "$actual" = "$expect" ]; then
-	echo_green passed
+	echo_green "\tpassed"
 else
 	echo_red failed
 	echo_indent expect $expect
