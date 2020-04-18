@@ -1,8 +1,8 @@
 version: '2'
-services: 
-  vscovid-crawler:
+services:
+  crawler:
     build: .
-    volumes: 
+    volumes:
       - .:/home/ubuntu/vscovid-crawler
     ports:
       - "8080:80"
