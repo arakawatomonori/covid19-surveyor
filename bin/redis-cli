@@ -27,4 +27,4 @@ if [ "$HOST" == "" ]; then
   HOST=${redis_host:-127.0.0.1}
 fi
 
-redis-cli -h $HOST $argv
+/usr/bin/redis-cli -h $HOST $argv
