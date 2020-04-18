@@ -6,3 +6,6 @@ services:
       - .:/app
     ports:
       - 8080:80
+
+  redis:
+    build: docker/redis
