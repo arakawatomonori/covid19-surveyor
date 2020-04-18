@@ -74,10 +74,12 @@ export_corona_files() {
 }
 
 export_pdf_corona_files() {
-	find ./www-data/ -regex '.*\.pdf$' | xargs -n1 pdftotext
+	find ./www-data/ -regex '.*\.pdf$' | xargs -n1 -I@ pdftotext @ @.txt
 	set +e
-	grep -r コロナ --include="*.txt" ./www-data | sanitize_grep_result >>\
-	$INTERMEDIATE_FILE_PATH
+	grep -r コロナ --include="*.pdf.txt" ./www-data |\
+		sanitize_grep_result |\
+		sed 's/\.pdf\.txt:/\.pdf:/' >>\
+		$INTERMEDIATE_FILE_PATH
 	set -e
 }
 
