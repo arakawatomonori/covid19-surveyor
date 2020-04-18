@@ -10,6 +10,7 @@ RUN apt-get update && \
       nginx \
       fcgiwrap \
       squid \
+      redis-tools \
       && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
