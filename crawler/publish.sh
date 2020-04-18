@@ -112,7 +112,7 @@ head=`cat <<EOM
         }
 
         .header {
-            background-color: rgb(94, 77, 187);
+            background-color:  #bf0025;
             padding-bottom: 25px;
         }
 
