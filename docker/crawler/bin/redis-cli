@@ -24,7 +24,7 @@ do
 done
 
 if [ "$HOST" == "" ]; then
-  HOST=${redis_host:-127.0.0.1}
+  HOST=redis # docker container
 fi
 
 /usr/bin/redis-cli -h $HOST $argv
