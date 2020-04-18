@@ -1,9 +1,8 @@
-version: '2'
-services: 
+version: "2"
+services:
   vscovid-crawler:
     build: .
-    volumes: 
-      - .:/home/ubuntu/vscovid-crawler
+    volumes:
+      - .:/app
     ports:
-      - "8080:80"
-    entrypoint: /home/ubuntu/vscovid-crawler/docker/entrypoint.sh
+      - 8080:80
