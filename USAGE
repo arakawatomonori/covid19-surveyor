@@ -40,3 +40,4 @@ USAGE
 
     make slack-check-results
         slackで質問DMを送って回答された結果の一覧を表示します
+
