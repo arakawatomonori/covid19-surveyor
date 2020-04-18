@@ -10,6 +10,7 @@ RUN apt-get update && \
       nginx \
       fcgiwrap \
       squid \
+      redis-tools \
       && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -25,4 +26,5 @@ COPY . /app
 COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 
+COPY docker/crawler/bin/redis-cli /usr/local/sbin/redis-cli
 EXPOSE 80
