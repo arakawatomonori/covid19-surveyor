@@ -60,12 +60,13 @@ $ make test
 
 ```
 docker build -t vscovid-crawler .
-docker run -it --rm -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh vscovid-crawler
+docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler
+docker run -it --rm -v $(pwd):/app vscovid-crawler bash
 ```
 
 ## Run with docker-compose
 
 ```
-$ docker-compose build
-$ docker-compose up
+docker-compose build
+docker-compose up
 ```
