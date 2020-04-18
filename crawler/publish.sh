@@ -282,7 +282,9 @@ header=`cat <<EOM
         </h1>
         <a class="twitter-share-button"
             href="https://twitter.com/intent/tweet?text=Hello%20world"
-            data-size="large">
+            data-size="large"
+            style="transform:scale(3.0, 3.0);"
+            >
             Tweet
         </a>
         <div class="search">
