@@ -17,5 +17,5 @@ echo_indent(){
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	return 0
+	exit 0
 fi
