@@ -61,7 +61,7 @@ $ make test
 ```
 docker build -t vscovid-crawler .
 docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler
-docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler bash
+docker run -it --rm -v $(pwd):/app vscovid-crawler bash
 ```
 
 ## Run with docker-compose
