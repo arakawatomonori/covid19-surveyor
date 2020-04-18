@@ -1,4 +1,5 @@
-
+#!/bin/bash
+set -e
 
 echo_green(){
   echo -e "\t\e[32m $1 \e[m"
