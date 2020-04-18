@@ -19,5 +19,8 @@ RUN ln -s /etc/nginx/sites-available/vscovid-crawler.conf /etc/nginx/sites-enabl
 
 COPY config/squid.conf /etc/squid/squid.conf
 
+COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+
 EXPOSE 80
 CMD ["bash"]
