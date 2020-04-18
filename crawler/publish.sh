@@ -48,12 +48,17 @@ head=`cat <<EOM
         }
 
         .card-content > .top > p {
-            color: rgb(51, 51, 51);
+            color: rgb(94, 77, 187);
+            font-weight: bold;
+            font-size: 1.5em;
+            text-decoration: underline;
         }
 
         .card-content > .top > h2 {
             margin-bottom: 16px;
             color: rgb(51, 51, 51);
+            font-weight:nomal;
+            font-size: 1.2em;
         }
 
         .card-content > .bottom {
