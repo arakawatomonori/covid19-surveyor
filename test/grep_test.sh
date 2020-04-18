@@ -45,4 +45,4 @@ else
 	echo_indent expect $expect
 	echo_indent actual $actual
 	exit 1
-fii
+fi
