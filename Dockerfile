@@ -11,6 +11,7 @@ RUN apt-get update && \
       fcgiwrap \
       squid \
       redis-tools \
+      poppler-utils \
       && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

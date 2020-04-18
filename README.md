@@ -26,7 +26,7 @@ cp .wgetrc ~/
 ```
 
 ## Setup for macOS
-- `brew install wget jq nginx fcgiwrap squid`
+- `brew install wget jq nginx fcgiwrap squid poppler`
 
 ### Install GNU xargs in macOS
 
