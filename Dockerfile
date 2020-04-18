@@ -26,5 +26,5 @@ COPY . /app
 COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 
-COPY docker/crawler/bin /usr/local/bin
+COPY docker/crawler/bin /usr/local/sbin
 EXPOSE 80
