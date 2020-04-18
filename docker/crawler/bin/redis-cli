@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source .env
-
 declare -i argc=0
 declare -a argv=()
 
