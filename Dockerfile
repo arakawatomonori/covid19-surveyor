@@ -26,5 +26,5 @@ COPY . /app
 COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 
-ENV PATH /app/bin:$PATH
+COPY docker/crawler/bin /usr/local/bin
 EXPOSE 80
