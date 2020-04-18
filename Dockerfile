@@ -14,10 +14,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ADD config/nginx_config /etc/nginx/sites-available/vscovid-crawler.conf
+COPY config/nginx_config /etc/nginx/sites-available/vscovid-crawler.conf
 RUN ln -s /etc/nginx/sites-available/vscovid-crawler.conf /etc/nginx/sites-enabled/vscovid-crawler.conf
 
-ADD config/squid.conf /etc/squid/squid.conf
+COPY config/squid.conf /etc/squid/squid.conf
 
 EXPOSE 80
 CMD ["bash"]
