@@ -24,7 +24,6 @@ for line in `cat tmp/rank.txt`; do
 done
 
 source .env
-channels_name=vscovid19
 
 . ./slack-bot/url-map.sh
 channels_id=`get_channels_id`

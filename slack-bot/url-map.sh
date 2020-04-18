@@ -1,6 +1,5 @@
 #!/bin/bash
 source .env
-channels_name=vscovid19
 ts=`date '+%s'`
 
 # チームのチャンネルID取得
@@ -23,8 +22,8 @@ get_channels_id() {
 		# キャッシュを復元
 		channels_list=`cat $channels_list_file`
 	fi
-	# channels_listをchannels_nameで絞り込んでchannels_idを得る
-	channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channels_name}'")' | jq .id`
+	# channels_listをslack_channelで絞り込んでchannels_idを得る
+	channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${slack_channel}'")' | jq .id`
 	channels_id=${channels_id:1:-1}
 	echo $channels_id
 	return 0
