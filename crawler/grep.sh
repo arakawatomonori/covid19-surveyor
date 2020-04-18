@@ -7,6 +7,7 @@ set -e
 ###
 ### Usage
 ### ./grep.sh
+### ./crawler/grep.sh ${DATA_PATH}
 ###
 
 # 配列初期化
