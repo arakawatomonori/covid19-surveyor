@@ -52,6 +52,10 @@ $ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 
 ## Development
 
+Join our Slack workspace!
+- https://join.slack.com/t/cfj/shared_invite/zt-88tbjehh-_ANL8iwMkwAuuBtXqiyPYg
+- Join #covid19-surveyor-dev channel!
+
 ```
 $ make test
 ```
