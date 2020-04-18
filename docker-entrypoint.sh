@@ -2,7 +2,7 @@
 
 if [ "$1" == "" ]; then
   # import all
-  make -C /app test
+  make -C /home/ubuntu/vscovid-crawler test
 
   $(which nginx) -t
   /etc/init.d/nginx start

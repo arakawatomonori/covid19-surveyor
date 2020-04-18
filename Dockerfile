@@ -21,8 +21,8 @@ RUN ln -s /etc/nginx/sites-available/vscovid-crawler.conf /etc/nginx/sites-enabl
 
 COPY config/squid.conf /etc/squid/squid.conf
 
-WORKDIR /app
-COPY . /app
+WORKDIR /home/ubuntu/vscovid-crawler
+COPY . /home/ubuntu/vscovid-crawler
 
 COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
