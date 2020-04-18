@@ -1,6 +1,6 @@
 version: "2"
 services:
-  vscovid-crawler:
+  crawler:
     build: .
     volumes:
       - .:/app
