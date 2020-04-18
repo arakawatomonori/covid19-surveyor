@@ -8,6 +8,7 @@ www-data/*.jp
 www-data/wget-log*
 *.jp
 grep_*
+!grep_test.sh
 *.swp
 *.tmp
 *.log
