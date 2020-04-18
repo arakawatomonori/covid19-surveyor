@@ -59,6 +59,19 @@ head=`cat <<EOM
             color: rgb(51, 51, 51);
             font-weight:nomal;
             font-size: 1.2em;
+            max-height: 8em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content > .top > h2::after {
+            display: block;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2em;
+            top: 6em;
+            background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%);
         }
 
         .card-content > .bottom {
