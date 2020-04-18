@@ -22,5 +22,8 @@ COPY config/squid.conf /etc/squid/squid.conf
 COPY docker-entrypoint.sh /usr/local/sbin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 
+WORKDIR /app
+COPY . /app
+
 EXPOSE 80
 CMD ["bash"]
