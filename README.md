@@ -59,13 +59,11 @@ $ make test
 ## Run with docker
 
 ```
-cd docker
 docker build -t vscovid-crawler .
-cd ..
-docker run --rm -d -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh -it vscovid-crawler
+docker run -it --rm -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh vscovid-crawler
 ```
 
-## Run with docker-compose 
+## Run with docker-compose
 
 ```
 $ docker-compose build
