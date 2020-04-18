@@ -2,6 +2,7 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 ENV=$(environment)
+REDIS_HOST := $(or $(redis_host),$(redis_host),127.0.0.1)
 
 .PHONY: all
 all: usage
@@ -56,21 +57,21 @@ slack-start-map:
 # clear
 .PHONY: slack-clear-offer
 slack-clear-offer:
-	redis-cli DEL vscovid-crawler:offered-members
+	redis-cli -h $(REDIS_HOST) DEL vscovid-crawler:offered-members
 
 # check
 .PHONY: slack-check-offer
 slack-check-offer:
-	redis-cli SMEMBERS vscovid-crawler:offered-members
+	redis-cli -h $(REDIS_HOST) SMEMBERS vscovid-crawler:offered-members
 
 .PHONY: slack-check-queue
 slack-check-queue:
-	redis-cli KEYS vscovid-crawler:queue-*
+	redis-cli -h $(REDIS_HOST) KEYS vscovid-crawler:queue-*
 
 .PHONY: slack-check-jobs
 slack-check-jobs:
-	redis-cli KEYS vscovid-crawler:job-*
+	redis-cli -h $(REDIS_HOST) KEYS vscovid-crawler:job-*
 
 .PHONY: slack-check-results
 slack-check-results:
-	redis-cli KEYS vscovid-crawler:result-*
+	redis-cli -h $(REDIS_HOST) KEYS vscovid-crawler:result-*
