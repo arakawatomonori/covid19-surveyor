@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
 
 # import all
 make -C /app test
