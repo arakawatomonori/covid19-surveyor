@@ -213,7 +213,7 @@ head=`cat <<EOM
             word-break: break-all;
         }
 
-        iframe.twitter-widget-0 {
+        iframe#twitter-widget-0 {
             transform: scale(3.0, 3.0) ;
         }
 
