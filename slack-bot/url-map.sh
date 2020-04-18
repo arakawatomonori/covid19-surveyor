@@ -4,6 +4,7 @@ ts=`date '+%s'`
 
 # チームのチャンネルID取得
 # 一日に一回でいい
+# tested
 get_channels_id() {
 	channels_list_file="tmp/channels_list.json"
 	channels_list_ts=0
@@ -13,7 +14,6 @@ get_channels_id() {
 	# ファイルのタイムスタンプが一日経過しているか
 	channels_list_diff=$((ts - channels_list_ts))
 	if [ $channels_list_diff -gt 86400 ]; then
-		echo get channels list
 		# 全チャンネルの一覧を取得
 		channels_list=`wget -q -O - --post-data "token=${slack_token}&exclude_archived=true" https://slack.com/api/channels.list`
 		# ファイルにキャッシュ
@@ -31,6 +31,7 @@ get_channels_id() {
 
 # チャンネルのメンバー取得
 # 十分間に一回でいい
+# tested
 get_members_list() {
 	channels_id=$1
 	members_list_file="tmp/members_list.json"
@@ -41,7 +42,6 @@ get_members_list() {
 	# ファイルのタイムスタンプが十分間経過しているか
 	members_list_diff=$((ts - members_list_ts))
 	if [ $members_list_diff -gt 600 ]; then
-		echo get channels info
 		# channels_idのチャンネルの詳細情報を取得
 		channels_info=`wget -q -O - --post-data "token=${slack_token}&channel=${channels_id}" https://slack.com/api/channels.info`
 		# channels_infoからメンバー一覧を取り出す
@@ -65,6 +65,7 @@ get_govname_by_url() {
 	return 0
 }
 
+# tested
 get_title_by_res() {
 	res=$1
 	title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`

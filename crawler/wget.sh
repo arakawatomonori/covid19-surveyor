@@ -11,6 +11,7 @@ set -e
 ### ./wget.sh data/test.csv
 ###
 
+# tested
 get_target_urls() {
 	urls=()
 	# $#は引数の個数
@@ -30,6 +31,7 @@ get_target_urls() {
 	return 0
 }
 
+# tested
 get_target_domains() {
 	domains=()
 	while (( $# > 0 ))
