@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+. ./test/helper.sh
+
 . ./crawler/grep.sh
 
 echo test sanitize_grep_result
