@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+source .env
+
+declare -i argc=0
+declare -a argv=()
+
+while (( $# > 0 ))
+do
+  case $1 in
+    -*)
+      if [[ "$1" =~ 'h' ]]; then
+        HOST=$2
+        shift
+        shift
+      fi
+      ;;
+    *)
+      ((++argc))
+      argv=("${argv[@]}" "$1")
+      shift
+      ;;
+  esac
+done
+
+if [ "$HOST" == "" ]; then
+  HOST=${redis_host:-127.0.0.1}
+fi
+
+redis-cli -h $HOST $argv
