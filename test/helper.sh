@@ -11,3 +11,7 @@ echo_red() {
 echo_indent(){
   echo -e "\t" $1 $2
 }
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	return 0
+fi
