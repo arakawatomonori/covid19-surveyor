@@ -250,6 +250,24 @@ head=`cat <<EOM
             applicable()
         }
     </script>
+
+    <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+        t._e.push(f);
+        };
+
+        return t;
+        }(document, "script", "twitter-wjs"));
+    </script>
 </head>
 EOM
 `
@@ -260,8 +278,13 @@ echo "<body>"
 header=`cat <<EOM
     <div class="header">
         <h1 class="title">
-            VS COVID-19
+            新型コロナウイルス各自治体の経済支援制度まとめ
         </h1>
+        <a class="twitter-share-button"
+            href="https://twitter.com/intent/tweet?text=Hello%20world"
+            data-size="large">
+            Tweet
+        </a>
         <div class="search">
 						<form onsubmit="return false;">
 							<input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
