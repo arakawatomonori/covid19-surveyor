@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-. ./test/helper.sh
+. ./lib/helper.sh
 
 . ./crawler/grep.sh
 
