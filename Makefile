@@ -24,6 +24,7 @@ test:
 .PHONY: wget
 wget:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
+	./crawler/remove-large-files.sh
 
 .PHONY: remove-large-files
 remove-large-files:
