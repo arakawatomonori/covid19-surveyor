@@ -60,17 +60,11 @@ Join our Slack workspace!
 $ make test
 ```
 
-## Run with docker
-
-```
-docker build -t vscovid-crawler .
-docker run -it --rm -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler vscovid-crawler
-docker run -it --rm -v $(pwd):/app vscovid-crawler bash
-```
-
 ## Run with docker-compose
 
 ```
 docker-compose build
 docker-compose up
+docker-compose exec crawler make publish
+docker-compose exec crawler bash
 ```
