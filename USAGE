@@ -3,6 +3,9 @@ USAGE
     make wget
         data/ 内のすべてのURLに対してwget -rを実行します
 
+    make remove-large-files
+        wget で取得したファイル群のうち、不要な大容量ファイルを削除します（mp3 等）
+
     make grep
         www-data/ 内のすべてのHTMLファイルに対してgrepを実行します
         make wgetを先に実行しておく必要があります
@@ -37,4 +40,3 @@ USAGE
 
     make slack-check-results
         slackで質問DMを送って回答された結果の一覧を表示します
-
