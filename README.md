@@ -64,7 +64,7 @@ $ make test
 
 ```
 docker build -t vscovid-crawler .
-docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler
+docker run -it --rm -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler vscovid-crawler
 docker run -it --rm -v $(pwd):/app vscovid-crawler bash
 ```
 
