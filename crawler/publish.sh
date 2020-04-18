@@ -15,11 +15,11 @@ head=`cat <<EOM
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ</title>
-    <meta property="og:title" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
-    <meta property="og:site_name" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
-    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
-    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <title>新型コロナウイルス各自治体の経済支援制度まとめ</title>
+    <meta property="og:title" content="新型コロナウイルス各自治体の経済支援制度まとめ">
+    <meta property="og:site_name" content="新型コロナウイルス各自治体の経済支援制度まとめ">
+    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://help.stopcovid19.jp/">
     <meta property="og:image" content="https://help.stopcovid19.jp/ogimg.png">
@@ -250,24 +250,6 @@ head=`cat <<EOM
             applicable()
         }
     </script>
-
-    <script>window.twttr = (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0],
-        t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-
-        t._e = [];
-        t.ready = function(f) {
-        t._e.push(f);
-        };
-
-        return t;
-        }(document, "script", "twitter-wjs"));
-    </script>
 </head>
 EOM
 `
@@ -278,18 +260,8 @@ echo "<body>"
 header=`cat <<EOM
     <div class="header">
         <h1 class="title">
-            新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
+            VS COVID-19
         </h1>
-        <a class="twitter-share-button"
-            href="https://twitter.com/intent/tweet"
-            data-text="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ"
-            data-url="https://help.stopcovid19.jp/"
-            data-via="codeforJP"
-            data-size="large"
-            style="transform:scale(3.0, 3.0);"
-            >
-            Tweet
-        </a>
         <div class="search">
 						<form onsubmit="return false;">
 							<input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
