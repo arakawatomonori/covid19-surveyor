@@ -15,11 +15,11 @@ head=`cat <<EOM
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>新型コロナウイルス各自治体の経済支援制度まとめ</title>
-    <meta property="og:title" content="新型コロナウイルス各自治体の経済支援制度まとめ">
-    <meta property="og:site_name" content="新型コロナウイルス各自治体の経済支援制度まとめ">
-    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
-    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <title>新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ</title>
+    <meta property="og:title" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
+    <meta property="og:site_name" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
+    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://help.stopcovid19.jp/">
     <meta property="og:image" content="https://help.stopcovid19.jp/ogimg.png">
@@ -278,10 +278,10 @@ echo "<body>"
 header=`cat <<EOM
     <div class="header">
         <h1 class="title">
-            新型コロナウイルス各自治体の経済支援制度まとめ
+            新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
         </h1>
         <a class="twitter-share-button"
-            href="https://twitter.com/intent/tweet?text=Hello%20world"
+            href="https://twitter.com/intent/tweet?text=%90V%8C%5E%83R%83%8D%83i%83E%83C%83%8B%83X%81iCOVID-19%81j%8Ae%8E%A9%8E%A1%91%CC%82%CC%8Co%8D%CF%8Ex%89%87%90%A7%93x%82%DC%82%C6%82%DF"
             data-size="large"
             style="transform:scale(3.0, 3.0);"
             >
