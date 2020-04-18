@@ -30,7 +30,7 @@ channels_id=`get_channels_id`
 
 json=`cat <<EOF
 {
-  "channel": "${slack_channel}",
+  "channel": "${channels_id}",
   "text": "回答者ランキング",
   "blocks": [
                 {
