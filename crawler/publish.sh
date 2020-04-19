@@ -330,17 +330,18 @@ header=`cat <<EOM
         </div>
         <div class="shares">
             <div class="share">
-                <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
-                   data-text="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ " data-url="https://help.stopcovid19.jp/"
-                   data-via="codeforJP" data-related="codeforJP" data-lang="ja" data-dnt="true" data-show-count="false">Tweet</a>
-                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true"
+                        class="twitter-share-button twitter-share-button-rendered twitter-tweet-button"
+                        style="position: static; visibility: visible; width: 75px; height: 20px;"
+                        title="Twitter Tweet Button"
+                        src="https://platform.twitter.com/widgets/tweet_button.6787510241df65d128e2b60207ad4c25.ja.html#dnt=true&amp;id=twitter-widget-0&amp;lang=ja&amp;original_referer=http%3A%2F%2Flocalhost%3A63342%2Fcovid19-surveyor%2Fwww-data%2Findex.html%3F_ijt%3Dh23inifumvkt57mm6cqromu6m2&amp;related=codeforJP&amp;size=m&amp;text=%E6%96%B0%E5%9E%8B%E3%82%B3%E3%83%AD%E3%83%8A%E3%82%A6%E3%82%A4%E3%83%AB%E3%82%B9%EF%BC%88COVID-19%EF%BC%89%E5%90%84%E8%87%AA%E6%B2%BB%E4%BD%93%E3%81%AE%E7%B5%8C%E6%B8%88%E6%94%AF%E6%8F%B4%E5%88%B6%E5%BA%A6%E3%81%BE%E3%81%A8%E3%82%81%20&amp;time=1587308822074&amp;type=share&amp;url=https%3A%2F%2Fhelp.stopcovid19.jp%2F&amp;via=codeforJP"
+                        data-url="https://help.stopcovid19.jp/">
+                </iframe>
             </div>
             <div class="share">
-                <div class="line-it-button" data-lang="ja" data-type="share-a" data-ver="3"
-                     data-url="https://help.stopcovid19.jp" data-color="default" data-size="small" data-count="false"
-                     style="display: none;"></div>
-                <script src="https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js" async="async"
-                        defer="defer"></script>
+                <a href="https://social-plugins.line.me/lineit/share?url=https://help.stopcovid19.jp/">
+                    <img height="20" src="line-share.png">
+                </a>
             </div>
             <div class="share">
                 <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fhelp.stopcovid19.jp&width=135&layout=button&action=like&size=small&share=true&height=65"
