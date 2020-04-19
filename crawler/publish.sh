@@ -331,19 +331,19 @@ EOM
 `
 echo $wrapper_start
 
+. ./lib/url-helper.sh
+
 keys=`redis-cli KEYS "vscovid-crawler:result-*"`
 for key in $keys; do
 	result=`redis-cli GET $key`
 	bool=`echo $result| cut -d',' -f 4`
 	if [ $bool = "true" ]; then
 		url=`echo $result| cut -d',' -f 1`
-		# ドメイン名から自治体名を得る
-		domain=$(cut -d'/' -f 3 <<< $url)
-		govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
+		# URLから自治体名を得る
+		govname=`get_govname_by_url $url`
 		# urlから詳細を得る
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
-		# urlからタイトルを得る
 		title=`grep $path ./result.txt |cut -d':' -f 2`
 		li=`cat <<EOM
 			<li class="card">
