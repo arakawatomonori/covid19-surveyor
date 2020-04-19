@@ -50,36 +50,36 @@ endif
 ###
 
 # start
-.PHONY: slack-start-queue
-slack-start-queue:
-	./slack-bot/url-queue.sh
+.PHONY: slack-bool-queue
+slack-bool-queue:
+	./slack-bot/url-bool-queue.sh
 
-.PHONY: slack-start-map
-slack-start-map:
-	while true; do ./slack-bot/url-map.sh; sleep 1; done
+.PHONY: slack-bool-map
+slack-bool-map:
+	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
 
-.PHONY: slack-start-reduce
-slack-start-reduce:
-	./slack-bot/url-reduce.sh > reduce.csv
+.PHONY: slack-bool-reduce
+slack-bool-reduce:
+	./slack-bot/url-bool-reduce.sh > reduce.csv
 
 # clear
 .PHONY: slack-clear-offer
-slack-clear-offer:
+slack-bool-clear-offer:
 	redis-cli DEL vscovid-crawler:offered-members
 
 # check
-.PHONY: slack-check-offer
-slack-check-offer:
+.PHONY: slack-check-bool-offer
+slack-check-bool-offer:
 	redis-cli SMEMBERS vscovid-crawler:offered-members
 
-.PHONY: slack-check-queue
-slack-check-queue:
+.PHONY: slack-check-bool-queue
+slack-check-bool-queue:
 	redis-cli KEYS vscovid-crawler:queue-*
 
-.PHONY: slack-check-jobs
-slack-check-jobs:
+.PHONY: slack-check-bool-jobs
+slack-check-bool-jobs:
 	redis-cli KEYS vscovid-crawler:job-*
 
-.PHONY: slack-check-results
-slack-check-results:
+.PHONY: slack-check-bool-results
+slack-check-bool-results:
 	redis-cli KEYS vscovid-crawler:result-*

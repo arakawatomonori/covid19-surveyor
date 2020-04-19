@@ -15,6 +15,20 @@ redis_offer(){
 	redis-cli SADD "$namespace:offered-members" $member_id
 }
 
+# redisに存在しないことを確認する
+redis_exists_md5(){
+	namespace=$1
+	md5=$2
+	queue_num=`redis-cli GET $namespace:queue-${md5}`
+	job_num=`redis-cli GET $namespace:job-${md5}`
+	result_num=`redis-cli GET $namespace:result-${md5}`
+	if [ ${#queue_num} = "0" ] && [ ${#job_num} = "0" ] && [ ${#result_num} = "0" ]; then
+		echo 0
+  else
+	  echo 1
+	fi
+}
+
 redis_pop_url_from_queue() {
 	namespace=$1
 	# xxx:queue-* を一件GET
