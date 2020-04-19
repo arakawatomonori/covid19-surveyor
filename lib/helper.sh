@@ -69,7 +69,7 @@ assert_not_empty(){
 	actual=$1
 
 	# 判定
-	if [ -n "$actual" ]; then
+	if [ "$actual" != "" ]; then
 		test_passed
 	else
 		test_failed "(not empty)" "$actual"
