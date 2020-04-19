@@ -48,10 +48,7 @@ head=`cat <<EOM
         }
 
         .card-content > .top > p {
-            color: rgb(94, 77, 187);
-            font-weight: bold;
-            font-size: 1.5em;
-            text-decoration: underline;
+            font-size: 0.8em;
         }
 
         .card-content > .top > h2 {
@@ -219,7 +216,6 @@ head=`cat <<EOM
         }
 
         iframe#twitter-widget-0 {
-            transform: scale(3.0, 3.0) ;
         }
 
     </style>
