@@ -16,7 +16,7 @@ echo_red() {
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- #
 # テスト成功出力
 test_passed(){
-	echo_green "    passed"
+	echo_green "\tpassed"
 	return 0
 }
 
@@ -27,9 +27,9 @@ test_failed(){
 	actual=$2
 
 	# 出力
-	echo_red   "    failed"
-	echo       "        expect: $expect"
-	echo       "        actual: $actual"
+	echo_red   "\tfailed"
+	echo -e    "\t\texpect: $expect"
+	echo -e    "\t\tactual: $actual"
 	exit 1
 }
 
