@@ -54,7 +54,7 @@ main() {
 
 	cd www-data
 	# urls配列の中身をwgetに渡している
-	echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
+	echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(html|pdf)$" --no-check-certificate {}
 	echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
 	cd -
 }
