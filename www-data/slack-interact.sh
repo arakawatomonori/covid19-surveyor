@@ -38,9 +38,9 @@ if [ "$event_type" == "block_actions" ]; then
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
         result=`redis-cli GET "vscovid-crawler:result-$md5"`
         if [ $result != "" ]; then
-                users=`echo $result|cut -d',' -f 2`
-                users=$users:$user_id
-                redis-cli SET "vscovid-crawler:result-$md5" "${url},${users},${timestamp},${result}" > /dev/null
+                user_ids=`echo $result|cut -d',' -f 2`
+                user_ids=$users:$user_id
+                redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_ids},${timestamp},${result}" > /dev/null
         else
                 redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
         fi

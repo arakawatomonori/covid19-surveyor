@@ -102,7 +102,12 @@ send_message() {
 		# 一度解析済みのURLを得て重複チェックする
 		key=`redis-cli KEYS vscovid-crawler:result-* | tail -n 1`
 		val=`redis-cli GET $key`
-		url=`echo $result|cut -d',' -f 1`
+		url=`echo $val|cut -d',' -f 1`
+		user_ids=`echo $val|cut -d',' -f 2`
+		# 既に一度チェックした人には送らない
+		if [ $user_ids == *"$member_id"* ]; then
+			return 0
+		fi
 	fi
 	echo $url
 	# URLからmd5を得る
