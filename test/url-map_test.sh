@@ -15,7 +15,6 @@ echo test get_members_list
 ## setup
 rm -f "tmp/members_list.json"
 channels_id=`get_channels_id`
-# TODO: 要修正。この行で「jq: error (at <stdin>:1): Cannot iterate over null (null)」というエラー出力が出ています。
 actual=`get_members_list $channels_id`
 assert_not_empty "${#actual}"
 
