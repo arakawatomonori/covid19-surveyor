@@ -30,14 +30,22 @@ if [ "$event_type" == "block_actions" ]; then
         timestamp=`date '+%s'`
         result=`echo $json | jq .actions[0].value`
         result=${result:1:-1}
-        response_url=`echo $json | jq .response_url`
+        action_id=`echo $json | jq .actions[0].action_id`
+        echo $action_id|grep '-select'
+        namespace="vscovid-crawler"
+        if [$? -eq 0];then
+                namespace="vscovid-crawler-url-struct"
+        else
+                namespace="vscovid-crawler"
+        fi
         # vscovid-crawler:offered-membersからIDをDEL
-        redis-cli SREM "vscovid-crawler:offered-members" $user_id > /dev/null
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
-        redis-cli DEL "vscovid-crawler:job-$md5" > /dev/null
+        redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-        redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
         res=`cat <<EOF
+        fi
 {
 	"token": "${slack_token}",
 	"channel": "${channel_id}",

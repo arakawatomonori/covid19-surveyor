@@ -1,37 +1,23 @@
 
+source .env
 
 . ./lib/slack-helper.sh
 . ./lib/url-helper.sh
+. ./lib/redis-helper.sh
 
-
-pop_url_from_queue() {
-	# vscovid-crawler:queue-* を一件GET
-	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
-	# URLを得る
-	url=`redis-cli GET ${key}`
-	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-	redis-cli DEL "vscovid-crawler:queue-$md5"
-	echo $url
-}
-
-push_job() {
-
-}
-
-
+namespace="vscovid-crawler"
 
 send_message() {
 	member_id=$1
-	# vscovid-crawler:offered-members にいない人にだけDMを送る
-	already_offered=`redis-cli SISMEMBER vscovid-crawler:offered-members ${member_id}`
+        # オファー済みか確認
+	already_offered=`redis_already_offered $namespace $member_id`
 	if [ $already_offered = "1" ]; then
 		return 0
 	fi
-	# vscovid-crawler:offered-members をSADD
-	redis-cli SADD "vscovid-crawler:offered-members" $member_id
-	echo offer to $member_id
-	url=`pop_url_from_queue`
-	echo $url
+	redis_offer $namespace $member_id
+        # キューから一件取り出す
+	url=`redis_pop_url_from_queue $namespace`
+
 	md5=`get_md5_by_url $url`
 	url_not_found=`check_url_exists $url`
 	# 404だった場合
@@ -40,15 +26,12 @@ send_message() {
 	fi
 	title=`get_title_by_url ${url}`
 	orgname=`get_orgname_by_url ${url}`
-	echo $orgname
 	# unixtime
 	timestamp=`date '+%s'`
-	# vscovid-crawler:job-{URLのMD5ハッシュ} をSET
-	redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
+
+        redis_push_job $namespace $md5 $url $member_id $timestamp
 	# Slack DM送信
-	im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
-	im_id=`echo $im_open | jq .channel.id`
-	im_id=${im_id:1:-1}
+        im_id=`open_im $member_id`
 	json=`cat <<EOF
 {
   "channel": "${im_id}",

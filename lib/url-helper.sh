@@ -38,6 +38,7 @@ get_md5_by_url() {
 	url=$1
 	# URLからmd5を得る
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
+	echo $md5
 }
 
 check_url_exists() {
