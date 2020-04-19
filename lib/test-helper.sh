@@ -76,7 +76,7 @@ assert_not_empty(){
 	fi
 }
 
-# helper.sh が直接実行されたら exit 0 する
+# *.sh が直接実行されたら exit 0 する
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     exit 0
 fi

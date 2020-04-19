@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+. ./lib/url-helper.sh
 . ./slack-bot/url-map.sh
 
 remove_newline_and_comma() {
@@ -14,9 +15,7 @@ for key in $keys; do
 	bool=`echo $result| cut -d',' -f 4`
 	if [ $bool = "true" ]; then
 		url=`echo $result| cut -d',' -f 1`
-		# ドメイン名から自治体名を得る
-		domain=$(cut -d'/' -f 3 <<< $url)
-		govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
+		govname=`get_orgname_by_url $url`
 		# urlからpathを得る
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
