@@ -80,4 +80,4 @@ docker-compose up
 
 開発に参加したい方は下記の招待リンクから Slack の Workspace に参加いただき、 `#covid19-surveyor-dev` チャンネルに参加してください。
 
-- https://join.slack.com/t/cfj/shared_invite/zt-88tbjehh-_ANL8iwMkwAuuBtXqiyPYg
+- https://cfjslackin.herokuapp.com/
