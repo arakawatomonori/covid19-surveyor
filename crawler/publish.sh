@@ -48,16 +48,17 @@ head=`cat <<EOM
         }
 
         .card-content > .top > p {
-            color: rgb(94, 77, 187);
-            font-weight: bold;
-            font-size: 1.5em;
-            text-decoration: underline;
+            font-size: 0.8em;
+            text-decoration: none;
+            color: black;
         }
 
         .card-content > .top > h2 {
             margin-bottom: 16px;
             color: rgb(51, 51, 51);
             font-weight:nomal;
+            font-size: 2em;
+            line-height: 1.2em;
             font-size: 1.2em;
             max-height: 8em;
             overflow: hidden;
@@ -232,7 +233,6 @@ head=`cat <<EOM
         }
 
         iframe#twitter-widget-0 {
-            transform: scale(3.0, 3.0) ;
         }
 
     </style>
@@ -362,9 +362,8 @@ for key in $keys; do
 			</li>
 EOM
 `
-		echo $li
-	fi
-done
+    echo $li
+done < reduce.csv
 
 wrapper_end=`cat <<EOM
 					</ul>

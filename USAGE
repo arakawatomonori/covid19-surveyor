@@ -24,13 +24,17 @@ USAGE
     make test
         test/ 配下にある単体テストを実行します
 
-    make slack-queue
+    make slack-start-queue
         集計結果を元にSlackで質問DMを送るためのキューを追加します
         make aggregateを先に実行しておく必要があります
 
-    make slack-map
+    make slack-start-map
         slack-queueからURLを取り出してSlackのメンバーにDMを送信します
         make slack-queueを先に実行しておく必要があります
+
+    make slack-start-reduce
+        slack-resultから結果URLを取り出してreduce.csvを生成します
+        make slack-mapでresultsを集めておく必要があります
 
     make slack-check-offer
         slackで質問DMを送って回答待ちのメンバーのID一覧を表示します
