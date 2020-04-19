@@ -19,9 +19,9 @@ echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.lo
 
 if [ "$event_type" == "block_actions" ]; then
         channel_id=`echo $json | jq .channel.id`
-	channel_id=${channel_id:1:-1}
-	ts=`echo $json | jq .container.message_ts`
-	ts=${ts:1:-1}
+        channel_id=${channel_id:1:-1}
+        ts=`echo $json | jq .container.message_ts`
+        ts=${ts:1:-1}
         user_id=`echo $json | jq .user.id`
         user_id=${user_id:1:-1}
         url=`echo $json | jq .message.text`
@@ -36,7 +36,14 @@ if [ "$event_type" == "block_actions" ]; then
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
         redis-cli DEL "vscovid-crawler:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-        redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        result=`redis-cli GET "vscovid-crawler:result-$md5"`
+        if [ $result != "" ]; then
+                users=`echo $result|cut -d',' -f 2`
+                users=$users:$user_id
+                redis-cli SET "vscovid-crawler:result-$md5" "${url},${users},${timestamp},${result}" > /dev/null
+        else
+                redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        fi
         res=`cat <<EOF
 {
 	"token": "${slack_token}",

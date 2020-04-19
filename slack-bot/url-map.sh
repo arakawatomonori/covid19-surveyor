@@ -86,11 +86,24 @@ send_message() {
 	if [ $already_offered = "1" ]; then
 		return 0
 	fi
+	# vscovid-crawler:offered-members をSADD
+	redis-cli SADD "vscovid-crawler:offered-members" $member_id
 	echo offer to $member_id
 	# vscovid-crawler:queue-* を一件GET
 	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
-	# URLを得る
-	url=`redis-cli GET ${key}`
+	if [ "$key" = "" ]; then
+		key=`redis-cli KEYS vscovid-crawler:result-* | tail -n 1`
+		val=`redis-cli GET ${key}`
+		url=`echo $val|cut -d',' -f 1`
+		# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
+		redis-cli DEL "vscovid-crawler:queue-$md5"
+	else
+		# キューが空
+		# 一度解析済みのURLを得て重複チェックする
+		key=`redis-cli KEYS vscovid-crawler:result-* | tail -n 1`
+		val=`redis-cli GET $key`
+		url=`echo $result|cut -d',' -f 1`
+	fi
 	echo $url
 	# URLからmd5を得る
 	md5=`echo $url | md5sum | cut -d' ' -f 1`
@@ -108,10 +121,6 @@ send_message() {
 	echo $govname
 	# unixtime
 	timestamp=`date '+%s'`
-	# vscovid-crawler:offered-members をSADD
-	redis-cli SADD "vscovid-crawler:offered-members" $member_id
-	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-	redis-cli DEL "vscovid-crawler:queue-$md5"
 	# vscovid-crawler:job-{URLのMD5ハッシュ} をSET
 	redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
 	# Slack DM送信
