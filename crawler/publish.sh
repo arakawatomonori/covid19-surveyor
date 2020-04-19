@@ -318,8 +318,7 @@ EOM
 `
 echo $wrapper_start
 
-keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for line in `cat reduce.csv`; do
+while read line; do
     govname=`echo $line| cut -d',' -f 1`
     url=`echo $line| cut -d',' -f 2`
     title=`echo $line| cut -d',' -f 3`
@@ -330,11 +329,11 @@ for line in `cat reduce.csv`; do
                         rel="noopener noreferrer">
                         <div class="card-content">
                                 <div class="top">
-                                        <h2>$govnameから ： $title</h2>
+                                        <h2>$govname から ： $title</h2>
                                         <p>$desc<p>
                                 </div>
                                 <div class="bottom">
-                                        <div class="url">$govnameのサイトへ</div>
+                                        <div class="url">$govname のサイトへ</div>
                                 </div>
                         </div>
                 </a>
@@ -342,7 +341,7 @@ for line in `cat reduce.csv`; do
 EOM
 `
     echo $li
-done
+done < reduce.csv
 
 wrapper_end=`cat <<EOM
 					</ul>

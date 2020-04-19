@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 
 . ./slack-bot/url-map.sh
 
@@ -14,9 +16,9 @@ for key in $keys; do
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
 		# urlからdescriptionを得る
-		description=`grep $path ./result.txt |cut -d':' -f 2`
+		description=`grep $path ./result.txt |cut -d':' -f 2|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'`
 		# urlからタイトルを得る
-		title=`get_title_by_url $url`
+		title=`get_title_by_url $url|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'`
 		echo $govname,$url,$title,$description
   fi
 done
