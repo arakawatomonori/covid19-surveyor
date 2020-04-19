@@ -76,8 +76,8 @@ docker-compose up
 
 ## For developers
 
-開発についての情報は [Code for Japan](https://www.code4japan.org/) が運営する Slack Workspace で行っています。
+開発についての議論などは [Code for Japan](https://www.code4japan.org/) が運営する Slack Workspace で行っています。
 
-開発に参加したい方は、下記の招待リンクから Slack の Workspace に参加いただき、 `#covid19-surveyor-dev` チャンネルに参加してください。
+開発に参加したい方は下記の招待リンクから Slack の Workspace に参加いただき、 `#covid19-surveyor-dev` チャンネルに参加してください。
 
 - https://join.slack.com/t/cfj/shared_invite/zt-88tbjehh-_ANL8iwMkwAuuBtXqiyPYg
