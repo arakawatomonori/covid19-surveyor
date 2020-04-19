@@ -64,7 +64,7 @@ $ make test
 
 ```
 docker-compose build
-docker-compose up
+docker-compose up # add `-d` to run in background
 docker-compose exec crawler make publish
 docker-compose exec crawler bash
 ```
