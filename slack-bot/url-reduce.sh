@@ -15,7 +15,7 @@ for key in $keys; do
 	bool=`echo $result| cut -d',' -f 4`
 	if [ $bool = "true" ]; then
 		url=`echo $result| cut -d',' -f 1`
-		govname=`get_govname_by_url $url`
+		govname=`get_orgname_by_url $url`
 		# urlからpathを得る
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
