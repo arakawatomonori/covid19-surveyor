@@ -1,3 +1,7 @@
+#!/bin/bash
+source .env
+ts=`date '+%s'`
+
 . ./slack-bot/url-map.sh
 
 send_message() {
