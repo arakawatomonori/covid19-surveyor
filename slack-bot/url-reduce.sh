@@ -3,6 +3,11 @@ set -e
 
 . ./slack-bot/url-map.sh
 
+remove_newline_and_comma() {
+	result=`echo $1|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
+	echo $result
+}
+
 keys=`redis-cli KEYS "vscovid-crawler:result-*"`
 for key in $keys; do
 	result=`redis-cli GET $key`
@@ -16,9 +21,9 @@ for key in $keys; do
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
 		# urlからdescriptionを得る
-		description=`grep $path ./result.txt |cut -d':' -f 2|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
+		description=`grep $path ./result.txt |cut -d':' -f 2|remove_newline_and_comma $(cat)`
 		# urlからタイトルを得る
-		title=`get_title_by_url $url|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
+		title=`get_title_by_url $url|remove_newline_and_comma $(cat)`
 		echo $govname,$url,$title,$description
   fi
 done
