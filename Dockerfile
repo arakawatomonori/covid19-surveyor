@@ -3,7 +3,7 @@ MAINTAINER TAKANO Mitsuhiro
 # @takano32 <takano32@gmail.com>
 
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
       make \
       wget \
       jq \
