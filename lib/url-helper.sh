@@ -14,7 +14,7 @@ get_domain_by_url() {
 get_orgname_by_url() {
     url=$1
     domain=`get_domain_by_url $url`
-    govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
+    govname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
     echo $govname
     return 0
 }
