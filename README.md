@@ -67,5 +67,6 @@ docker-compose build
 docker-compose up # add `-d` to run in background
 # open http://localhost:8080/
 docker-compose exec crawler make publish
+docker-compose exec crawler make wget
 docker-compose exec crawler bash
 ```
