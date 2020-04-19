@@ -319,38 +319,29 @@ EOM
 echo $wrapper_start
 
 keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for key in $keys; do
-	result=`redis-cli GET $key`
-	bool=`echo $result| cut -d',' -f 4`
-	if [ $bool = "true" ]; then
-		url=`echo $result| cut -d',' -f 1`
-		# ドメイン名から自治体名を得る
-		domain=$(cut -d'/' -f 3 <<< $url)
-		govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
-		# urlから詳細を得る
-		path=${url//http:\/\//}
-		path=${path//https:\/\//}
-		# urlからタイトルを得る
-		title=`grep $path ./result.txt |cut -d':' -f 2`
-		li=`cat <<EOM
-			<li class="card">
-					<a href="${url}" target="_blank"
-							rel="noopener noreferrer">
-							<div class="card-content">
-									<div class="top">
-											<h2>$title</h2>
-											<p>$govname から提供されています。</p>
-									</div>
-									<div class="bottom">
-											<div class="url">詳細を確認する</div>
-									</div>
-							</div>
-					</a>
-			</li>
+for line in `cat reduce.csv`; do
+    govname=`echo $line| cut -d',' -f 1`
+    url=`echo $line| cut -d',' -f 2`
+    title=`echo $line| cut -d',' -f 3`
+    desc=`echo $line| cut -d',' -f 4`
+    li=`cat <<EOM
+        <li class="card">
+                <a href="${url}" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="card-content">
+                                <div class="top">
+                                        <h2>$govnameから ： $title</h2>
+                                        <p>$desc<p>
+                                </div>
+                                <div class="bottom">
+                                        <div class="url">$govnameのサイトへ</div>
+                                </div>
+                        </div>
+                </a>
+        </li>
 EOM
 `
-		echo $li
-	fi
+    echo $li
 done
 
 wrapper_end=`cat <<EOM
