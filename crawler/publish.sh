@@ -49,13 +49,16 @@ head=`cat <<EOM
 
         .card-content > .top > p {
             font-size: 0.8em;
+            text-decoration: none;
+            color: black;
         }
 
         .card-content > .top > h2 {
             margin-bottom: 16px;
             color: rgb(51, 51, 51);
             font-weight:nomal;
-            font-size: 1.2em;
+            font-size: 2em;
+            line-height: 1.2em;
         }
 
         .card-content > .bottom {
