@@ -7,18 +7,9 @@ set -e
 
 echo test get_target_urls
 actual=`get_target_urls data/test.csv`
-expect="http://www.kantei.go.jp https://www.cao.go.jp http://www.bousai.go.jp https://www.mhlw.go.jp https://www.meti.go.jp"
-if [ "$actual" = "$expect" ]; then
-	test_passed
-else
-	test_failed "$expect" "$actual"
-fi
+assert_equal "http://www.kantei.go.jp https://www.cao.go.jp http://www.bousai.go.jp https://www.mhlw.go.jp https://www.meti.go.jp" "$actual"
 
 echo test get_target_domains
-actual=`get_target_domains $actual`
-expect="www.kantei.go.jp www.cao.go.jp www.bousai.go.jp www.mhlw.go.jp www.meti.go.jp"
-if [ "$actual" = "$expect" ]; then
-	test_passed
-else
-	test_failed "$expect" "$actual"
-fi
+urls="https://www.cao.go.jp http://www.bousai.go.jp"
+domains=`get_target_domains $urls`
+assert_equal "www.cao.go.jp www.bousai.go.jp" "$domains"
