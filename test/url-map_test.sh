@@ -18,8 +18,9 @@ fi
 echo test get_members_list
 ## setup
 rm -f "tmp/members_list.json"
+channels_id=`get_channels_id`
 actual=`get_members_list $channels_id`
-if [ -n "${#actual}" ]; then
+if [ "$actual" != "" ]; then
 	test_passed
 else
 	test_failed "not null" "$actual"
