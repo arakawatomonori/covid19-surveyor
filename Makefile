@@ -58,6 +58,10 @@ slack-start-queue:
 slack-start-map:
 	while true; do ./slack-bot/url-map.sh; sleep 1; done
 
+.PHONY: slack-start-reduce
+slack-start-reduce:
+	./slack-bot/url-reduce.sh > reduce.csv
+
 # clear
 .PHONY: slack-clear-offer
 slack-clear-offer:
