@@ -11,6 +11,8 @@ set -e
 ### ./wget.sh data/test.csv
 ###
 
+. ./lib/url-helper.sh
+
 # tested
 get_target_urls() {
 	urls=()
@@ -36,10 +38,7 @@ get_target_domains() {
 	domains=()
 	while (( $# > 0 ))
 	do
-		url=$1
-		# urlからhttp://とhttps://を削る
-		domain=${url//http:\/\//}
-		domain=${domain//https:\/\//}
+		domain=`get_domain_by_url $1`
 		# domains配列に追加
 		domains=("${domains} $domain")
 		shift

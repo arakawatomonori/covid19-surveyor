@@ -1,11 +1,13 @@
 # urls.txtの内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 
+. ./lib/url-helper.sh
+
 for url in `cat urls.txt`; do
 	# URLの整形
 	url=${url:9:-1}l
 	echo path $url
-	domain=$(cut -d'/' -f 1 <<< $url)
+	domain=`get_domain_by_url $url`
 	echo domain $domain
 	host=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
 	echo host $host

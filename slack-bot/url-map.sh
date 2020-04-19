@@ -2,6 +2,8 @@
 source .env
 ts=`date '+%s'`
 
+. ./lib/url-helper.sh
+
 # チームのチャンネルID取得
 # 一日に一回でいい
 # tested
@@ -53,15 +55,6 @@ get_members_list() {
 		members_list=`cat $members_list_file`
 	fi
 	echo $members_list
-	return 0
-}
-
-# URLから自治体名を得る
-get_govname_by_url() {
-	url=$1
-	domain=`echo $url | cut -d'/' -f 3`
-	govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
-	echo $govname
 	return 0
 }
 

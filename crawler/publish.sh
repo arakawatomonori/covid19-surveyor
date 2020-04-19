@@ -331,6 +331,8 @@ EOM
 `
 echo $wrapper_start
 
+. ./lib/url-helper.sh
+
 while read line; do
     govname=`echo $line| cut -d',' -f 1`
     url=`echo $line| cut -d',' -f 2`
