@@ -11,7 +11,7 @@ expect="www.kantei.go.jp"
 assert_equal "$expect" "$actual"
 
 
-echo test get_govname_by_url
-actual=`get_govname_by_url https://www.mhlw.go.jp`
+echo test get_orgname_by_url
+actual=`get_orgname_by_url https://www.mhlw.go.jp`
 expect="厚生労働省"
 assert_equal "$expect" "$actual"

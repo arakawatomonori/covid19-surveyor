@@ -97,7 +97,7 @@ send_message() {
 		return 0
 	fi
 	title=`get_title_by_url ${url}`
-	govname=`get_govname_by_url ${url}`
+	govname=`get_orgname_by_url ${url}`
 	echo $govname
 	# unixtime
 	timestamp=`date '+%s'`
