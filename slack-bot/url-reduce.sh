@@ -16,9 +16,9 @@ for key in $keys; do
 		path=${url//http:\/\//}
 		path=${path//https:\/\//}
 		# urlからdescriptionを得る
-		description=`grep $path ./result.txt |cut -d':' -f 2|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'`
+		description=`grep $path ./result.txt |cut -d':' -f 2|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
 		# urlからタイトルを得る
-		title=`get_title_by_url $url|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'`
+		title=`get_title_by_url $url|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
 		echo $govname,$url,$title,$description
   fi
 done
