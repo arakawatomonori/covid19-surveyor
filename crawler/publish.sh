@@ -333,37 +333,30 @@ echo $wrapper_start
 
 . ./lib/url-helper.sh
 
-keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for key in $keys; do
-	result=`redis-cli GET $key`
-	bool=`echo $result| cut -d',' -f 4`
-	if [ $bool = "true" ]; then
-		url=`echo $result| cut -d',' -f 1`
-		# URLから自治体名を得る
-		govname=`get_govname_by_url $url`
-		# urlから詳細を得る
-		path=${url//http:\/\//}
-		path=${path//https:\/\//}
-		title=`grep $path ./result.txt |cut -d':' -f 2`
-		li=`cat <<EOM
-			<li class="card">
-					<a href="${url}" target="_blank"
-							rel="noopener noreferrer">
-							<div class="card-content">
-									<div class="top">
-											<h2>$title</h2>
-											<p>$govname から提供されています。</p>
-									</div>
-									<div class="bottom">
-											<div class="url">詳細を確認する</div>
-									</div>
-							</div>
-					</a>
-			</li>
+while read line; do
+    govname=`echo $line| cut -d',' -f 1`
+    url=`echo $line| cut -d',' -f 2`
+    title=`echo $line| cut -d',' -f 3`
+    desc=`echo $line| cut -d',' -f 4`
+    li=`cat <<EOM
+        <li class="card">
+                <a href="${url}" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="card-content">
+                                <div class="top">
+                                        <h2>$govname から ： $title</h2>
+                                        <p>$desc<p>
+                                </div>
+                                <div class="bottom">
+                                        <div class="url">$govname のサイトへ</div>
+                                </div>
+                        </div>
+                </a>
+        </li>
 EOM
 `
-		echo $li
-	fi
+        echo $li
+    fi
 done
 
 wrapper_end=`cat <<EOM
