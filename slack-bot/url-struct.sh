@@ -49,21 +49,21 @@ json=`cat <<EOF
           {
             "text": {
               "type": "plain_text",
-              "text": "融資/貸付"
+              "text": "お金が貰える"
             },
             "value": "1"
           },
           {
             "text": {
               "type": "plain_text",
-              "text": "給付金/補助金/助成金/支援金"
+              "text": "お金が借りられる"
             },
             "value": "2"
           },
           {
             "text": {
               "type": "plain_text",
-              "text": "納税猶予/徴収猶予/返済猶予"
+              "text": "支払いや返済が猶予される"
             },
             "value": "3"
           },

@@ -156,6 +156,7 @@ send_message() {
                 },
                 {
                         "type": "actions",
+												"action_id": "${md5}-bool"
                         "elements": [
                                 {
                                         "type": "button",
