@@ -14,14 +14,14 @@ json=`cat <<EOF
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "URL: ${url}"
+            "text": "タイトル: ${title}"
         }
     },
     {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "タイトル: ${title}"
+            "text": "URL: ${url}"
         }
     },
     {

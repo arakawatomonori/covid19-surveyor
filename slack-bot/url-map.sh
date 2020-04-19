@@ -79,6 +79,32 @@ get_title_by_url() {
 	echo $title
 }
 
+pop_url_from_queue() {
+	# vscovid-crawler:queue-* を一件GET
+	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
+	# URLを得る
+	url=`redis-cli GET ${key}`
+	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
+	redis-cli DEL "vscovid-crawler:queue-$md5"
+	echo $url
+}
+
+push_job() {
+
+}
+
+get_md5_by_url() {
+	url=$1
+	# URLからmd5を得る
+	md5=`echo $url | md5sum | cut -d' ' -f 1`
+}
+
+check_url_exists() {
+	# URLが404でないことを確認
+	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
+	echo $url_not_found
+}
+
 send_message() {
 	member_id=$1
 	# vscovid-crawler:offered-members にいない人にだけDMを送る
@@ -86,21 +112,15 @@ send_message() {
 	if [ $already_offered = "1" ]; then
 		return 0
 	fi
+	# vscovid-crawler:offered-members をSADD
+	redis-cli SADD "vscovid-crawler:offered-members" $member_id
 	echo offer to $member_id
-	# vscovid-crawler:queue-* を一件GET
-	key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
-	# URLを得る
-	url=`redis-cli GET ${key}`
+	url=`pop_url_from_queue`
 	echo $url
-	# URLからmd5を得る
-	md5=`echo $url | md5sum | cut -d' ' -f 1`
-	# URLが404でないことを確認
-	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
-	echo url_not_found $url_not_found
+	md5=`get_md5_by_url $url`
+	url_not_found=`check_url_exists $url`
 	# 404だった場合
 	if [ $url_not_found = "1" ]; then
-		# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-		redis-cli DEL "vscovid-crawler:queue-$md5"
 		return 0
 	fi
 	title=`get_title_by_url ${url}`
@@ -108,10 +128,6 @@ send_message() {
 	echo $govname
 	# unixtime
 	timestamp=`date '+%s'`
-	# vscovid-crawler:offered-members をSADD
-	redis-cli SADD "vscovid-crawler:offered-members" $member_id
-	# vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-	redis-cli DEL "vscovid-crawler:queue-$md5"
 	# vscovid-crawler:job-{URLのMD5ハッシュ} をSET
 	redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
 	# Slack DM送信
@@ -127,14 +143,14 @@ send_message() {
                         "type": "section",
                         "text": {
                                 "type": "mrkdwn",
-                                "text": "${url}"
+                                "text": "タイトル: ${title}"
                         }
                 },
                 {
                         "type": "section",
                         "text": {
                                 "type": "mrkdwn",
-                                "text": "タイトル: ${title}"
+                                "text": "URL: ${url}"
                         }
                 },
                 {
