@@ -26,7 +26,7 @@ cp .wgetrc ~/
 ```
 
 ## Setup for macOS
-- `brew install wget jq nginx fcgiwrap squid`
+- `brew install wget jq nginx fcgiwrap squid poppler`
 
 ### Install GNU xargs in macOS
 
@@ -52,6 +52,10 @@ $ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 
 ## Development
 
+Join our Slack workspace!
+- https://join.slack.com/t/cfj/shared_invite/zt-88tbjehh-_ANL8iwMkwAuuBtXqiyPYg
+- Join #covid19-surveyor-dev channel!
+
 ```
 $ make test
 ```
@@ -59,15 +63,14 @@ $ make test
 ## Run with docker
 
 ```
-cd docker
 docker build -t vscovid-crawler .
-cd ..
-docker run --rm -d -p 8080:80 -v $(pwd):/home/ubuntu/vscovid-crawler --entrypoint /home/ubuntu/vscovid-crawler/docker/entrypoint.sh -it vscovid-crawler
+docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler
+docker run -it --rm -v $(pwd):/app vscovid-crawler bash
 ```
 
-## Run with docker-compose 
+## Run with docker-compose
 
 ```
-$ docker-compose build
-$ docker-compose up
+docker-compose build
+docker-compose up
 ```

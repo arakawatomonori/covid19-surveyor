@@ -24,6 +24,11 @@ test:
 .PHONY: wget
 wget:
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
+	./crawler/remove-large-files.sh
+
+.PHONY: remove-large-files
+remove-large-files:
+	./crawler/remove-large-files.sh
 
 .PHONY: grep
 grep:
@@ -52,6 +57,10 @@ slack-start-queue:
 .PHONY: slack-start-map
 slack-start-map:
 	while true; do ./slack-bot/url-map.sh; sleep 1; done
+
+.PHONY: slack-start-reduce
+slack-start-reduce:
+	./slack-bot/url-reduce.sh > reduce.csv
 
 # clear
 .PHONY: slack-clear-offer

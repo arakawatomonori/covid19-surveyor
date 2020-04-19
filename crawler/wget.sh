@@ -11,6 +11,7 @@ set -e
 ### ./wget.sh data/test.csv
 ###
 
+# tested
 get_target_urls() {
 	urls=()
 	# $#は引数の個数
@@ -30,6 +31,7 @@ get_target_urls() {
 	return 0
 }
 
+# tested
 get_target_domains() {
 	domains=()
 	while (( $# > 0 ))
@@ -54,7 +56,7 @@ main() {
 	cd www-data
 	# urls配列の中身をwgetに渡している
 	echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
-	echo $domains | xargs -n 1 echo | xargs -I{} cp -f robots.txt {}
+	echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
 	cd -
 }
 

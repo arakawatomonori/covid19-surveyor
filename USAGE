@@ -3,6 +3,9 @@ USAGE
     make wget
         data/ 内のすべてのURLに対してwget -rを実行します
 
+    make remove-large-files
+        wget で取得したファイル群のうち、不要な大容量ファイルを削除します（mp3 等）
+
     make grep
         www-data/ 内のすべてのHTMLファイルに対してgrepを実行します
         make wgetを先に実行しておく必要があります
@@ -18,13 +21,20 @@ USAGE
     make release
         wget, grep, aggregate, publishを順に実行します
 
-    make slack-queue
+    make test
+        test/ 配下にある単体テストを実行します
+
+    make slack-start-queue
         集計結果を元にSlackで質問DMを送るためのキューを追加します
         make aggregateを先に実行しておく必要があります
 
-    make slack-map
+    make slack-start-map
         slack-queueからURLを取り出してSlackのメンバーにDMを送信します
         make slack-queueを先に実行しておく必要があります
+
+    make slack-start-reduce
+        slack-resultから結果URLを取り出してreduce.csvを生成します
+        make slack-mapでresultsを集めておく必要があります
 
     make slack-check-offer
         slackで質問DMを送って回答待ちのメンバーのID一覧を表示します

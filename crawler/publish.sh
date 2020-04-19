@@ -15,6 +15,14 @@ head=`cat <<EOM
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <title>新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ</title>
+    <meta property="og:title" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
+    <meta property="og:site_name" content="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ">
+    <meta name="description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:description" content="全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度をCode for japanのボランティアたちがまとめたウェブサイトです">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://help.stopcovid19.jp/">
+    <meta property="og:image" content="https://help.stopcovid19.jp/ogimg.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
         .card-content {
@@ -40,12 +48,31 @@ head=`cat <<EOM
         }
 
         .card-content > .top > p {
-            color: rgb(51, 51, 51);
+            font-size: 0.8em;
+            text-decoration: none;
+            color: black;
         }
 
         .card-content > .top > h2 {
             margin-bottom: 16px;
             color: rgb(51, 51, 51);
+            font-weight:nomal;
+            font-size: 2em;
+            line-height: 1.2em;
+            font-size: 1.2em;
+            max-height: 8em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content > .top > h2::after {
+            display: block;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2em;
+            top: 6em;
+            background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 90%);
         }
 
         .card-content > .bottom {
@@ -112,8 +139,9 @@ head=`cat <<EOM
         }
 
         .header {
-            background-color: rgb(94, 77, 187);
+            background-color:  #bf0025;
             padding-bottom: 25px;
+            text-align: center;
         }
 
         .header > .title {
@@ -204,6 +232,9 @@ head=`cat <<EOM
             word-break: break-all;
         }
 
+        iframe#twitter-widget-0 {
+        }
+
     </style>
 
     <script>
@@ -242,7 +273,24 @@ head=`cat <<EOM
             applicable()
         }
     </script>
-    <title>新型コロナウイルス各自治体の経済支援制度まとめ</title>
+
+    <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+        t._e.push(f);
+        };
+
+        return t;
+        }(document, "script", "twitter-wjs"));
+    </script>
 </head>
 EOM
 `
@@ -253,12 +301,21 @@ echo "<body>"
 header=`cat <<EOM
     <div class="header">
         <h1 class="title">
-            VS COVID-19
+            新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
         </h1>
+        <a class="twitter-share-button"
+            href="https://twitter.com/intent/tweet"
+            data-text="新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ"
+            data-url="https://help.stopcovid19.jp/"
+            data-via="codeforJP"
+            data-size="large"
+            >
+            Tweet
+        </a>
         <div class="search">
-						<form onsubmit="return false;">
-							<input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
-						</form>
+            <form onsubmit="return false;">
+                <input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
+            </form>
         </div>
     </div>
 EOM
@@ -274,40 +331,30 @@ EOM
 `
 echo $wrapper_start
 
-keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for key in $keys; do
-	result=`redis-cli GET $key`
-	bool=`echo $result| cut -d',' -f 4`
-	if [ $bool = "true" ]; then
-		url=`echo $result| cut -d',' -f 1`
-		# ドメイン名から自治体名を得る
-		domain=$(cut -d'/' -f 3 <<< $url)
-		govname=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 1|cut -d':' -f 2`
-		# urlから詳細を得る
-		path=${url//http:\/\//}
-		path=${path//https:\/\//}
-		# urlからタイトルを得る
-		title=`grep $path ./result.txt |cut -d':' -f 2`
-		li=`cat <<EOM
-			<li class="card">
-					<a href="${url}" target="_blank"
-							rel="noopener noreferrer">
-							<div class="card-content">
-									<div class="top">
-											<h2>$title</h2>
-											<p>$govname から提供されています。</p>
-									</div>
-									<div class="bottom">
-											<div class="url">詳細を確認する</div>
-									</div>
-							</div>
-					</a>
-			</li>
+while read line; do
+    govname=`echo $line| cut -d',' -f 1`
+    url=`echo $line| cut -d',' -f 2`
+    title=`echo $line| cut -d',' -f 3`
+    desc=`echo $line| cut -d',' -f 4`
+    li=`cat <<EOM
+        <li class="card">
+                <a href="${url}" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="card-content">
+                                <div class="top">
+                                        <h2>$govname から ： $title</h2>
+                                        <p>$desc<p>
+                                </div>
+                                <div class="bottom">
+                                        <div class="url">$govname のサイトへ</div>
+                                </div>
+                        </div>
+                </a>
+        </li>
 EOM
 `
-		echo $li
-	fi
-done
+    echo $li
+done < reduce.csv
 
 wrapper_end=`cat <<EOM
 					</ul>
