@@ -1,44 +1,39 @@
 #!/bin/bash
 set -e
 
+. ./lib/helper.sh
+
 . ./crawler/grep.sh
 
-# test sanitize_grep_result
+echo test sanitize_grep_result
 ## remove whitespace chars
 input="foo.html:あいうえお　かきくけこ さしすせそ	たちつてと"
-result=$(echo $input | sanitize_grep_result)
-echo $result
+actual=$(echo $input | sanitize_grep_result)
 expect="foo.html:あいうえおかきくけこさしすせそたちつてと"
-echo $expect
-if [ "$result" = "$expect" ]; then
-	echo "passed"
+if [ "$actual" = "$expect" ]; then
+	test_passed
 else
-	echo "failed"
-	exit 1
+	test_failed "$expect" "$actual"
 fi
 
+echo test sanitize_grep_result
 ## remove too long line
 input="foo.html:$(seq 100 | xargs)"
-result=$(echo $input | sanitize_grep_result)
-echo $result
+actual=$(echo $input | sanitize_grep_result)
 expect=""
-echo $expect
-if [ "$result" = "$expect" ]; then
-	echo "passed"
+if [ "$actual" = "$expect" ]; then
+	test_passed
 else
-	echo "failed"
-	exit 1
+	test_failed "$expect" "$actual"
 fi
 
+echo test sanitize_grep_result
 ## sanitize HTML tags
 input="foo.html:<p><a href=\"bar.html\">テキストテキスト<br>テキスト</a></p>"
-result=$(echo $input | sanitize_grep_result)
-echo $result
+actual=$(echo $input | sanitize_grep_result)
 expect="foo.html:テキストテキストテキスト"
-echo $expect
-if [ "$result" = "$expect" ]; then
-	echo "passed"
+if [ "$actual" = "$expect" ]; then
+	test_passed
 else
-	echo "failed"
-	exit 1
+	test_failed "$expect" "$actual"
 fi

@@ -52,6 +52,7 @@ init_intermediate_file() {
     echo "" > $INTERMEDIATE_FILE_PATH
 }
 
+# tested
 sanitize_grep_result() {
 	# 長過ぎる行は無視
 	sed '/^.\{1,200\}$/!d' |\
