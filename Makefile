@@ -29,6 +29,7 @@ else
 	./crawler/wget.sh data/test.csv
 endif
 	./crawler/remove-large-files.sh
+	@echo you should do next: make grep
 
 .PHONY: remove-large-files
 remove-large-files:
@@ -38,10 +39,12 @@ remove-large-files:
 grep:
 	rm -f ./tmp/grep_*
 	./crawler/grep.sh
+	@echo you should do next: make aggregate
 
 .PHONY: aggregate
 aggregate:
 	./crawler/aggregate.sh
+	@echo you should do next: make slack-bool-reduce
 
 .PHONY: publish
 publish:
@@ -67,6 +70,7 @@ slack-bool-map:
 .PHONY: slack-bool-reduce
 slack-bool-reduce:
 	./slack-bot/url-bool-reduce.sh > reduce.csv
+	@echo you should do next: make publish
 
 # clear
 .PHONY: slack-bool-clear-offer
