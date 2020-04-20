@@ -42,8 +42,9 @@ get_md5_by_url() {
 	echo $md5
 }
 
+# URL が 404 ではないかどうかを確認する
+# 存在すれば 1、存在しなければ 0 を出力する
 check_url_exists() {
-	# URLが404でないことを確認
 	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
 	echo $url_not_found
 }

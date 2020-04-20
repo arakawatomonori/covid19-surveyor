@@ -18,7 +18,7 @@ send_message() {
 	fi
 	
         # キューから一件取り出す
-	url=`redis_pop_url_from_queue $namespace`
+	url=`redis_pop_value_from_queue $namespace`
 
 	md5=`get_md5_by_url $url`
 	url_not_found=`check_url_exists $url`

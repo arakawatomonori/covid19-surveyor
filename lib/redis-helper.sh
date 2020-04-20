@@ -32,7 +32,7 @@ redis_exists_md5(){
 	fi
 }
 
-redis_pop_url_from_queue() {
+redis_pop_value_from_queue() {
 	namespace=$1
 	# xxx:queue-* を一件GET
 	key=`redis-cli KEYS $namespace:queue-* | tail -n 1`

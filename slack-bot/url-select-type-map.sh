@@ -19,7 +19,7 @@ send_message() {
 	fi
 	redis_offer $namespace $member_id
   # キューから一件取り出す
-	value=`redis_pop_url_from_queue $namespace`
+	value=`redis_pop_value_from_queue $namespace`
   url=`echo $value| cut -d',' -f 1`
   orgname=`echo $value| cut -d',' -f 2`
   title=`echo $value| cut -d',' -f 3`
