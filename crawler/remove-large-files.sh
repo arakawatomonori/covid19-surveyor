@@ -21,18 +21,18 @@ echo ""
 # 拡張子毎に
 for ext in $(echo $exts | sed "s/,/ /g")
 do
-	echo -n "$ext ..."
+    echo -n "$ext ..."
 
-	# 検索の確認用（必要に応じてコメント外して実験）
-	# echo ""
-	# find $REPOS_DIR/www-data/*/. -name "*.$ext"
-	# find $REPOS_DIR/www-data/*/. -name "*.$ext\?*"
+    # 検索の確認用（必要に応じてコメント外して実験）
+    # echo ""
+    # find $REPOS_DIR/www-data/*/. -name "*.$ext"
+    # find $REPOS_DIR/www-data/*/. -name "*.$ext\?*"
 
-	# 実際の削除
-	find $REPOS_DIR/www-data/*/. -name "*.$ext"    -exec rm -rf {} \;
-	find $REPOS_DIR/www-data/*/. -name "*.$ext\?*" -exec rm -rf {} \;
+    # 実際の削除
+    find $REPOS_DIR/www-data/*/. -name "*.$ext"    -exec rm -rf {} \;
+    find $REPOS_DIR/www-data/*/. -name "*.$ext\?*" -exec rm -rf {} \;
 
-	echo " done"
+    echo " done"
 done
 
 echo ""
