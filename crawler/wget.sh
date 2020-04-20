@@ -20,28 +20,21 @@ set -e
 get_target_urls() {
     urls=()
     # $#は引数の個数
-    while (( $# > 0 ))
-    do
+    while (( $# > 0 )); do
         # $1は1つ目の引数
-        for line in `cat $1`; do
-            # CSVファイルの行の3番めを取り出す
-            url=`echo ${line} | cut -d',' -f 3`
-            # urls配列に追加
-            urls=("${urls} $url")
-        done
+        urls=("${urls[@]} $(cat $1 | cut -d',' -f 3)")
         # shiftで次の引数を$1に入れている
         shift
     done
-    echo $urls
+    echo ${urls}
     return 0
 }
 
 # tested
 get_target_domains() {
     domains=()
-    while (( $# > 0 ))
-    do
-        domain=`get_domain_by_url $1`
+    while (( $# > 0 )); do
+        domain=$(get_domain_by_url $1)
         # domains配列に追加
         domains=("${domains} $domain")
         shift
@@ -52,16 +45,16 @@ get_target_domains() {
 
 main() {
     args=$*
-    urls=`get_target_urls $args`
-    domains=`get_target_domains $urls`
+    urls=$(get_target_urls $args)
+    domains=$(get_target_domains $urls)
     # ダウンロード対象の拡張子
-    ext=`jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev`
+    ext=$(jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev)
 
-    cd www-data
+    pushd www-data
     # urls配列の中身をwgetに渡している
-    echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
-    echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
-    cd -
+    echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
+    echo ${domains} | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
+    popd
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
