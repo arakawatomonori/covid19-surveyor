@@ -5,8 +5,12 @@ set -e
 ### About
 ### grep.shで./tmpに収集した情報を結合し、ソートし、重複を取り除くスクリプト
 ###
+### Dependency
+### - make wget
+### - make grep
+###
 ### Usage
-### ./aggregate.sh
+### - make aggregate
 ###
 
 

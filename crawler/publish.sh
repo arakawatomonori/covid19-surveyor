@@ -3,10 +3,17 @@ set -e
 
 ###
 ### About
-### help.stopcovid19.jp/index.htmlを生成するスクリプト
+### help.stopcovid19.jp/index.html を生成するスクリプト
+###
+### Dependency
+### - make wget
+### - make grep
+### - make aggregate
+### - make slack-bool-queue
+### - make slack-bool-reduce
 ###
 ### Usage
-### ./index.sh
+### - make publish
 ###
 
 

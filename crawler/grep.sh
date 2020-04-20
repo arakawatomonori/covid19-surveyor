@@ -5,8 +5,11 @@ set -e
 ### About
 ### ./www-dataに収集した全サイトから新型コロナウイルスに関連するHTMLファイルの一覧を取得するスクリプト
 ###
+### Dependency
+### - make wget
+###
 ### Usage
-### ./crawler/grep.sh ${DATA_PATH}
+### - make grep
 ###
 
 # 配列初期化
