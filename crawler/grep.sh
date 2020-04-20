@@ -48,7 +48,7 @@ EOM
 export INTERMEDIATE_FILE_PATH="./tmp/grep_コロナ.txt.tmp"
 
 remove_exist_index() {
-	rm -f www-data/index.html
+    rm -f www-data/index.html
 }
 
 init_intermediate_file() {
@@ -57,55 +57,55 @@ init_intermediate_file() {
 
 # tested
 sanitize_grep_result() {
-	# 長過ぎる行は無視
-	sed '/^.\{1,200\}$/!d' |\
-	# 半角スペース除去
-	sed 's/ //g' |\
-	# 全角スペース除去
-	sed 's/　//g' |\
-	# タブ除去
-	sed 's/[ \t]*//g' |\
-	# HTMLタグ除去
-	sed -e 's/<[^>]*>//g'
+    # 長過ぎる行は無視
+    sed '/^.\{1,200\}$/!d' |\
+    # 半角スペース除去
+    sed 's/ //g' |\
+    # 全角スペース除去
+    sed 's/　//g' |\
+    # タブ除去
+    sed 's/[ \t]*//g' |\
+    # HTMLタグ除去
+    sed -e 's/<[^>]*>//g'
 }
 
 export_corona_files() {
-	set +e
-	# www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
-	grep -r コロナ --include="*.html" ./www-data | sanitize_grep_result >>\
-	$INTERMEDIATE_FILE_PATH
-	set -e
+    set +e
+    # www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
+    grep -r コロナ --include="*.html" ./www-data | sanitize_grep_result >>\
+    $INTERMEDIATE_FILE_PATH
+    set -e
 }
 
 export_pdf_corona_files() {
-	find ./www-data/ -regex '.*\.pdf$' | xargs -n1 -I@ pdftotext @ @.txt
-	set +e
-	grep -r コロナ --include="*.pdf.txt" ./www-data |\
-		sanitize_grep_result |\
-		sed 's/\.pdf\.txt:/\.pdf:/' >>\
-		$INTERMEDIATE_FILE_PATH
-	set -e
+    find ./www-data/ -regex '.*\.pdf$' | xargs -n1 -I@ pdftotext @ @.txt
+    set +e
+    grep -r コロナ --include="*.pdf.txt" ./www-data |\
+        sanitize_grep_result |\
+        sed 's/\.pdf\.txt:/\.pdf:/' >>\
+        $INTERMEDIATE_FILE_PATH
+    set -e
 }
 
 export_keyword_files()  {
-	set +e
-	for word in ${WORDS}; do
-		echo $word
-		# 中間ファイルを各キーワードでgrepして結果を出力
-		grep $word $INTERMEDIATE_FILE_PATH > ./tmp/grep_コロナ_$word.txt.tmp
-	done
-	set -e
+    set +e
+    for word in ${WORDS}; do
+        echo $word
+        # 中間ファイルを各キーワードでgrepして結果を出力
+        grep $word $INTERMEDIATE_FILE_PATH > ./tmp/grep_コロナ_$word.txt.tmp
+    done
+    set -e
 }
 
 main() {
-	remove_exist_index
-	init_intermediate_file
-	export_corona_files
-	export_pdf_corona_files
-	export_keyword_files
+    remove_exist_index
+    init_intermediate_file
+    export_corona_files
+    export_pdf_corona_files
+    export_keyword_files
 }
 
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	main $@
+    main $@
 fi

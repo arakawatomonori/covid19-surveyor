@@ -16,41 +16,48 @@ get_domain_by_url() {
 get_orgname_by_url() {
     url=$1
     domain=`get_domain_by_url $url`
-    govname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
-    echo $govname
+    orgname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
+    echo $orgname
     return 0
 }
 
 # tested
 get_title_by_res() {
-	res=$1
-	title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
-	echo $title
+    res=$1
+    title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
+    echo $title
 }
 
 get_title_by_url() {
-	url=$1
-	res=`wget -q -O - $url`
-	title=`get_title_by_res "$res"`
-	echo $title
+    url=$1
+    res=`wget -q -O - $url`
+    title=`get_title_by_res "$res"`
+    echo $title
 }
 
 get_md5_by_url() {
-	url=$1
-	# URLからmd5を得る
-	md5=`echo $url | md5sum | cut -d' ' -f 1`
-	echo $md5
+    url=$1
+    # URLからmd5を得る
+    md5=`echo $url | md5sum | cut -d' ' -f 1`
+    echo $md5
 }
 
 # URL が 404 ではないかどうかを確認する
 # 存在すれば 1、存在しなければ 0 を出力する
 check_url_exists() {
-	url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
-	echo $url_not_found
+    url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
+    echo $url_not_found
 }
 
 
 
+get_prefname_by_url() {
+    url=$1
+    domain=`get_domain_by_url $url`
+    prefname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 4 | cut -d':' -f 2`
+    echo $prefname
+    return 0
+}
 
 # *.sh が直接実行されたら exit 0 する
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

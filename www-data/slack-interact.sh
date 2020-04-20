@@ -22,9 +22,9 @@ echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.lo
 
 if [ "$event_type" == "block_actions" ]; then
         channel_id=`echo $json | jq .channel.id`
-	channel_id=${channel_id:1:-1}
-	ts=`echo $json | jq .container.message_ts`
-	ts=${ts:1:-1}
+        channel_id=${channel_id:1:-1}
+        ts=`echo $json | jq .container.message_ts`
+        ts=${ts:1:-1}
         user_id=`echo $json | jq .user.id`
         user_id=${user_id:1:-1}
         url=`echo $json | jq .message.text`
@@ -50,23 +50,23 @@ if [ "$event_type" == "block_actions" ]; then
         res=`cat <<EOF
         fi
 {
-	"token": "${slack_token}",
-	"channel": "${channel_id}",
-	"ts": "${ts}",
-        "text": "回答ありがとうございます！",
-	"blocks": null,
-	"attachments": null
+    "token": "${slack_token}",
+    "channel": "${channel_id}",
+    "ts": "${ts}",
+    "text": "回答ありがとうございます！",
+    "blocks": null,
+    "attachments": null
 }
 EOF
 `
-        echo 'Content-type: application/json'
-        echo ''
-        echo $res
-	wget -q -O /home/ubuntu/vscovid-crawler/tmp/slack-interact.res.log --post-data "$res" \
-        --header="Content-type: application/json" \
-        --header="Authorization: Bearer ${slack_token}" \
-        https://slack.com/api/chat.update
-        exit
+    echo 'Content-type: application/json'
+    echo ''
+    echo $res
+    wget -q -O /home/ubuntu/vscovid-crawler/tmp/slack-interact.res.log --post-data "$res" \
+    --header="Content-type: application/json" \
+    --header="Authorization: Bearer ${slack_token}" \
+    https://slack.com/api/chat.update
+    exit
 fi
 
 echo 'Content-type: text/plain'

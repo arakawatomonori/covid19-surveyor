@@ -10,32 +10,32 @@ source .env
 namespace="vscovid-crawler"
 
 send_message() {
-	member_id=$1
-        # オファー済みか確認
-	already_offered=`redis_already_offered $namespace $member_id`
-	if [ $already_offered = "1" ]; then
-		return 0
-	fi
-	
-        # キューから一件取り出す
-	url=`redis_pop_value_from_queue $namespace`
+    member_id=$1
+    # オファー済みか確認
+    already_offered=`redis_already_offered $namespace $member_id`
+    if [ $already_offered = "1" ]; then
+        return 0
+    fi
+    
+    # キューから一件取り出す
+    url=`redis_pop_value_from_queue $namespace`
 
-	md5=`get_md5_by_url $url`
-	url_not_found=`check_url_exists $url`
-	# 404だった場合
-	if [ $url_not_found = "1" ]; then
-		return 0
-	fi
-	title=`get_title_by_url ${url}`
-	orgname=`get_orgname_by_url ${url}`
-	# unixtime
-	timestamp=`date '+%s'`
+    md5=`get_md5_by_url $url`
+    url_not_found=`check_url_exists $url`
+    # 404だった場合
+    if [ $url_not_found = "1" ]; then
+        return 0
+    fi
+    title=`get_title_by_url ${url}`
+    orgname=`get_orgname_by_url ${url}`
+    # unixtime
+    timestamp=`date '+%s'`
 
-        redis_offer $namespace $member_id
-        redis_push_job $namespace $md5 $url $member_id $timestamp
-	# Slack DM送信
-        im_id=`open_im $member_id`
-	json=`cat <<EOF
+    redis_offer $namespace $member_id
+    redis_push_job $namespace $md5 $url $member_id $timestamp
+    # Slack DM送信
+    im_id=`open_im $member_id`
+    json=`cat <<EOF
 {
   "channel": "${im_id}",
   "text": "<${url}>",
@@ -73,7 +73,7 @@ send_message() {
                 },
                 {
                         "type": "actions",
-												"action_id": "${md5}-bool"
+                                                                                                "action_id": "${md5}-bool"
                         "elements": [
                                 {
                                         "type": "button",
@@ -114,29 +114,29 @@ send_message() {
 EOF
 `
 
-	wget -q -O - --post-data "$json" \
-	--header="Content-type: application/json" \
-	--header="Authorization: Bearer ${slack_token}" \
-	https://slack.com/api/chat.postMessage | jq .
-	echo ""
+    wget -q -O - --post-data "$json" \
+    --header="Content-type: application/json" \
+    --header="Authorization: Bearer ${slack_token}" \
+    https://slack.com/api/chat.postMessage | jq .
+    echo ""
 }
 
 main() {
-	channels_id=`get_channels_id`
-	members_list=`get_members_list $channels_id`
+    channels_id=`get_channels_id`
+    members_list=`get_members_list $channels_id`
 
-	echo members num ${#members_list[@]}
+    echo members num ${#members_list[@]}
 
-	# 一秒に一回でいい
-	# 各メンバーにDMを送る
-	# テスターのID
-	#members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
-	for member in $members_list; do
-		member_id=${member:1:-1}
-		send_message $member_id
-	done
+    # 一秒に一回でいい
+    # 各メンバーにDMを送る
+    # テスターのID
+    #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
+    for member in $members_list; do
+        member_id=${member:1:-1}
+        send_message $member_id
+    done
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	main $@
+    main $@
 fi
