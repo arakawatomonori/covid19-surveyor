@@ -1,7 +1,13 @@
+#!/bin/bash
+set -e
+
 # urls.txtの内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 
+. ./lib/redis-helper.sh
 . ./lib/url-helper.sh
+
+namespace="vscovid-crawler"
 
 for url in `cat urls.txt`; do
     # URLの整形
@@ -13,14 +19,11 @@ for url in `cat urls.txt`; do
     echo host $host
     url=${url/$domain/$host}
     echo url $url
-    # md5を計算
-    md5=`echo $url | md5sum | cut -d' ' -f 1`
+    md5=`get_md5_by_url $url`
     echo $md5
     # redisに存在しないことを確認する
-    queue_num=`redis-cli GET vscovid-crawler:queue-${md5}`
-    job_num=`redis-cli GET vscovid-crawler:job-${md5}`
-    result_num=`redis-cli GET vscovid-crawler:result-${md5}`
-    if [ ${#queue_num} = "0" ] && [ ${#job_num} = "0" ] && [ ${#result_num} = "0" ]; then
-        redis-cli SET "vscovid-crawler:queue-$md5" $url
+    is_exists=`redis_exists_md5 $namespace $md5`
+    if [ $is_exists = "0" ]; then
+        redis-cli SET "$namespace:queue-$md5" $url
     fi
 done
