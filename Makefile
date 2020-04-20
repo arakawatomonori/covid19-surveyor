@@ -63,23 +63,23 @@ slack-bool-reduce:
 	./slack-bot/url-bool-reduce.sh > reduce.csv
 
 # clear
-.PHONY: slack-clear-offer
+.PHONY: slack-bool-clear-offer
 slack-bool-clear-offer:
 	redis-cli DEL vscovid-crawler:offered-members
 
 # check
-.PHONY: slack-check-bool-offer
-slack-check-bool-offer:
+.PHONY: slack-bool-check-offer
+slack-bool-check-offer:
 	redis-cli SMEMBERS vscovid-crawler:offered-members
 
-.PHONY: slack-check-bool-queue
-slack-check-bool-queue:
+.PHONY: slack-bool-check-queue
+slack-bool-check-queue:
 	redis-cli KEYS vscovid-crawler:queue-*
 
-.PHONY: slack-check-bool-jobs
-slack-check-bool-jobs:
+.PHONY: slack-bool-check-jobs
+slack-bool-check-jobs:
 	redis-cli KEYS vscovid-crawler:job-*
 
-.PHONY: slack-check-bool-results
-slack-check-bool-results:
+.PHONY: slack-bool-check-results
+slack-bool-check-results:
 	redis-cli KEYS vscovid-crawler:result-*

@@ -36,12 +36,12 @@ USAGE
         slack-resultから結果URLを取り出してreduce.csvを生成します
         make slack-mapでresultsを集めておく必要があります
 
-    make slack-check-bool-offer
+    make slack-bool-check-offer
         slackで質問DMを送って回答待ちのメンバーのID一覧を表示します
 
-    make slack-check-bool-jobs
+    make slack-bool-check-jobs
         slackで質問DMを送って回答待ちのjob一覧を表示します
 
-    make slack-check-bool-results
+    make slack-bool-check-results
         slackで質問DMを送って回答された結果の一覧を表示します
 
