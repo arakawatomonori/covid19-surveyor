@@ -25,25 +25,19 @@ clean:
 ### crawler
 ###
 
-# csv内の全ドメインをwww-data以下にミラーリングする
 .PHONY: wget
 wget:
+	# csv内の全ドメインをwww-data以下にミラーリングする
 ifeq ($(ENV),production)
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
 else
 	./crawler/wget.sh data/test.csv
 endif
-	make remove-large-files
-	make grep
-
-# tmp/urls.txt内の全URLをwww-data以下にミラーリングする
-.PHONY: fetch
-fetch:
+	# tmp/urls.txt内の全URLをwww-data以下にミラーリングする
+	# tmp/urls.txtは「経済支援制度ですか？」に「はい」と答えられたURLのみ
 	cd www-data
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
-	make remove-large-files
-	make grep
 
 # www-data内の巨大なファイルを削除する
 .PHONY: remove-large-files
@@ -51,27 +45,27 @@ remove-large-files:
 	./crawler/remove-large-files.sh
 
 # www-data内のHTMLとPDFをgrepで検索する
+# tmp/sanitize_コロナ.txt.tmp を生成する
 .PHONY: grep
 grep: tmp/sanitize_コロナ.txt.tmp
 
-tmp/sanitize_コロナ.txt.tmp:
-	rm -f ./tmp/grep_*
+tmp/sanitize_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
-	make aggregate
 
-# 検索結果を集計する
+# grep結果を集計する
+# 複数のキーワードでgrepしているので重複があったりするのをuniqする
+# tmp/results.txt を生成する
 .PHONY: aggregate
 aggregate: tmp/results.txt
 
-tmp/results.txt:
+tmp/results.txt: grep
 	./crawler/aggregate.sh
-	make slack-bool-reduce
 
 # index.htmlとindex.jsonを生成する
 .PHONY: publish
 publish: www-data/index.html
 
-www-data/index.html:
+www-data/index.html: slack-bool-reduce
 	./crawler/publish.sh > ./www-data/index.html
 	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
@@ -90,14 +84,13 @@ slack-bool-queue:
 .PHONY: slack-bool-map
 slack-bool-map:
 	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
-	make publish
 
+# redisのデータを集計しreduce.csvを生成する
 .PHONY: slack-bool-reduce
 slack-bool-reduce: reduce.csv
 
-reduce.csv:
+reduce.csv: tmp/results.txt
 	./slack-bot/url-bool-reduce.sh > reduce.csv
-	@echo you should do next: make publish
 
 
 # clear
