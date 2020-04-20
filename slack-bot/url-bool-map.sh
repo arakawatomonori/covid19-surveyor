@@ -16,7 +16,7 @@ send_message() {
 	if [ $already_offered = "1" ]; then
 		return 0
 	fi
-	redis_offer $namespace $member_id
+	
         # キューから一件取り出す
 	url=`redis_pop_url_from_queue $namespace`
 
@@ -31,6 +31,7 @@ send_message() {
 	# unixtime
 	timestamp=`date '+%s'`
 
+        redis_offer $namespace $member_id
         redis_push_job $namespace $md5 $url $member_id $timestamp
 	# Slack DM送信
         im_id=`open_im $member_id`
