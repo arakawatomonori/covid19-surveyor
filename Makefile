@@ -46,6 +46,12 @@ aggregate:
 	./crawler/aggregate.sh
 	@echo you should do next: make slack-bool-reduce
 
+.PHONY: fetch
+fetch:
+	cd www-data
+	cat ../urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
+	cd -
+
 .PHONY: publish
 publish:
 	./crawler/publish.sh > ./www-data/index.html
