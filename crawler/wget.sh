@@ -7,8 +7,11 @@ set -e
 ### CSVのフォーマットは
 ### 組織名,略称,URL
 ###
+### Dependency
+### - None
+###
 ### Usage
-### ./wget.sh data/test.csv
+### - make wget
 ###
 
 . ./lib/url-helper.sh

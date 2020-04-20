@@ -1,128 +1,45 @@
 #!/bin/bash
-source .env
-ts=`date '+%s'`
+set -e
 
+source .env
+
+. ./lib/redis-helper.sh
+. ./lib/slack-helper.sh
 . ./lib/url-helper.sh
 
-# チームのチャンネルID取得
-# 一日に一回でいい
-# tested
-get_channels_id() {
-    channels_list_file="tmp/channels_list.json"
-    channels_list_ts=0
-    if [ -e $channels_list_file ]; then
-        channels_list_ts=`date '+%s' -r $channels_list_file`
-    fi
-    # ファイルのタイムスタンプが一日経過しているか
-    channels_list_diff=$((ts - channels_list_ts))
-    if [ $channels_list_diff -gt 86400 ]; then
-        # 全チャンネルの一覧を取得
-        channels_list=`wget -q -O - --post-data "token=${slack_token}&exclude_archived=true" https://slack.com/api/channels.list`
-        # ファイルにキャッシュ
-        echo $channels_list > $channels_list_file
-    else
-        # キャッシュを復元
-        channels_list=`cat $channels_list_file`
-    fi
-    # channels_listをslack_channelで絞り込んでchannels_idを得る
-    channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${slack_channel}'")' | jq .id`
-    channels_id=${channels_id:1:-1}
-    echo $channels_id
-    return 0
-}
-
-# チャンネルのメンバー取得
-# 十分間に一回でいい
-# tested
-get_members_list() {
-    channels_id=$1
-    members_list_file="tmp/members_list.json"
-    members_list_ts=0
-    if [ -e $members_list_file ]; then
-        members_list_ts=`date '+%s' -r $members_list_file`
-    fi
-    # ファイルのタイムスタンプが十分間経過しているか
-    members_list_diff=$((ts - members_list_ts))
-    if [ $members_list_diff -gt 600 ]; then
-        # channels_idのチャンネルの詳細情報を取得
-        channels_info=`wget -q -O - --post-data "token=${slack_token}&channel=${channels_id}" https://slack.com/api/channels.info`
-        # channels_infoからメンバー一覧を取り出す
-        members_list=`echo $channels_info | jq .channel.members[]`
-        # ファイルにキャッシュ
-        echo $members_list > $members_list_file
-    else
-        # キャッシュから復元
-        members_list=`cat $members_list_file`
-    fi
-    echo $members_list
-    return 0
-}
-
-# tested
-get_title_by_res() {
-    res=$1
-    title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
-    echo $title
-}
-
-get_title_by_url() {
-    url=$1
-    res=`wget -q -O - $url`
-    title=`get_title_by_res "$res"`
-    echo $title
-}
+namespace="vscovid-crawler"
 
 send_message() {
     member_id=$1
-    # vscovid-crawler:offered-members にいない人にだけDMを送る
-    already_offered=`redis-cli SISMEMBER vscovid-crawler:offered-members ${member_id}`
+    # オファー済みか確認
+    already_offered=`redis_already_offered $namespace $member_id`
     if [ $already_offered = "1" ]; then
         return 0
     fi
-    echo offer to $member_id
-    # vscovid-crawler:queue-* を一件GET
-    key=`redis-cli KEYS vscovid-crawler:queue-* | tail -n 1`
-    # URLを得る
-    url=`redis-cli GET ${key}`
-    echo $url
-    # URLからmd5を得る
-    md5=`echo $url | md5sum | cut -d' ' -f 1`
-    # URLが404でないことを確認
-    url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
-    echo url_not_found $url_not_found
+    
+    # キューから一件取り出す
+    url=`redis_pop_value_from_queue $namespace`
+
+    md5=`get_md5_by_url $url`
+    url_not_found=`check_url_exists $url`
     # 404だった場合
     if [ $url_not_found = "1" ]; then
-        # vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-        redis-cli DEL "vscovid-crawler:queue-$md5"
         return 0
     fi
     title=`get_title_by_url ${url}`
-    govname=`get_orgname_by_url ${url}`
-    echo $govname
+    orgname=`get_orgname_by_url ${url}`
     # unixtime
     timestamp=`date '+%s'`
-    # vscovid-crawler:offered-members をSADD
-    redis-cli SADD "vscovid-crawler:offered-members" $member_id
-    # vscovid-crawler:queue-{URLのMD5ハッシュ} をDEL
-    redis-cli DEL "vscovid-crawler:queue-$md5"
-    # vscovid-crawler:job-{URLのMD5ハッシュ} をSET
-    redis-cli SET "vscovid-crawler:job-$md5" "${url},${member_id},${timestamp}"
+
+    redis_offer $namespace $member_id
+    redis_push_job $namespace $md5 $url $member_id $timestamp
     # Slack DM送信
-    im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
-    im_id=`echo $im_open | jq .channel.id`
-    im_id=${im_id:1:-1}
+    im_id=`open_im $member_id`
     json=`cat <<EOF
 {
   "channel": "${im_id}",
   "text": "<${url}>",
   "blocks": [
-                {
-                        "type": "section",
-                        "text": {
-                                "type": "mrkdwn",
-                                "text": "${url}"
-                        }
-                },
                 {
                         "type": "section",
                         "text": {
@@ -134,21 +51,29 @@ send_message() {
                         "type": "section",
                         "text": {
                                 "type": "mrkdwn",
+                                "text": "URL: ${url}"
+                        }
+                },
+                {
+                        "type": "section",
+                        "text": {
+                                "type": "mrkdwn",
                                 "text": "
 *このURLは、以下の2つの条件を満たしていますか？*
 
 • 新型コロナウイルスについての経済支援制度である
-• ${govname}が独自に実施しているものである
+• ${orgname}が独自に実施しているものである
 
 ※経済支援制度とは、お金が貰える|お金が借りられる|お金が節約できる制度です
 ※上記以外でも、住宅の支援、食料の支援、子育ての支援などの場合は「はい」と答えてください
-※このURLが他の組織の制度を${govname}が紹介しているだけの場合は「いいえ」と答えてください
+※このURLが他の組織の制度を${orgname}が紹介しているだけの場合は「いいえ」と答えてください
 ※このURLがトップページやリンク集の場合は「いいえ」と答えてください
 "
                         }
                 },
                 {
                         "type": "actions",
+                                                                                                "action_id": "${md5}-bool"
                         "elements": [
                                 {
                                         "type": "button",
@@ -192,7 +117,7 @@ EOF
     wget -q -O - --post-data "$json" \
     --header="Content-type: application/json" \
     --header="Authorization: Bearer ${slack_token}" \
-    https://slack.com/api/chat.postMessage
+    https://slack.com/api/chat.postMessage | jq .
     echo ""
 }
 
