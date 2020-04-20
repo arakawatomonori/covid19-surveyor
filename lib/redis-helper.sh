@@ -36,7 +36,7 @@ redis_pop_url_from_queue() {
 	# URLを得る
 	value=`redis-cli GET ${key}`
 	# xxx:queue-{URLのMD5ハッシュ} をDEL
-	redis-cli DEL "$namespace:queue-$md5"
+	redis-cli DEL $key
 	echo $value
 }
 
