@@ -45,27 +45,27 @@ remove-large-files:
 	./crawler/remove-large-files.sh
 
 # www-data内のHTMLとPDFをgrepで検索する
-# tmp/sanitize_コロナ.txt.tmp を生成する
+# tmp/grep_コロナ.txt.tmp を生成する
 .PHONY: grep
-grep: tmp/sanitize_コロナ.txt.tmp
+grep: tmp/grep_コロナ.txt.tmp
 
-tmp/sanitize_コロナ.txt.tmp: remove-large-files
+tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
 # grep結果を集計する
 # 複数のキーワードでgrepしているので重複があったりするのをuniqする
-# tmp/results.txt を生成する
+# tmp/results.txt, tmp/urls.txt を生成する
 .PHONY: aggregate
 aggregate: tmp/results.txt
 
 tmp/results.txt: grep
 	./crawler/aggregate.sh
 
-# index.htmlとindex.jsonを生成する
+# www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
 publish: www-data/index.html
 
-www-data/index.html: slack-bool-reduce
+www-data/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/index.html
 	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
