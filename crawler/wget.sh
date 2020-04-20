@@ -54,10 +54,12 @@ main() {
     args=$*
     urls=`get_target_urls $args`
     domains=`get_target_domains $urls`
+    # ダウンロード対象の拡張子
+    ext=`jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev`
 
     cd www-data
     # urls配列の中身をwgetに渡している
-    echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --no-check-certificate {}
+    echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
     echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
     cd -
 }
