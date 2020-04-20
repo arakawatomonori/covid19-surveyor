@@ -15,21 +15,11 @@ set -e
 
 
 # ファイルを結合して一つにまとめる
-cat ./tmp/grep_コロナ_*.txt.tmp > ./tmp/cat.txt.tmp
 # ソートする
-sort ./tmp/cat.txt.tmp > ./tmp/sort.txt.tmp
 # 重複を取り除く
-uniq -d ./tmp/sort.txt.tmp > result.txt
+cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq -d > results.txt
 
 # result.txtからurlのみを抜き出す
-urls=""
-for line in `cat result.txt`; do
-    url=$line
-    url=`echo ${url} | cut -d':' -f 1`
-    url=`echo ${url} | sed -z 's/\.\/www-data\///g'`
-    urls=("${urls}\n${url}")
-done
+url=$(cat results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
 
-echo -e $urls > ./tmp/urls.txt.tmp
-
-uniq ./tmp/urls.txt.tmp > urls.txt
+echo -e ${urls} | uniq > urls.txt
