@@ -90,7 +90,7 @@ export_corona_pdf_files() {
 
 sanitize_intermediate_file() {
     set +e
-    cat $INTERMEDIATE_FILE_PATH | xargs -P 16 -I {} echo {} | sanitize_grep_result >> $SANITIZED_FILE_PATH
+    cat $INTERMEDIATE_FILE_PATH | sanitize_grep_result >> $SANITIZED_FILE_PATH
     set -e
 }
 

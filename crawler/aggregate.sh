@@ -24,8 +24,9 @@ uniq -d ./tmp/sort.txt.tmp > result.txt
 # result.txtからurlのみを抜き出す
 urls=""
 for line in `cat result.txt`; do
-    url=`echo ${line} | cut -d':' -f 1`
-    url="${url:2:-1}l"
+    url=$line
+    url=`echo ${url} | cut -d':' -f 1`
+    url=`echo ${url} | sed -z 's/\.\/www-data\///g'`
     urls=("${urls}\n${url}")
 done
 
