@@ -36,6 +36,7 @@ remove-large-files:
 
 .PHONY: grep
 grep:
+	rm -f ./tmp/grep_*
 	./crawler/grep.sh
 
 .PHONY: aggregate
