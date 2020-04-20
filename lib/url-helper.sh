@@ -14,11 +14,18 @@ get_domain_by_url() {
 get_orgname_by_url() {
     url=$1
     domain=`get_domain_by_url $url`
-    govname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
-    echo $govname
+    orgname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
+    echo $orgname
     return 0
 }
 
+get_prefname_by_url() {
+    url=$1
+    domain=`get_domain_by_url $url`
+    prefname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 4 | cut -d':' -f 2`
+    echo $prefname
+    return 0
+}
 
 # *.sh が直接実行されたら exit 0 する
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
