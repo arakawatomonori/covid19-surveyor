@@ -367,16 +367,22 @@ echo $wrapper_start
 . ./lib/url-helper.sh
 
 while read line; do
-    govname=`echo $line| cut -d',' -f 1`
+    orgname=`echo $line| cut -d',' -f 1`
     url=`echo $line| cut -d',' -f 2`
     title=`echo $line| cut -d',' -f 3`
     desc=`echo $line| cut -d',' -f 4`
+    prefname=`get_prefname_by_url $url`
+    prefitem=""
+    if [ "$prefname" != "" ]; then
+        prefitem="<div class="item">$prefname</div>"
+    fi
     li=`cat <<EOM
-        <li class="card">
+        <li class="card" data-orgname="${orgname}" data-prefname="${prefname}" data-type="" data-target="">
             <div class="card-content">
                 <div class="top">
                     <div class="tags">
-                        <div class="item">$govname</div>
+                        ${prefitem}
+                        <div class="item">$orgname</div>
                     </div>
                     <h2>$title</h2>
                     <p>$desc</p>
@@ -414,7 +420,7 @@ while read line; do
                             </g>
                         </svg>
                     </a>
-                    <a class="share-twitter" href="https://twitter.com/intent/tweet?text=${govname}がこんな支援制度をやってるよ！ ${title} ${url} 他の支援制度はこちらで探せるよ！ https://help.stopcovid19.jp &via=codeforJP&related=codeforJP" target="_blank" rel="noopener noreferrer">
+                    <a class="share-twitter" href="https://twitter.com/intent/tweet?text=${orgname}がこんな支援制度をやってるよ！ ${title} ${url} 他の支援制度はこちらで探せるよ！ https://help.stopcovid19.jp &via=codeforJP&related=codeforJP" target="_blank" rel="noopener noreferrer">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
                              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                              viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve">
@@ -462,7 +468,7 @@ while read line; do
                         </svg>
                     </a>
                     <a class="link" href="${url}" target="_blank" rel="noopener noreferrer">
-                        <div class="url">$govname のサイトへ</div>
+                        <div class="url">$orgname のサイトへ</div>
                     </a>
                 </div>
             </div>
