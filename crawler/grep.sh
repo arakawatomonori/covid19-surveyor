@@ -73,13 +73,14 @@ sanitize_grep_result() {
 export_corona_files() {
     set +e
     # www-data内の全HTMLファイルをコロナでgrepして中間ファイルに出力
-    grep -r コロナ --include="*.html" ./www-data > $INTERMEDIATE_FILE_PATH
+    find ./www-data/ -regex '.*\.html$' |\
+      xargs -P 16 -I{} grep -r コロナ {} >> $INTERMEDIATE_FILE_PATH
     cat $INTERMEDIATE_FILE_PATH | sanitize_grep_result >> $SANITIZED_FILE_PATH
     set -e
 }
 
 export_pdf_corona_files() {
-    find ./www-data/ -regex '.*\.pdf$' | xargs -n1 -I@ pdftotext @ @.txt
+    find ./www-data/ -regex '.*\.pdf$' | xargs -n1 -P 16 -I@ pdftotext @ @.txt
     set +e
     grep -r コロナ --include="*.pdf.txt" ./www-data |\
         sanitize_grep_result |\
@@ -102,7 +103,7 @@ main() {
     remove_exist_index
     init_intermediate_file
     export_corona_files
-    export_pdf_corona_files
+    #export_pdf_corona_files
     export_keyword_files
 }
 

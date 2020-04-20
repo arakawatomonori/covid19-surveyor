@@ -2,10 +2,9 @@
 set -e
 
 . ./lib/url-helper.sh
-. ./slack-bot/url-map.sh
 
 remove_newline_and_comma() {
-    result=`echo $1|sed -z 's/\r/ /g'|sed -z 's/\n/ /g'|sed -z 's/,/ /g'`
+    result=`echo $1|sed -z 's/\r//g'|sed -z 's/\n//g'|sed -z 's/,//g'`
     echo $result
 }
 
@@ -20,9 +19,10 @@ for key in $keys; do
         path=${url//http:\/\//}
         path=${path//https:\/\//}
         # urlからdescriptionを得る
-        description=`grep $path ./result.txt |cut -d':' -f 2|remove_newline_and_comma $(cat)`
+        desc=`grep $path ./result.txt |cut -d':' -f 2`
+        desc=`remove_newline_and_comma $desc`
         # urlからタイトルを得る
         title=`get_title_by_url $url|remove_newline_and_comma $(cat)`
-        echo $govname,$url,$title,$description
+        echo $govname,$url,$title,$desc
   fi
 done
