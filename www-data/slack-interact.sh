@@ -32,8 +32,8 @@ if [ "$event_type" == "block_actions" ]; then
         result=`echo $json | jq .actions[0].value`
         result=${result:1:-1}
         action_id=`echo $json | jq .actions[0].action_id`
-        echo $action_id|grep '-select-type'
         namespace="vscovid-crawler"
+        echo $action_id|grep '-select-type'
         if [$? -eq 0];then
                 namespace="vscovid-crawler-select-type"
         else
