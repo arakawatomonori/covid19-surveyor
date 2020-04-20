@@ -13,7 +13,7 @@ while read line; do
     url=`echo $line| cut -d',' -f 2`
     title=`echo $line| cut -d',' -f 3`
     desc=`echo $line| cut -d',' -f 4`
-    md5=`echo $url | md5sum | cut -d' ' -f 1`
+    md5=`get_md5_by_url $url`
     
     is_exists=`redis_exists_md5 $namespace $md5`
     if [ $is_exists = "0" ]; then

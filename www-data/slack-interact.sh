@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+. ./ubuntu/home/ubuntu/vscode-crawler/lib/url-helper.sh
+
 eval "$(cat /home/ubuntu/vscovid-crawler/.env <(echo) <(declare -x))"
 
 formdata=`cat`
@@ -27,7 +29,7 @@ if [ "$event_type" == "block_actions" ]; then
         user_id=${user_id:1:-1}
         url=`echo $json | jq .message.text`
         url=${url:2:-2}
-        md5=`echo $url | md5sum | cut -d' ' -f 1`
+        md5=`get_md5_by_url $url`
         timestamp=`date '+%s'`
         result=`echo $json | jq .actions[0].value`
         result=${result:1:-1}

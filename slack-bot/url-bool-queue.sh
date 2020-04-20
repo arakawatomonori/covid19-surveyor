@@ -19,8 +19,7 @@ for url in `cat urls.txt`; do
 	echo host $host
 	url=${url/$domain/$host}
 	echo url $url
-	# md5を計算
-	md5=`echo $url | md5sum | cut -d' ' -f 1`
+	md5=`get_md5_by_url $url`
 	echo $md5
 	# redisに存在しないことを確認する
 	is_exists=`redis_exists_md5 $namespace $md5`
