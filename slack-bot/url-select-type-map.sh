@@ -73,7 +73,7 @@ send_message() {
             "text": "制度種別"
           },
           "accessory": {
-            "action_id": "${md5}-select",
+            "action_id": "${md5}-select-type",
             "type": "static_select",
             "placeholder": {
               "type": "plain_text",
