@@ -33,8 +33,8 @@ ifeq ($(ENV),production)
 else
 	./crawler/wget.sh data/test.csv
 endif
-	./crawler/remove-large-files.sh
-	@echo you should do next: make grep
+	make remove-large-files
+	make grep
 
 # tmp/urls.txt内の全URLをwww-data以下にミラーリングする
 .PHONY: fetch
@@ -42,6 +42,8 @@ fetch:
 	cd www-data
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
+	make remove-large-files
+	make grep
 
 # www-data内の巨大なファイルを削除する
 .PHONY: remove-large-files
@@ -51,21 +53,24 @@ remove-large-files:
 # www-data内のHTMLとPDFをgrepで検索する
 .PHONY: grep
 grep: tmp/sanitize_コロナ.txt.tmp
+
 tmp/sanitize_コロナ.txt.tmp:
 	rm -f ./tmp/grep_*
 	./crawler/grep.sh
-	@echo you should do next: make aggregate
+	make aggregate
 
 # 検索結果を集計する
 .PHONY: aggregate
 aggregate: tmp/results.txt
+
 tmp/results.txt:
 	./crawler/aggregate.sh
-	@echo you should do next: make slack-bool-reduce
+	make slack-bool-reduce
 
 # index.htmlとindex.jsonを生成する
 .PHONY: publish
 publish: www-data/index.html
+
 www-data/index.html:
 	./crawler/publish.sh > ./www-data/index.html
 	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
@@ -85,9 +90,11 @@ slack-bool-queue:
 .PHONY: slack-bool-map
 slack-bool-map:
 	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
+	make publish
 
 .PHONY: slack-bool-reduce
 slack-bool-reduce: reduce.csv
+
 reduce.csv:
 	./slack-bot/url-bool-reduce.sh > reduce.csv
 	@echo you should do next: make publish
