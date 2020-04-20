@@ -23,7 +23,11 @@ test:
 
 .PHONY: wget
 wget:
+ifeq ($(ENV),production)
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
+else
+	./crawler/wget.sh data/test.csv
+endif
 	./crawler/remove-large-files.sh
 
 .PHONY: remove-large-files
