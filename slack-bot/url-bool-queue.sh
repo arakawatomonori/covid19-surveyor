@@ -4,6 +4,7 @@ set -e
 # urls.txtの内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 
+. ./lib/redis-helper.sh
 . ./lib/url-helper.sh
 
 namespace="vscovid-crawler"
