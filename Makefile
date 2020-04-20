@@ -14,13 +14,18 @@ usage:
 test:
 	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
 
+.PHONY: clean
+clean:
+	rm -f reduce.csv
+	rm -f tmp/*
+	rm -f www-data/index.html
+	rm -f www-data/index.json
+
 ###
 ### crawler
 ###
 
-.PHONY: release
-release: wget remove-large-files grep aggregate publish
-
+# csv内の全ドメインをwww-data以下にミラーリングする
 .PHONY: wget
 wget:
 ifeq ($(ENV),production)
@@ -31,29 +36,37 @@ endif
 	./crawler/remove-large-files.sh
 	@echo you should do next: make grep
 
+# tmp/urls.txt内の全URLをwww-data以下にミラーリングする
+.PHONY: fetch
+fetch:
+	cd www-data
+	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
+	cd -
+
+# www-data内の巨大なファイルを削除する
 .PHONY: remove-large-files
 remove-large-files:
 	./crawler/remove-large-files.sh
 
+# www-data内のHTMLとPDFをgrepで検索する
 .PHONY: grep
-grep:
+grep: tmp/sanitize_コロナ.txt.tmp
+tmp/sanitize_コロナ.txt.tmp:
 	rm -f ./tmp/grep_*
 	./crawler/grep.sh
 	@echo you should do next: make aggregate
 
+# 検索結果を集計する
 .PHONY: aggregate
-aggregate:
+aggregate: tmp/results.txt
+tmp/results.txt:
 	./crawler/aggregate.sh
 	@echo you should do next: make slack-bool-reduce
 
-.PHONY: fetch
-fetch:
-	cd www-data
-	cat ../urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
-	cd -
-
+# index.htmlとindex.jsonを生成する
 .PHONY: publish
-publish:
+publish: www-data/index.html
+www-data/index.html:
 	./crawler/publish.sh > ./www-data/index.html
 	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
@@ -74,9 +87,11 @@ slack-bool-map:
 	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
 
 .PHONY: slack-bool-reduce
-slack-bool-reduce:
+slack-bool-reduce: reduce.csv
+reduce.csv:
 	./slack-bot/url-bool-reduce.sh > reduce.csv
 	@echo you should do next: make publish
+
 
 # clear
 .PHONY: slack-bool-clear-offer
