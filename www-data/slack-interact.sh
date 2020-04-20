@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 eval "$(cat /home/ubuntu/vscovid-crawler/.env <(echo) <(declare -x))"
 

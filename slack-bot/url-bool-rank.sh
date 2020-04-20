@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 declare -A users
 
 keys=`redis-cli KEYS "vscovid-crawler:result-*"`

@@ -1,4 +1,5 @@
-
+#!/bin/bash
+set -e
 
 
 # URLからドメイン名を取得

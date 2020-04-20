@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # reduce.csvの内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 

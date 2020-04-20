@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 ###
 ### SlackのEventを受け取るためのCGI
