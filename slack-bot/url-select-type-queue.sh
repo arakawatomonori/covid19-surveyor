@@ -6,7 +6,7 @@ set -e
 
 . ./lib/url-helper.sh
 
-namespace="vscovid-crawler-url-struct"
+namespace="vscovid-crawler-select-type"
 
 while read line; do
     orgname=`echo $line| cut -d',' -f 1`

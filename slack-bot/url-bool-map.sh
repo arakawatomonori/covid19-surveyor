@@ -3,9 +3,9 @@ set -e
 
 source .env
 
+. ./lib/redis-helper.sh
 . ./lib/slack-helper.sh
 . ./lib/url-helper.sh
-. ./lib/redis-helper.sh
 
 namespace="vscovid-crawler"
 

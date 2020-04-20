@@ -8,7 +8,7 @@ ts=`date '+%s'`
 . ./lib/url-helper.sh
 . ./lib/redis-helper.sh
 
-namespace="vscovid-crawler-url-struct"
+namespace="vscovid-crawler-select-type"
 
 send_message() {
 	member_id=$1
