@@ -15,12 +15,12 @@ event_type=${event_type:1:-1}
 echo $event_type > /home/ubuntu/wget/tmp/slack-event.event-type.log
 
 if [ "$event_type" == "url_verification" ]; then
-	challenge=`echo $json | jq .challenge`
-	challenge=${challenge:1:-1}
-	echo 'Content-type: text/plain'
-	echo ''
-	echo $challenge
-	exit
+    challenge=`echo $json | jq .challenge`
+    challenge=${challenge:1:-1}
+    echo 'Content-type: text/plain'
+    echo ''
+    echo $challenge
+    exit
 fi
 
 echo 'Content-type: text/plain'

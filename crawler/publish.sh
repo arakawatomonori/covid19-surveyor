@@ -359,7 +359,7 @@ EOM
 done < reduce.csv
 
 wrapper_end=`cat <<EOM
-					</ul>
+                    </ul>
         </div>
     </div>
 EOM
