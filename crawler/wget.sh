@@ -8,7 +8,7 @@ set -e
 ### 組織名,略称,URL
 ###
 ### Dependency
-### None
+### - None
 ###
 ### Usage
 ### - make wget
