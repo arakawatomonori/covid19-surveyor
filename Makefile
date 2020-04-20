@@ -10,20 +10,24 @@ all: usage
 usage:
 	@cat USAGE
 
+.PHONY: test
+test:
+	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
+
 ###
 ### crawler
 ###
 
 .PHONY: release
-release: wget grep aggregate publish
-
-.PHONY: test
-test:
-	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
+release: wget remove-large-files grep aggregate publish
 
 .PHONY: wget
 wget:
+ifeq ($(ENV),production)
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
+else
+	./crawler/wget.sh data/test.csv
+endif
 	./crawler/remove-large-files.sh
 
 .PHONY: remove-large-files

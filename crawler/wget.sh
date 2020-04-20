@@ -15,52 +15,52 @@ set -e
 
 # tested
 get_target_urls() {
-	urls=()
-	# $#は引数の個数
-	while (( $# > 0 ))
-	do
-		# $1は1つ目の引数
-		for line in `cat $1`; do
-			# CSVファイルの行の3番めを取り出す
-			url=`echo ${line} | cut -d',' -f 3`
-			# urls配列に追加
-			urls=("${urls} $url")
-		done
-		# shiftで次の引数を$1に入れている
-		shift
-	done
-	echo $urls
-	return 0
+    urls=()
+    # $#は引数の個数
+    while (( $# > 0 ))
+    do
+        # $1は1つ目の引数
+        for line in `cat $1`; do
+            # CSVファイルの行の3番めを取り出す
+            url=`echo ${line} | cut -d',' -f 3`
+            # urls配列に追加
+            urls=("${urls} $url")
+        done
+        # shiftで次の引数を$1に入れている
+        shift
+    done
+    echo $urls
+    return 0
 }
 
 # tested
 get_target_domains() {
-	domains=()
-	while (( $# > 0 ))
-	do
-		domain=`get_domain_by_url $1`
-		# domains配列に追加
-		domains=("${domains} $domain")
-		shift
-	done
-	echo $domains
-	return 0
+    domains=()
+    while (( $# > 0 ))
+    do
+        domain=`get_domain_by_url $1`
+        # domains配列に追加
+        domains=("${domains} $domain")
+        shift
+    done
+    echo $domains
+    return 0
 }
 
 main() {
-	args=$*
-	urls=`get_target_urls $args`
-	domains=`get_target_domains $urls`
-	# ダウンロード対象の拡張子
-	ext=`jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev`
+    args=$*
+    urls=`get_target_urls $args`
+    domains=`get_target_domains $urls`
+    # ダウンロード対象の拡張子
+    ext=`jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev`
 
-	cd www-data
-	# urls配列の中身をwgetに渡している
-	echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
-	echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
-	cd -
+    cd www-data
+    # urls配列の中身をwgetに渡している
+    echo $urls | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
+    echo $domains | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
+    cd -
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-	main $@
+    main $@
 fi
