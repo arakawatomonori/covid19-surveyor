@@ -15,7 +15,8 @@ redis_offer(){
 	redis-cli SADD "$namespace:offered-members" $member_id
 }
 
-# redisに存在しないことを確認する
+# redis に指定ハッシュが存在するかどうかを確認する
+# 存在すれば 1、存在しなければ 0 を出力する
 redis_exists_md5(){
 	namespace=$1
 	md5=$2
@@ -23,8 +24,10 @@ redis_exists_md5(){
 	job_num=`redis-cli GET $namespace:job-${md5}`
 	result_num=`redis-cli GET $namespace:result-${md5}`
 	if [ ${#queue_num} = "0" ] && [ ${#job_num} = "0" ] && [ ${#result_num} = "0" ]; then
+		# 存在しなかった
 		echo 0
   else
+		# 存在していた
 	  echo 1
 	fi
 }
