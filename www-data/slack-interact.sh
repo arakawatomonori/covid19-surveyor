@@ -37,7 +37,7 @@ if [ "$event_type" == "block_actions" ]; then
     action_id=${action_id:1:-1}
     echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
     namespace="vscovid-crawler"
-    if [[ "$action_id" = .\vscovid-crawler-vote-* ]]; then
+    if [[ "$action_id" == "vscovid-crawler-vote-*" ]]; then
         namespace="vscovid-crawler-vote"
         if [ "$result" = "true" ]; then
             value=`redis-cli INCR "$namespace:result-$md5"`
