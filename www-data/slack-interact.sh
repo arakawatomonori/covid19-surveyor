@@ -34,15 +34,16 @@ if [ "$event_type" == "block_actions" ]; then
     result=`echo $json | jq .actions[0].value`
     result=${result:1:-1}
     action_id=`echo $json | jq .actions[0].action_id`
+    echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
     namespace="vscovid-crawler"
-    if [[ "$action_id" == "vscovid-crawler-vote-*" ]]; then
+    if [[ "$action_id" = .\vscovid-crawler-vote-* ]]; then
         namespace="vscovid-crawler-vote"
         if [ "$result" = "true" ]; then
             value=`redis-cli INCR "$namespace:result-$md5"`
         else
             value=`redis-cli DECR "$namespace:result-$md5"`
         fi
-    elif [ "$action_id" == "vscovid-crawler-select-type" ]; then
+    elif [ "$action_id" = "vscovid-crawler-select-type" ]; then
         namespace="vscovid-crawler-select-type"
         # vscovid-crawler:offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
