@@ -34,6 +34,7 @@ if [ "$event_type" == "block_actions" ]; then
     result=`echo $json | jq .actions[0].value`
     result=${result:1:-1}
     action_id=`echo $json | jq .actions[0].action_id`
+    action_id=${action_id:1:-1}
     echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
     namespace="vscovid-crawler"
     if [[ "$action_id" = .\vscovid-crawler-vote-* ]]; then
