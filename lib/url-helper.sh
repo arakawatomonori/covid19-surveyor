@@ -21,17 +21,10 @@ get_orgname_by_url() {
     return 0
 }
 
-
-get_res_by_url() {
-    url=$1
-    res=`wget -q -O - $url`
-    echo $res
-}
-
 # tested
 get_title_by_res() {
     res=$1
-    title=`echo $res | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
+    title=`echo "$res" | grep -o '<title>.*</title>' | sed 's#<title>\(.*\)</title>#\1#'`
     echo $title
 }
 

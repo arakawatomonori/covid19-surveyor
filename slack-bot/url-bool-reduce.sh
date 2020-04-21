@@ -8,16 +8,27 @@ remove_newline_and_comma() {
     echo $result
 }
 
-keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for key in $keys; do
-    result=`redis-cli GET $key`
-    bool=`echo $result| cut -d',' -f 4`
-    if [ $bool = "true" ]; then
-        url=`echo $result| cut -d',' -f 1`
-        govname=`get_orgname_by_url $url`
-        res=`get_res_by_url $url`
-        title=`get_title_by_res "$res"|remove_newline_and_comma $(cat)`
-        desc=`get_desc_by_res "$res"|remove_newline_and_comma $(cat)`
-        echo $govname,$url,$title,$desc
-  fi
-done
+get_row_by_url() {
+    url=$1
+    govname=`get_orgname_by_url $url`
+    res=`wget -q -O - $url`
+    title=`get_title_by_res "$res"`
+    desc=`get_desc_by_res "$res"`
+    echo $govname,$url,$title,$desc
+}
+
+main() {
+    keys=`redis-cli KEYS "vscovid-crawler:result-*"`
+    for key in $keys; do
+        result=`redis-cli GET $key`
+        bool=`echo $result| cut -d',' -f 4`
+        if [ $bool = "true" ]; then
+            url=`echo $result| cut -d',' -f 1`
+            row=`get_row_by_url $url`
+    fi
+    done
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main
+fi
