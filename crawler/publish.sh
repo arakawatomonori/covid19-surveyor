@@ -330,6 +330,9 @@ header=`cat <<EOM
         <h1 class="title">
             新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
         </h1>
+        <h2>
+            全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度を<a href="https://www.code4japan.org/">Code for Japan</a>のボランティアたちがまとめたウェブサイトです
+        </h2>
         <div class="search">
             <form onsubmit="return false;">
                 <input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
