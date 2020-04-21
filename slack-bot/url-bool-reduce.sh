@@ -15,14 +15,9 @@ for key in $keys; do
     if [ $bool = "true" ]; then
         url=`echo $result| cut -d',' -f 1`
         govname=`get_orgname_by_url $url`
-        # urlからpathを得る
-        path=${url//http:\/\//}
-        path=${path//https:\/\//}
-        # urlからdescriptionを得る
-        desc=`grep $path ./result.txt |cut -d':' -f 2`
-        desc=`remove_newline_and_comma $desc`
-        # urlからタイトルを得る
-        title=`get_title_by_url $url|remove_newline_and_comma $(cat)`
+        res=`get_res_by_url $url`
+        title=`get_title_by_res $res|remove_newline_and_comma $(cat)`
+        desc=`get_desc_by_res $res|remove_newline_and_comma $(cat)`
         echo $govname,$url,$title,$desc
   fi
 done
