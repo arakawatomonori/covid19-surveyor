@@ -39,6 +39,8 @@ if [ "$event_type" == "block_actions" ]; then
     echo $action_id
     namespace="vscovid-crawler"
     if [[ $action_id == vscovid-crawler-vote-* ]]; then
+        # vscovid-crawler:offered-membersからIDをDEL
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
         namespace="vscovid-crawler-vote"
         if [ "$result" = "true" ]; then
             value=`redis-cli INCR "$namespace:result-$md5"`

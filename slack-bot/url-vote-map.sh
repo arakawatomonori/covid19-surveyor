@@ -13,10 +13,10 @@ namespace="vscovid-crawler-vote"
 send_message() {
     member_id=$1
     # オファー済みか確認
-    #already_offered=`redis_already_offered $namespace $member_id`
-    #if [ $already_offered = "1" ]; then
-    #    return 0
-    #fi
+    already_offered=`redis_already_offered $namespace $member_id`
+    if [ $already_offered = "1" ]; then
+        return 0
+    fi
     # キューから一件取り出す
     value=`redis_pop_value_from_queue $namespace`
     value=`echo $value| cut -d' ' -f 2`
@@ -27,7 +27,8 @@ send_message() {
     result=`echo $value| cut -d',' -f 4`
 
     title=`get_title_by_url ${url}`
-    #desc=`get_desc_by_url ${url}`
+    desc=`get_desc_by_url ${url}`
+    desc=`jq -nc --arg content "$desc" '$content'`
     orgname=`get_orgname_by_url ${url}`
 
     md5=`get_md5_by_url $url`
