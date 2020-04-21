@@ -183,7 +183,6 @@ head=`cat <<EOM
         .header > .title {
             margin: 0px;
             padding: 30px 0px 20px;
-            color: white;
             text-align: center;
             font-size: 45px;
         }
@@ -261,6 +260,7 @@ head=`cat <<EOM
 
         h1, h2, p {
             margin: 0px;
+            color: white;
         }
 
         ul {
