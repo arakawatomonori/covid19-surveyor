@@ -16,7 +16,6 @@ test:
 
 .PHONY: clean
 clean:
-	rm -f reduce.csv
 	rm -f tmp/*
 	rm -f www-data/index.html
 	rm -f www-data/index.json
@@ -89,7 +88,7 @@ slack-bool-map:
 .PHONY: slack-bool-reduce
 slack-bool-reduce: reduce.csv
 
-reduce.csv: tmp/results.txt
+reduce.csv:
 	./slack-bot/url-bool-reduce.sh > reduce.csv
 
 
