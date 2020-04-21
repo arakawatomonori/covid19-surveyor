@@ -21,6 +21,13 @@ get_orgname_by_url() {
     return 0
 }
 
+
+get_res_by_url() {
+    url=$1
+    res=`wget -q -O - $url`
+    echo $res
+}
+
 # tested
 get_title_by_res() {
     res=$1
@@ -33,6 +40,13 @@ get_title_by_url() {
     res=`wget -q -O - $url`
     title=`get_title_by_res "$res"`
     echo $title
+}
+
+get_desc_by_res() {
+    res=$1
+    res=`echo "$res" | sed 's/<script>.*<\/script>//g;/<script>/,/<\/script>/{/<script>/!{/<\/script>/!d}};s/<script>.*//g;s/.*<\/script>//g'`
+    desc=`echo "$res" | grep コロナ | sed -e 's/ //g' -e 's/　//g' -e 's/[ \t]*//g' -e 's/<[^>]*>//g'`
+    echo $desc
 }
 
 get_md5_by_url() {
@@ -48,8 +62,6 @@ check_url_exists() {
     url_not_found=`wget --spider $url 2>&1 |grep -c '404 Not Found'`
     echo $url_not_found
 }
-
-
 
 get_prefname_by_url() {
     url=$1
