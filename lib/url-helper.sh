@@ -44,8 +44,8 @@ get_title_by_url() {
 
 get_desc_by_res() {
     res=$1
-    res=`echo $res | sed 's/<script>.*<\/script>//g;/<script>/,/<\/script>/{/<script>/!{/<\/script>/!d}};s/<script>.*//g;s/.*<\/script>//g'`
-    desc=`echo $res | grep コロナ | sed -e 's/ //g' -e 's/　//g' -e 's/[ \t]*//g' -e 's/<[^>]*>//g'`
+    res=`echo "$res" | sed 's/<script>.*<\/script>//g;/<script>/,/<\/script>/{/<script>/!{/<\/script>/!d}};s/<script>.*//g;s/.*<\/script>//g'`
+    desc=`echo "$res" | grep コロナ | sed -e 's/ //g' -e 's/　//g' -e 's/[ \t]*//g' -e 's/<[^>]*>//g'`
     echo $desc
 }
 
