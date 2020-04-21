@@ -24,7 +24,7 @@ get_orgname_by_url() {
 
 get_res_by_url() {
     url=$1
-    res=`wget -q -O - --timeout=5 $url`
+    res=`wget -q -O - $url`
     echo $res
 }
 
@@ -37,7 +37,7 @@ get_title_by_res() {
 
 get_title_by_url() {
     url=$1
-    res=`wget -q -O - --timeout=5 $url`
+    res=`wget -q -O - $url`
     title=`get_title_by_res "$res"`
     echo $title
 }
