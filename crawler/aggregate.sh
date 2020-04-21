@@ -20,6 +20,6 @@ set -e
 cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq -d > results.txt
 
 # result.txtからurlのみを抜き出す
-url=$(cat results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
+urls=$(cat results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
 
 echo -e ${urls} | uniq > urls.txt

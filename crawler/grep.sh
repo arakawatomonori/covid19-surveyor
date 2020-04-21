@@ -58,7 +58,6 @@ init_intermediate_file() {
 
 # tested
 sanitize_grep_result() {
-    # 長過ぎる行は無視
     # 半角スペース除去
     # 全角スペース除去
     # タブ除去
