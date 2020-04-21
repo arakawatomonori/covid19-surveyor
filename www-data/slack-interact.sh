@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-. ./ubuntu/home/ubuntu/vscode-crawler/lib/url-helper.sh
+. /home/ubuntu/vscovid-crawler/lib/url-helper.sh
 
 eval "$(cat /home/ubuntu/vscovid-crawler/.env <(echo) <(declare -x))"
 
@@ -21,34 +21,45 @@ event_type=${event_type:1:-1}
 echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.log
 
 if [ "$event_type" == "block_actions" ]; then
-        channel_id=`echo $json | jq .channel.id`
-        channel_id=${channel_id:1:-1}
-        ts=`echo $json | jq .container.message_ts`
-        ts=${ts:1:-1}
-        user_id=`echo $json | jq .user.id`
-        user_id=${user_id:1:-1}
-        url=`echo $json | jq .message.text`
-        url=${url:2:-2}
-        md5=`get_md5_by_url $url`
-        timestamp=`date '+%s'`
-        result=`echo $json | jq .actions[0].value`
-        result=${result:1:-1}
-        action_id=`echo $json | jq .actions[0].action_id`
-        namespace="vscovid-crawler"
-        echo $action_id|grep '-select-type'
-        if [$? -eq 0];then
-                namespace="vscovid-crawler-select-type"
+    channel_id=`echo $json | jq .channel.id`
+    channel_id=${channel_id:1:-1}
+    ts=`echo $json | jq .container.message_ts`
+    ts=${ts:1:-1}
+    user_id=`echo $json | jq .user.id`
+    user_id=${user_id:1:-1}
+    url=`echo $json | jq .message.text`
+    url=${url:2:-2}
+    md5=`get_md5_by_url $url`
+    timestamp=`date '+%s'`
+    result=`echo $json | jq .actions[0].value`
+    result=${result:1:-1}
+    action_id=`echo $json | jq .actions[0].action_id`
+    namespace="vscovid-crawler"
+    if [ "$action_id" == "vscovid-crawler-vote-*" ]; then
+        namespace="vscovid-crawler-vote"
+        if [ "$result" = "true" ]; then
+            value=`redis-cli INCR "$namespace:result-$md5"`
         else
-                namespace="vscovid-crawler"
+            value=`redis-cli DECR "$namespace:result-$md5"`
         fi
+    elif [ "$action_id" == "vscovid-crawler-select-type" ]; then
+        namespace="vscovid-crawler-select-type"
         # vscovid-crawler:offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
         redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
         redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
-        res=`cat <<EOF
-        fi
+    else
+        namespace="vscovid-crawler"
+        # vscovid-crawler:offered-membersからIDをDEL
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
+        redis-cli DEL "$namespace:job-$md5" > /dev/null
+        # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
+        redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+    fi
+    res=`cat <<EOF
 {
     "token": "${slack_token}",
     "channel": "${channel_id}",

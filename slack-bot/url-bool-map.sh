@@ -73,7 +73,7 @@ send_message() {
                 },
                 {
                         "type": "actions",
-                                                                                                "action_id": "${md5}-bool"
+                        "action_id": "vscovid-crawler"
                         "elements": [
                                 {
                                         "type": "button",
