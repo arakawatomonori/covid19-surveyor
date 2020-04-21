@@ -16,8 +16,8 @@ for key in $keys; do
         url=`echo $result| cut -d',' -f 1`
         govname=`get_orgname_by_url $url`
         res=`get_res_by_url $url`
-        title=`get_title_by_res $res|remove_newline_and_comma $(cat)`
-        desc=`get_desc_by_res $res|remove_newline_and_comma $(cat)`
+        title=`get_title_by_res "$res"|remove_newline_and_comma $(cat)`
+        desc=`get_desc_by_res "$res"|remove_newline_and_comma $(cat)`
         echo $govname,$url,$title,$desc
   fi
 done
