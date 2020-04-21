@@ -58,16 +58,11 @@ init_intermediate_file() {
 
 # tested
 sanitize_grep_result() {
-    # 長過ぎる行は無視
-    sed '/^.\{1,200\}$/!d' |\
     # 半角スペース除去
-    sed 's/ //g' |\
     # 全角スペース除去
-    sed 's/　//g' |\
     # タブ除去
-    sed 's/[ \t]*//g' |\
     # HTMLタグ除去
-    sed -e 's/<[^>]*>//g'
+    sed -e 's/ //g' -e 's/　//g' -e 's/[ \t]*//g' -e 's/<[^>]*>//g'
 }
 
 export_corona_html_files() {
