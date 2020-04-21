@@ -25,7 +25,7 @@ main() {
         if [ $bool = "true" ]; then
             url=`echo $result| cut -d',' -f 1`
             row=`get_row_by_url $url`
-    fi
+        fi
     done
 }
 
