@@ -35,7 +35,7 @@ if [ "$event_type" == "block_actions" ]; then
     result=${result:1:-1}
     action_id=`echo $json | jq .actions[0].action_id`
     namespace="vscovid-crawler"
-    if [ "$action_id" == "vscovid-crawler-vote-*" ]; then
+    if [[ "$action_id" == "vscovid-crawler-vote-*" ]]; then
         namespace="vscovid-crawler-vote"
         if [ "$result" = "true" ]; then
             value=`redis-cli INCR "$namespace:result-$md5"`
