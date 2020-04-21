@@ -27,8 +27,6 @@ send_message() {
     result=`echo $value| cut -d',' -f 4`
 
     title=`get_title_by_url ${url}`
-    desc=`get_desc_by_url ${url}`
-    desc=`jq -nc --arg content "$desc" '$content'`
     orgname=`get_orgname_by_url ${url}`
 
     md5=`get_md5_by_url $url`
@@ -57,13 +55,6 @@ send_message() {
             "text": {
                 "type": "mrkdwn",
                 "text": "URL: ${url}"
-            }
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "概要: ${desc}"
             }
         },
         {
