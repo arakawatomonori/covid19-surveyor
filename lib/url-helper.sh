@@ -30,7 +30,7 @@ get_title_by_res() {
 
 get_title_by_url() {
     url=$1
-    res=`wget -q -O - $url`
+    res=`wget -q -O - --timeout=5 $url`
     title=`get_title_by_res "$res"`
     echo $title
 }
