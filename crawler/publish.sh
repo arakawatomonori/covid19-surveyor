@@ -378,10 +378,10 @@ echo $wrapper_start
 
 while read line; do
     orgname=`echo $line| cut -d',' -f 1`
-    url=`echo $line| cut -d',' -f 2`
-    title=`echo $line| cut -d',' -f 3`
-    desc=`echo $line| cut -d',' -f 4`
-    prefname=`get_prefname_by_url $url`
+    prefname=`echo $line| cut -d',' -f 2`
+    url=`echo $line| cut -d',' -f 3`
+    title=`echo $line| cut -d',' -f 4`
+    desc=`echo $line| cut -d',' -f 5`
     prefitem=""
     if [ "$prefname" != "" ]; then
         prefitem="<div class="item">$prefname</div>"

@@ -55,7 +55,7 @@ fetch:
 .PHONY: publish
 publish:
 	./crawler/publish.sh > ./www-data/index.html
-	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 endif
