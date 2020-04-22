@@ -10,36 +10,63 @@ all: usage
 usage:
 	@cat USAGE
 
+.PHONY: test
+test:
+	./test/test.sh
+
+.PHONY: clean
+clean:
+	rm -f tmp/*
+	rm -f www-data/index.html
+	rm -f www-data/index.json
+
 ###
 ### crawler
 ###
 
-.PHONY: release
-release: wget grep aggregate publish
-
-.PHONY: test
-test:
-	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
-
 .PHONY: wget
 wget:
+	# csv内の全ドメインをwww-data以下にミラーリングする
+ifeq ($(ENV),production)
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
+else
+	./crawler/wget.sh data/test.csv
+endif
+	# tmp/urls.txt内の全URLをwww-data以下にミラーリングする
+	# tmp/urls.txtは「経済支援制度ですか？」に「はい」と答えられたURLのみ
+	cd www-data
+	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
+	cd -
 
+# www-data内の巨大なファイルを削除する
 .PHONY: remove-large-files
 remove-large-files:
 	./crawler/remove-large-files.sh
 
+# www-data内のHTMLとPDFをgrepで検索する
+# tmp/grep_コロナ.txt.tmp を生成する
 .PHONY: grep
-grep:
+grep: tmp/grep_コロナ.txt.tmp
+
+tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
+# grep結果を集計する
+# 複数のキーワードでgrepしているので重複があったりするのをuniqする
+# tmp/results.txt, tmp/urls.txt を生成する
 .PHONY: aggregate
-aggregate:
+aggregate: tmp/results.txt
+
+tmp/results.txt: grep
 	./crawler/aggregate.sh
 
+# www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
-publish:
+publish: www-data/index.html
+
+www-data/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/index.html
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 endif
@@ -49,32 +76,40 @@ endif
 ###
 
 # start
-.PHONY: slack-start-queue
-slack-start-queue:
-	./slack-bot/url-queue.sh
+.PHONY: slack-bool-queue
+slack-bool-queue:
+	./slack-bot/url-bool-queue.sh
 
-.PHONY: slack-start-map
-slack-start-map:
-	while true; do ./slack-bot/url-map.sh; sleep 1; done
+.PHONY: slack-bool-map
+slack-bool-map:
+	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
+
+# redisのデータを集計しreduce.csvを生成する
+.PHONY: slack-bool-reduce
+slack-bool-reduce: reduce.csv
+
+reduce.csv:
+	./slack-bot/url-bool-reduce.sh > reduce.csv
+
 
 # clear
-.PHONY: slack-clear-offer
-slack-clear-offer:
+.PHONY: slack-bool-clear-offer
+slack-bool-clear-offer:
 	redis-cli DEL vscovid-crawler:offered-members
 
 # check
-.PHONY: slack-check-offer
-slack-check-offer:
+.PHONY: slack-bool-check-offer
+slack-bool-check-offer:
 	redis-cli SMEMBERS vscovid-crawler:offered-members
 
-.PHONY: slack-check-queue
-slack-check-queue:
+.PHONY: slack-bool-check-queue
+slack-bool-check-queue:
 	redis-cli KEYS vscovid-crawler:queue-*
 
-.PHONY: slack-check-jobs
-slack-check-jobs:
+.PHONY: slack-bool-check-jobs
+slack-bool-check-jobs:
 	redis-cli KEYS vscovid-crawler:job-*
 
-.PHONY: slack-check-results
-slack-check-results:
+.PHONY: slack-bool-check-results
+slack-bool-check-results:
 	redis-cli KEYS vscovid-crawler:result-*

@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+
+. /home/ubuntu/vscovid-crawler/lib/url-helper.sh
 
 eval "$(cat /home/ubuntu/vscovid-crawler/.env <(echo) <(declare -x))"
 
@@ -18,44 +21,71 @@ event_type=${event_type:1:-1}
 echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.log
 
 if [ "$event_type" == "block_actions" ]; then
-        channel_id=`echo $json | jq .channel.id`
-	channel_id=${channel_id:1:-1}
-	ts=`echo $json | jq .container.message_ts`
-	ts=${ts:1:-1}
-        user_id=`echo $json | jq .user.id`
-        user_id=${user_id:1:-1}
-        url=`echo $json | jq .message.text`
-        url=${url:2:-2}
-        md5=`echo $url | md5sum | cut -d' ' -f 1`
-        timestamp=`date '+%s'`
-        result=`echo $json | jq .actions[0].value`
-        result=${result:1:-1}
-        response_url=`echo $json | jq .response_url`
+    channel_id=`echo $json | jq .channel.id`
+    channel_id=${channel_id:1:-1}
+    ts=`echo $json | jq .container.message_ts`
+    ts=${ts:1:-1}
+    user_id=`echo $json | jq .user.id`
+    user_id=${user_id:1:-1}
+    url=`echo $json | jq .message.text`
+    url=${url:2:-2}
+    md5=`get_md5_by_url $url`
+    timestamp=`date '+%s'`
+    result=`echo $json | jq .actions[0].value`
+    result=${result:1:-1}
+    action_id=`echo $json | jq .actions[0].action_id`
+    action_id=${action_id:1:-1}
+    echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
+    namespace="vscovid-crawler"
+    if [[ $action_id == vscovid-crawler-vote-* ]]; then
+        namespace="vscovid-crawler-vote"
         # vscovid-crawler:offered-membersからIDをDEL
-        redis-cli SREM "vscovid-crawler:offered-members" $user_id > /dev/null
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # 回答回数をカウント
+        redis-cli INCR "$namespace:count-$user_id" > /dev/null
+        if [ "$result" = "true" ]; then
+            value=`redis-cli INCR "$namespace:result-$md5"`
+        else
+            value=`redis-cli DECR "$namespace:result-$md5"`
+        fi
+    elif [ "$action_id" = "vscovid-crawler-select-type" ]; then
+        namespace="vscovid-crawler-select-type"
+        # vscovid-crawler:offered-membersからIDをDEL
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # 回答回数をカウント
+        redis-cli INCR "$namespace:count-$user_id" > /dev/null
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
-        redis-cli DEL "vscovid-crawler:job-$md5" > /dev/null
+        redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
-        redis-cli SET "vscovid-crawler:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
-        res=`cat <<EOF
+        redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+    else
+        namespace="vscovid-crawler"
+        # vscovid-crawler:offered-membersからIDをDEL
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
+        redis-cli DEL "$namespace:job-$md5" > /dev/null
+        # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
+        redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+    fi
+    res=`cat <<EOF
 {
-	"token": "${slack_token}",
-	"channel": "${channel_id}",
-	"ts": "${ts}",
-        "text": "回答ありがとうございます！",
-	"blocks": null,
-	"attachments": null
+    "token": "${slack_token}",
+    "channel": "${channel_id}",
+    "ts": "${ts}",
+    "text": "回答ありがとうございます！",
+    "blocks": null,
+    "attachments": null
 }
 EOF
 `
-        echo 'Content-type: application/json'
-        echo ''
-        echo $res
-	wget -q -O /home/ubuntu/vscovid-crawler/tmp/slack-interact.res.log --post-data "$res" \
-        --header="Content-type: application/json" \
-        --header="Authorization: Bearer ${slack_token}" \
-        https://slack.com/api/chat.update
-        exit
+    echo 'Content-type: application/json'
+    echo ''
+    echo $res
+    wget -q -O /home/ubuntu/vscovid-crawler/tmp/slack-interact.res.log --post-data "$res" \
+    --header="Content-type: application/json" \
+    --header="Authorization: Bearer ${slack_token}" \
+    https://slack.com/api/chat.update
+    exit
 fi
 
 echo 'Content-type: text/plain'
