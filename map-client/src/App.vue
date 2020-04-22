@@ -1,7 +1,12 @@
 <template>
-  <div id="app" class="app">
+  <div
+    id="app"
+    class="app"
+  >
     <header class="site-header">
-      <h1 class="site-title title is-3">新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ（地域検索）</h1>
+      <h1 class="site-title title is-3">
+        新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ（地域検索）
+      </h1>
       <p class="site-description">
         全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度を
         <a href="https://www.code4japan.org/">Code for Japan</a>
@@ -10,32 +15,49 @@
     </header>
 
     <main class="main">
-      <div ref="map" class="map"></div>
+      <div
+        ref="map"
+        class="map"
+      />
 
       <div class="info-area">
-        <h2 class="selected-name title is-3">{{ selected || '地図上の都道府県を選択してください' }}</h2>
+        <h2 class="selected-name title is-3">
+          {{ selected || '地図上の都道府県を選択してください' }}
+        </h2>
         <label class="checkbox cb-national">
-          <input type="checkbox" v-model="includesNationalOffers">
+          <input
+            v-model="includesNationalOffers"
+            type="checkbox"
+          >
           国からの支援制度も含める
         </label>
-        <p class="num-items">該当件数:
-          <span class="has-text-weight-bold">{{filteredItems.length}}件</span>
+        <p class="num-items">
+          該当件数:
+          <span class="has-text-weight-bold">{{ filteredItems.length }}件</span>
         </p>
       </div>
 
       <div class="filtered-items">
-        <div v-for="(item, i) in filteredItems" :key="i" class="card">
+        <div
+          v-for="(item, i) in filteredItems"
+          :key="i"
+          class="card"
+        >
           <div class="card-content">
             <div class="media">
               <div class="media-left">
                 <span class="tag is-link is-large">{{ item.orgname }}</span>
               </div>
               <div class="media-content">
-                <h3 class="title is-4">{{ item.title }}</h3>
+                <h3 class="title is-4">
+                  {{ item.title }}
+                </h3>
               </div>
             </div>
             <div class="content">
-              <p class="subtitle is-6">{{ item.description }}</p>
+              <p class="subtitle is-6">
+                {{ item.description }}
+              </p>
               <p class="action-area">
                 <a class="button is-primary is-rounded">{{ item.orgname }}のサイトへ</a>
               </p>
@@ -60,10 +82,6 @@ export default {
       includesNationalOffers: false
     }
   },
-  mounted() {
-    this.setupMap()
-    this.loadItems()
-  },
   computed: {
     filteredItems() {
       return this.items.filter(i =>
@@ -73,6 +91,10 @@ export default {
         (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
       )
     }
+  },
+  mounted() {
+    this.setupMap()
+    this.loadItems()
   },
   methods: {
     loadItems() {
