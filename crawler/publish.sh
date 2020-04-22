@@ -191,6 +191,12 @@ head=`cat <<EOM
             text-align: center;
         }
 
+        .header > h3 > a {
+            text-decoration: underline;
+            color: white;
+            padding: 0 4px;
+        }
+
         .header > .search > form > input#searchbox {
             width: 80vw;
             max-width: 600px;
