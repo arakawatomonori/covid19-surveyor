@@ -1,4 +1,16 @@
 #!/bin/bash
+
+#
+# Setup:
+#   Set .env properly
+#
+
+#
+# Usage:
+#   cd {REPOS_ROOT}
+#   ./slack-bot/url-vote-rank.sh
+#
+
 set -e
 
 source .env
