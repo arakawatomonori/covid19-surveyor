@@ -12,7 +12,7 @@ usage:
 
 .PHONY: test
 test:
-	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
+	./test/test.sh
 
 ###
 ### crawler

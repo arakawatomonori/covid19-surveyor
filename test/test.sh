@@ -12,6 +12,9 @@ TEST_SUCCESS=0
 TEST_FAIL=0
 
 for SCRIPT in $TEST_SCRIPTS; do
+    if [ x"$SCRIPT" = x"test.sh" ]; then
+        continue
+    fi
     TEST_COUNT=$(($TEST_COUNT + 1))
     ./test/$SCRIPT
     if [ $? = 0 ]; then
@@ -21,6 +24,7 @@ for SCRIPT in $TEST_SCRIPTS; do
     fi
 done
 
+echo "----"
 echo "ALL TEST: $TEST_COUNT"
 echo "SUCCESS:  $TEST_SUCCESS"
 echo "FAIL:     $TEST_FAIL"
