@@ -10,11 +10,12 @@ remove_newline_and_comma() {
 
 get_row_by_url() {
     url=$1
-    govname=`get_orgname_by_url $url`
+    orgname=`get_orgname_by_url $url`
+    prefname=`get_prefname_by_url $url`
     res=`wget -q -O - $url`
     title=`get_title_by_res "$res"`
     desc=`get_desc_by_res "$res"`
-    echo $govname,$url,$title,$desc
+    echo $orgname,$prefname,$url,$title,$desc
 }
 
 main() {
