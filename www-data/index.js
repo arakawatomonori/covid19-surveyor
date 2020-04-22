@@ -10,7 +10,7 @@ function isearch(pattern) {
     for (var i = 0; i < length; i++) {
         var e = spans[i];
         if (e.className === "card") {
-            if (e.innerHTML.match(regex)) {
+            if (regex.test(e.innerText)) {
                 e.style.display = "list-item";
                 applis += 1;
             } else {
