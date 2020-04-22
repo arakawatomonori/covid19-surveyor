@@ -26,7 +26,7 @@ for SCRIPT in $TEST_SCRIPTS; do
 done
 
 echo "----"
-echo "ALL TEST: $TEST_COUNT"
+echo "TESTS:    $TEST_COUNT"
 echo "SUCCESS:  $TEST_SUCCESS"
 echo "FAIL:     $TEST_FAIL"
 
