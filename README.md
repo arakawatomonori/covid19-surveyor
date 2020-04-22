@@ -1,4 +1,4 @@
-# covid19-surveryor
+# covid19-surveyor
 シェルスクリプトで書かれた主要省庁と都道府県のWebサイトを収集し分類するシステム。
 
 ## Warning
