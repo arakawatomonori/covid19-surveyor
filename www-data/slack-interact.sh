@@ -36,12 +36,13 @@ if [ "$event_type" == "block_actions" ]; then
     action_id=`echo $json | jq .actions[0].action_id`
     action_id=${action_id:1:-1}
     echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
-    echo $action_id
     namespace="vscovid-crawler"
     if [[ $action_id == vscovid-crawler-vote-* ]]; then
         namespace="vscovid-crawler-vote"
         # vscovid-crawler:offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # 回答回数をカウント
+        redis-cli INCR "$namespace:count-$user_id" > /dev/null
         if [ "$result" = "true" ]; then
             value=`redis-cli INCR "$namespace:result-$md5"`
         else
@@ -51,6 +52,8 @@ if [ "$event_type" == "block_actions" ]; then
         namespace="vscovid-crawler-select-type"
         # vscovid-crawler:offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # 回答回数をカウント
+        redis-cli INCR "$namespace:count-$user_id" > /dev/null
         # vscovid-crawler:job-{URLのMD5ハッシュ} をDEL
         redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
@@ -64,7 +67,6 @@ if [ "$event_type" == "block_actions" ]; then
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
         redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
     fi
-    echo $namespace
     res=`cat <<EOF
 {
     "token": "${slack_token}",
