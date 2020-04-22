@@ -71,6 +71,10 @@ send_message() {
 ※上記以外でも、住宅の支援、食料の支援、子育ての支援などの場合は「はい」と答えてください
 ※このURLが他の組織の制度を${orgname}が紹介しているだけの場合は「いいえ」と答えてください
 ※このURLがトップページやリンク集の場合は「いいえ」と答えてください
+
+※回答に困ったとき
+• <https://github.com/arakawatomonori/covid19-surveyor/wiki/%E3%83%87%E3%83%BC%E3%82%BF%E6%95%B4%E7%90%86%E3%83%9C%E3%83%83%E3%83%88%E3%81%B8%E3%81%AE%E5%9B%9E%E7%AD%94%E6%96%B9%E9%87%9D-FAQ|FAQ> に、回答時の FAQ をまとめてあります。
+• FAQ 等を見ても分からない場合は Slack の <https://app.slack.com/client/T02FMV4EB/C011U5YG8S3|#covid19-survey-qa> にご質問ください。
 "
             }
         },
