@@ -41,8 +41,15 @@ send_message() {
     json=`cat <<EOF
 {
     "channel":"${im_id}",
-    "text":"<${url}>",
+    "text":"",
     "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "新型コロナに関連する経済支援制度を収集しています！"
+            }
+        },
         {
             "type": "section",
             "text": {
