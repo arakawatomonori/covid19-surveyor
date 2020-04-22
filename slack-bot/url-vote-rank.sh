@@ -19,7 +19,15 @@ source .env
 . ./lib/slack-helper.sh
 
 
-# ユーザー毎の投票数を集計 -> tmp/rank.txt
+# 全体の回答状況を収集
+total_vote_count=`redis-cli KEYS vscovid-crawler-vote:result-* | wc -l`
+remaining_vote_count=`redis-cli KEYS vscovid-crawler-vote:queue-*  | wc -l`
+current_status="全回答数: $total_vote_count
+残り件数: $remaining_vote_count"
+echo "$current_status"
+
+
+# ユーザー毎の回答数を集計 -> tmp/rank.txt
 declare -A users
 
 keys=`redis-cli KEYS "vscovid-crawler-vote:count-*"`
@@ -53,13 +61,27 @@ echo $channels_id
 json=`cat <<EOF
 {
     "channel": "${channels_id}",
-    "text": "回答者ランキング",
+    "text": "現在の回答状況",
     "blocks": [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "現在の回答者ランキングです！"
+                "text": "現在の回答状況です！"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "${current_status}\r\n"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "====================\r\n:trophy: 回答者ランキング :trophy:\r\n===================="
             }
         },
         {
