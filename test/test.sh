@@ -1,11 +1,12 @@
 #!/bin/bash
 # vim: set ft=sh ff=unix fileencoding=utf-8 expandtab ts=4 sw=4 :
 
-cd $(dirname "$(cd "$(dirname "${BASH_SOURCE:-$0}")" && pwd)")
+cd `dirname $0`
+cd ..
 
 cd test
 TEST_SCRIPTS=`echo *.sh`
-cd - 
+cd -
 
 TEST_COUNT=0
 TEST_SUCCESS=0
