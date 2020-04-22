@@ -10,6 +10,9 @@ server {
     autoindex_exact_size off;
     autoindex_localtime on;
 
+    gzip on;
+    gzip_types text/html text/css application/javascript application/json application/font-woff application/font-tff image/gif image/png image/jpeg application/octet-stream;
+
     location / {
         try_files $uri $uri/ =404;
     }

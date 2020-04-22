@@ -1,9 +1,6 @@
 #!/bin/bash -e
 
 if [ "$1" == "" ]; then
-    # import all
-    make -C /app test
-
     $(which nginx) -t
     /etc/init.d/nginx start
 

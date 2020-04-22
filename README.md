@@ -66,19 +66,15 @@ $ brew install gnu-sed
 $ export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 ```
 
-## Run with docker
-
-```
-docker build -t vscovid-crawler .
-docker run -it --rm -p 8080:80 -v $(pwd):/app vscovid-crawler
-docker run -it --rm -v $(pwd):/app vscovid-crawler bash
-```
-
 ## Run with docker-compose
 
 ```
 docker-compose build
-docker-compose up
+docker-compose up # add `-d` to run in background
+# open http://localhost:8080/
+docker-compose exec crawler make publish
+docker-compose exec crawler make wget
+docker-compose exec crawler bash
 ```
 
 ## For developers

@@ -1,8 +1,33 @@
 #!/bin/bash
+
+#
+# Setup:
+#   Set .env properly
+#
+
+#
+# Usage:
+#   cd {REPOS_ROOT}
+#   ./slack-bot/url-vote-rank.sh
+#
+
 set -e
 
 source .env
 
+# 依存lib
+. ./lib/slack-helper.sh
+
+
+# 全体の回答状況を収集
+total_vote_count=`redis-cli KEYS vscovid-crawler-vote:result-* | wc -l`
+remaining_vote_count=`redis-cli KEYS vscovid-crawler-vote:queue-*  | wc -l`
+current_status="全回答数: $total_vote_count
+残り件数: $remaining_vote_count"
+echo "$current_status"
+
+
+# ユーザー毎の回答数を集計 -> tmp/rank.txt
 declare -A users
 
 keys=`redis-cli KEYS "vscovid-crawler-vote:count-*"`
@@ -16,29 +41,47 @@ for k in "${!users[@]}"; do
     echo $k,${users["$k"]}
 done | sort -t , -rn -k2 | head -n 20 > tmp/rank.txt
 
+
+# tmp/rank.txt を元にポスト用ランキング文字列を構築 -> $rank
 rank=""
 for line in `cat tmp/rank.txt`; do
     user_id=`echo $line | cut -d',' -f 1`
     count=`echo $line | cut -d',' -f 2`
     rank=$rank"\r\n<@$user_id> さん、 $count 回"
 done
-
 echo $rank
 
-. ./lib/slack-helper.sh
+
+# ポスト先チャンネル識別子
 channels_id=`get_channels_id`
 echo $channels_id
 
+
+# API へ送る用の JSON 構築
 json=`cat <<EOF
 {
-  "channel": "${channels_id}",
-  "text": "回答者ランキング",
-  "blocks": [
+    "channel": "${channels_id}",
+    "text": "現在の回答状況",
+    "blocks": [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "現在の回答者ランキングです！"
+                "text": "現在の回答状況です！"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "${current_status}\r\n"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "====================\r\n:trophy: 回答者ランキング :trophy:\r\n===================="
             }
         },
         {
@@ -53,9 +96,11 @@ json=`cat <<EOF
 EOF
 `
 
+
+# API ポスト実行
 echo "$json"
 wget -q -O - --post-data "$json" \
---header="Content-type: application/json" \
---header="Authorization: Bearer ${slack_token}" \
-https://slack.com/api/chat.postMessage | jq .
+    --header="Content-type: application/json" \
+    --header="Authorization: Bearer ${slack_token}" \
+    https://slack.com/api/chat.postMessage | jq .
 echo ""
