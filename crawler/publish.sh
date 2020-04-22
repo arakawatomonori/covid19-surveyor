@@ -258,7 +258,7 @@ head=`cat <<EOM
             padding: 0;
         }
 
-        h1, h2, p {
+        h1, h2, h3, p {
             margin: 0px;
             color: white;
         }
@@ -330,9 +330,15 @@ header=`cat <<EOM
         <h1 class="title">
             新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
         </h1>
-        <h2>
+        <h3>
             全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度を<a href="https://www.code4japan.org/">Code for Japan</a>のボランティアたちがまとめたウェブサイトです
-        </h2>
+        </h3>
+        <h3>
+            情報収集整理ボランティアへの参加は <a href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
+        </h3>
+        <h3>
+            システム開発ボランティアへの参加は <a href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
+        </h3>
         <div class="search">
             <form onsubmit="return false;">
                 <input type="text" id="searchbox" onkeyup="isearch(this.value)" placeholder="検索する単語をご入力ください">
