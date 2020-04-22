@@ -25,4 +25,9 @@ echo "ALL TEST: $TEST_COUNT"
 echo "SUCCESS:  $TEST_SUCCESS"
 echo "FAIL:     $TEST_FAIL"
 
+if [ $TEST_FAIL != 0 ]; then
+    exit 1
+fi
+
+exit 0
 
