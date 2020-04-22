@@ -13,11 +13,13 @@
 ## Setup for Ubuntu
 
 ### Requirements
+
 ```
 sudo apt install make wget jq nginx fcgiwrap squid poppler-utils
 ```
 
 ### copy nginx config
+
 ```
 cp nginx_config /etc/nginx/site-available/
 ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config
@@ -25,17 +27,20 @@ sudo service nginx restart
 ```
 
 ### copy squid config
+
 ```
 cp -f squid.conf /etc/squid/
 sudo service squid restart
 ```
 
 ### copy wget config
+
 ```
 cp .wgetrc ~/
 ```
 
 ## Setup for macOS
+
 - `brew install wget jq nginx fcgiwrap squid poppler`
 
 ### Install GNU xargs in macOS
