@@ -6,6 +6,9 @@ www-data/*.net
 www-data/*.tv
 www-data/*.jp
 www-data/wget-log*
+www-data/map/
+www-data/index.html
+www-data/index.json
 *.jp
 grep_*
 !grep_test.sh
@@ -13,5 +16,4 @@ grep_*
 *.tmp
 *.log
 tmp/*
-index.html
-index.json
+node_modules/
