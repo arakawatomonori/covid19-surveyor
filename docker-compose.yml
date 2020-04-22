@@ -3,7 +3,7 @@ services:
   crawler:
     build: .
     volumes:
-      - .:/app
+      - .:/home/ubuntu/vscovid-crawler
     ports:
       - 8080:80
 

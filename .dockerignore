@@ -1,2 +1,4 @@
 **/.git
 **/tmp
+/result.txt
+/www-data/
