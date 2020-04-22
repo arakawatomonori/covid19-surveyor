@@ -197,6 +197,10 @@ head=`cat <<EOM
             padding: 0 4px;
         }
 
+        .header > h3 > a:hover {
+            text-decoration: none;
+        }
+
         .header > .search > form > input#searchbox {
             width: 80vw;
             max-width: 600px;
