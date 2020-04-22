@@ -17,6 +17,7 @@ for SCRIPT in $TEST_SCRIPTS; do
         continue
     fi
     TEST_COUNT=$(($TEST_COUNT + 1))
+    echo "[RUN]: $SCRIPT"
     ./test/$SCRIPT
     if [ $? = 0 ]; then
         TEST_SUCCESS=$(($TEST_SUCCESS + 1))
@@ -26,9 +27,9 @@ for SCRIPT in $TEST_SCRIPTS; do
 done
 
 echo "----"
-echo "TESTS:    $TEST_COUNT"
-echo "SUCCESS:  $TEST_SUCCESS"
-echo "FAIL:     $TEST_FAIL"
+echo "[TESTS]:    $TEST_COUNT"
+echo "[SUCCESS]:  $TEST_SUCCESS"
+echo "[FAIL]:     $TEST_FAIL"
 
 if [ $TEST_FAIL != 0 ]; then
     exit 1
