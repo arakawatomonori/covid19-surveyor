@@ -43,9 +43,9 @@ echo $channels_id
 
 json=`cat <<EOF
 {
-  "channel": "${channels_id}",
-  "text": "回答者ランキング",
-  "blocks": [
+    "channel": "${channels_id}",
+    "text": "回答者ランキング",
+    "blocks": [
         {
             "type": "section",
             "text": {
