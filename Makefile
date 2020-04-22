@@ -12,7 +12,7 @@ usage:
 
 .PHONY: test
 test:
-	find ./test/ -regex '.*\.sh$$' | xargs -t -n1 bash
+	./test/test.sh
 
 .PHONY: clean
 clean:
@@ -66,7 +66,7 @@ publish: www-data/index.html
 
 www-data/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/index.html
-	./lib/csv2json.sh "govname" "url" "title" "description" < reduce.csv > ./www-data/index.json
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 endif

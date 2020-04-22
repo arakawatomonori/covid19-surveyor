@@ -3,6 +3,7 @@ set -e
 
 
 # URLからドメイン名を取得
+# tested
 get_domain_by_url() {
     url=$1
     domain=$(cut -d'/' -f 3 <<< $url)
@@ -13,6 +14,7 @@ get_domain_by_url() {
 
 # URL から団体名を取得
 #   /data/*.csv からドメインに紐づく名前定義を引っ張ってくる
+# tested
 get_orgname_by_url() {
     url=$1
     domain=`get_domain_by_url $url`
@@ -35,10 +37,18 @@ get_title_by_url() {
     echo $title
 }
 
+# tested
 get_desc_by_res() {
     res=$1
     res=`echo "$res" | sed 's/<script>.*<\/script>//g;/<script>/,/<\/script>/{/<script>/!{/<\/script>/!d}};s/<script>.*//g;s/.*<\/script>//g'`
     desc=`echo "$res" | grep コロナ | sed -e 's/ //g' -e 's/　//g' -e 's/[ \t]*//g' -e 's/<[^>]*>//g'`
+    echo $desc
+}
+
+get_desc_by_url() {
+    url=$1
+    res=`wget -q -O - $url`
+    desc=`get_desc_by_res "$res"`
     echo $desc
 }
 
