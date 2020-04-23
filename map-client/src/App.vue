@@ -5,18 +5,18 @@
   >
     <header class="site-header">
       <h1 class="site-title title is-3">
-        新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ（地域検索）
+        新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
       </h1>
       <p class="site-description">
         全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度を
-        <a href="https://www.code4japan.org/">Code for Japan</a>
+        <a class="description-link" href="https://www.code4japan.org/">Code for Japan</a>
         のボランティアたちがまとめたウェブサイトです
       </p>
-      <p>
-        情報収集整理ボランティアへの参加は <a href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
+      <p class="site-description">
+        情報収集整理ボランティアへの参加は <a class="description-link" href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
       </p>
-      <p>
-        システム開発ボランティアへの参加は <a href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
+      <p class="site-description">
+        システム開発ボランティアへの参加は <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
       </p>
     </header>
 
@@ -133,6 +133,20 @@ export default {
 .app {
   width: 100%;
   margin: 0 auto;
+}
+
+.site-header > .site-description {
+  color: white;
+}
+
+.site-header > .site-description > .description-link  {
+  text-decoration: underline;
+  color: white;
+  padding: 0 4px;
+}
+
+.site-header > .site-description > .description-link:hover {
+  text-decoration: none;
 }
 
 .site-header {
