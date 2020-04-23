@@ -78,7 +78,7 @@ docker-compose exec crawler bash
 ```
 
 ## Deploy Preview
-- プッシュする度にフロントエンドがビルドされnow.sh経由でユニークなURLが発行されます
+- プッシュする度にフロントエンドがビルドされvercel.com経由でユニークなURLが発行されます
 - プルリクエストにコメントがつくのでレビューや確認する際の参考にできます
 
 ## For developers
