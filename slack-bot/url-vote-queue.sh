@@ -16,9 +16,9 @@ for key in $keys; do
     redis-cli SET "$namespace:queue-$md5" $value
 done
 
-for url in `cat ./tmp/urls-uniq.txt`; do
-    echo path $url
-    domain=`get_domain_by_url $url`
+for path in `cat ./tmp/urls-uniq.txt`; do
+    echo path $path
+    domain=`echo $path| cut -d'/' -f1 `
     echo domain $domain
     host_with_url_scheme=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
     echo host_with_url_scheme $host_with_url_scheme
