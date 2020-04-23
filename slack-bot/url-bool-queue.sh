@@ -13,9 +13,9 @@ for url in `cat ./tmp/urls-uniq.txt`; do
     echo path $url
     domain=`get_domain_by_url $url`
     echo domain $domain
-    host=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
-    echo host $host
-    url=${url/$domain/$host}
+    host_with_url_scheme=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
+    echo host_with_url_scheme $host_with_url_scheme 
+    url=${url/$domain/$host_with_url_scheme}
     echo url $url
     md5=`get_md5_by_url $url`
     echo $md5
