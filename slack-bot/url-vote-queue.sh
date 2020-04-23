@@ -18,8 +18,9 @@ for key in $keys; do
 done
 
 # http://example.com/foo/bar.html のとき
+# domain_and_path=example.com/foo/bar.html
 for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
-    # path=example.com/foo/bar.html
+    # path=foo/bar.html
     path=`echo $domain_and_path | cut -d'/' -f 2-`
     echo path $path
     domain=`echo $path| cut -d'/' -f1 `
