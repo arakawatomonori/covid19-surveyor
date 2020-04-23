@@ -10,8 +10,8 @@ set -e
 namespace="vscovid-crawler"
 
 for url in `cat ./tmp/urls-uniq.txt`; do
-    echo path $url
-    domain=`get_domain_by_url $url`
+    echo path $path
+    domain=`echo $path| cut -d'/' -f1 `
     echo domain $domain
     host_with_url_scheme=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
     echo host_with_url_scheme $host_with_url_scheme 
