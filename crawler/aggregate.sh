@@ -22,4 +22,10 @@ cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq -d > ./tmp/results.txt
 # result.txtからurlのみを抜き出す
 urls=$(cat ./tmp/results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
 
-echo -e ${urls} | uniq > ./tmp/urls.txt
+echo "" > ./tmp/urls.txt
+
+for url in $urls; do
+    echo "$url" >> ./tmp/urls.txt
+done
+
+uniq -d ./tmp/urls.txt > ./tmp/urls-uniq.txt
