@@ -130,7 +130,7 @@ export default {
 }
 
 .site-header {
-  background: #00d1b2;
+  background: #ac0027;
   padding: 24px;
 }
 
