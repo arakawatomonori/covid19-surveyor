@@ -17,13 +17,19 @@ for key in $keys; do
     redis-cli SET "$namespace:queue-$md5" $value
 done
 
+# http://example.com/foo/bar.html のとき
 for path in `cat ./tmp/urls-uniq.txt`; do
+    # path=example.com/foo/bar.html
     echo path $path
     domain=`echo $path| cut -d'/' -f1 `
+    # domain=example.com
     echo domain $domain
     top_url=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
+    # top_url=https://example.com/index.html
     echo top_url $top_url
+    # schema=https:
     schema=`echo $top_url | cut -d'/' -f 1`
+    # url=https://example.com/foo/bar.html
     url="$schema//$path"
     md5=`get_md5_by_url $url`
     echo $md5
