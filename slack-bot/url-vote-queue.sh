@@ -18,8 +18,9 @@ for key in $keys; do
 done
 
 # http://example.com/foo/bar.html のとき
-for path in `cat ./tmp/urls-uniq.txt`; do
+for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     # path=example.com/foo/bar.html
+    path=`echo $domain_and_path | cut -d'/' -f 2-`
     echo path $path
     domain=`echo $path| cut -d'/' -f1 `
     # domain=example.com
@@ -30,7 +31,7 @@ for path in `cat ./tmp/urls-uniq.txt`; do
     # schema=https:
     schema=`echo $top_url | cut -d'/' -f 1`
     # url=https://example.com/foo/bar.html
-    url="$schema//$path"
+    url="$schema//$domain/$path"
     md5=`get_md5_by_url $url`
     echo $md5
     # redisに存在しないことを確認する
