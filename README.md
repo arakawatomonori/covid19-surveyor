@@ -78,7 +78,7 @@ docker-compose exec crawler bash
 ```
 
 ## Deploy Preview
-- プッシュする度にビルドされvercel.comを通しプレビュー用のユニークURLが発行されます。詳しくはこちらの[Vercel for GitHub](https://zeit.ink/github-learn-more)をご覧ください。
+- プッシュする度にビルドされvercel.comを通しプレビュー用のユニークURLが発行されます。詳しくはこちらの[Vercel for GitHub](https://vercel.com/docs/v2/git-integrations/vercel-for-github)をご覧ください。
 - プルリクエストのコメントに上記のURLが付くのでレビューや確認する際の参考にできます。
 
 ## For developers
