@@ -1,12 +1,21 @@
 #!/bin/bash
 set -e
 
-. ./lib/url-helper.sh
+#
+# Summary
+#   投票結果を元に CSV 形式の文字列を標準出力に出力
+#
+# Detail
+#   ・Redis の "vscovid-crawler:result-*" を元に URL を抽出
+#   ・抽出した URL を全 wget し、結果を CSV 形式で標準出力に出力
+#
+# Caution
+#   wget が URL 件数分走るので負荷に注意
+#
 
-remove_newline_and_comma() {
-    result=$(echo $1|sed -z 's/\r//g'|sed -z 's/\n//g'|sed -z 's/,//g')
-    echo $result
-}
+# 依存lib
+. ./lib/url-helper.sh
+. ./lib/string-helper.sh
 
 get_row_by_url() {
     url=$1
@@ -17,7 +26,7 @@ get_row_by_url() {
         return 1
     fi
     title=$(get_title_by_res "$res")
-    desc=$(get_desc_by_res "$res")
+    desc=$(get_desc_by_res "$res" | remove_newline_and_comma)
     echo $orgname,$prefname,$url,$title,$desc
 }
 
