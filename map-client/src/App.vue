@@ -16,7 +16,7 @@
         情報収集整理ボランティアへの参加は <a class="description-link" href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
       </p>
       <p class="site-description">
-        システム開発ボランティアへの参加は <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
+        システム開発ボランティアへの参加は <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGitHub</a> からできます
       </p>
     </header>
 
