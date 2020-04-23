@@ -12,12 +12,6 @@
         <a href="https://www.code4japan.org/">Code for Japan</a>
         のボランティアたちがまとめたウェブサイトです
       </p>
-      <p>
-        情報収集整理ボランティアへの参加は <a href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
-      </p>
-      <p>
-        システム開発ボランティアへの参加は <a href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
-      </p>
     </header>
 
     <main class="main">
@@ -143,10 +137,6 @@ export default {
 .site-title {
   color: white;
   line-height: 1.2;
-}
-
-.site-header .p {
-  color: white;
 }
 
 .main {

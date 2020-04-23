@@ -5,8 +5,8 @@ www-data/*.com
 www-data/*.net
 www-data/*.tv
 www-data/*.jp
-www-data/map/
 www-data/wget-log*
+www-data/map/
 www-data/index.html
 www-data/index.json
 *.jp
