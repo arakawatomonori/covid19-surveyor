@@ -2,6 +2,7 @@
 set -e
 
 . ./lib/url-helper.sh
+. ./lib/redis-helper.sh
 
 source .env
 ts=`date '+%s'`
