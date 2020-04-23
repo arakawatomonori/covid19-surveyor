@@ -62,15 +62,19 @@ tmp/results.txt: grep
 
 # www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
-publish: www-data/index.html
-
-www-data/map/index.html: reduce.csv
-	./crawler/publish.sh > ./www-data/search/index.html
-	cd map-client && npm run build
-	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
+publish: www-data/search/index.html www-data/map/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 endif
+
+www-data/map/index.html:
+	cd map-client && npm run build
+
+www-data/map/index.json: www-data/map/index.html reduce.csv
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
+
+www-data/search/index.html: reduce.csv
+	./crawler/publish.sh > ./www-data/search/index.html
 
 ###
 ### slack-bot
