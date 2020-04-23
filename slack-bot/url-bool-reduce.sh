@@ -21,7 +21,7 @@ get_row_by_url() {
     url=$1
     orgname=$(get_orgname_by_url $url)
     prefname=$(get_prefname_by_url $url)
-    res=$(wget -q -O - $url)
+    res=$(wget -q -O - --timeout=5 $url)
     if [ $? -ne 0 ]; then
         return 1
     fi
