@@ -27,7 +27,7 @@ if [ "$event_type" == "block_actions" ]; then
     ts=${ts:1:-1}
     user_id=`echo $json | jq .user.id`
     user_id=${user_id:1:-1}
-    url=`echo $json | jq .blocks[3].text.text`
+    url=`echo $json | jq .message.blocks[3].text.text`
     url=${url:6:-2}
     md5=`get_md5_by_url $url`
     timestamp=`date '+%s'`
