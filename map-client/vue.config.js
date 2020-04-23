@@ -3,6 +3,6 @@ process.env.VUE_APP_JSON_PATH = process.env.NODE_ENV === 'production'
   : 'index-mock.json'
 
 module.exports = {
-  publicPath: '/',
-  outputDir: '../www-data/'
+  publicPath: '/map/',
+  outputDir: '../www-data/map/'
 }
