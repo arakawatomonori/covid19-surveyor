@@ -131,9 +131,9 @@ export default {
     filteredItems() {
       return this.items.filter(i => {
         if (this.isSearchTypeString) {
-          return this.searchString && this.isMatchPattern(i)
+          return !this.searchString || this.isMatchPattern(i)
         } else {
-          return this.selectedPref && (
+          return !this.selectedPref || (
             this.selectedPref === i.orgname ||
             this.selectedPref === i.prefname ||
             (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
