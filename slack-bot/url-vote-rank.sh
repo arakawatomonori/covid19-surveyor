@@ -43,12 +43,16 @@ done | sort -t , -rn -k2 | head -n 20 > tmp/rank.txt
 
 
 # tmp/rank.txt を元にポスト用ランキング文字列を構築 -> $rank
-rank=""
+rank='```'
+rank=$rank"\r\n"
 for line in `cat tmp/rank.txt`; do
     user_id=`echo $line | cut -d',' -f 1`
     count=`echo $line | cut -d',' -f 2`
-    rank=$rank"\r\n<@$user_id> さん、 $count 回"
+    new_rank=`printf "%5d 回: %s さん" "$count" "<@$user_id>"`
+    rank=$rank"$new_rank"
+    rank=$rank"\r\n"
 done
+rank=$rank'```'
 echo $rank
 
 
