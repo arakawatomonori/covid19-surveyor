@@ -145,6 +145,10 @@ export default {
   line-height: 1.2;
 }
 
+.site-header .p {
+  color: white;
+}
+
 .main {
   margin: 32px auto;
   width: 100%;
