@@ -77,6 +77,10 @@ docker-compose exec crawler make wget
 docker-compose exec crawler bash
 ```
 
+## Deploy Preview
+- プッシュする度にビルドされvercel.comを通しプレビュー用のユニークURLが発行されます。詳しくはこちらの[Vercel for GitHub](https://vercel.com/docs/v2/git-integrations/vercel-for-github)をご覧ください。
+- プルリクエストのコメントに上記のURLが付くのでレビューや確認する際の参考にできます。
+
 ## For developers
 
 開発についての議論などは [Code for Japan](https://www.code4japan.org/) が運営する Slack Workspace で行っています。
