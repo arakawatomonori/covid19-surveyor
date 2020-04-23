@@ -65,7 +65,10 @@
                 {{ item.description }}
               </p>
               <p class="action-area">
-                <a class="button is-primary is-rounded">{{ item.orgname }}のサイトへ</a>
+                <a
+                  class="button is-primary is-rounded"
+                  :href="item.url"
+                >{{ item.orgname }}のサイトへ</a>
               </p>
             </div>
           </div>
