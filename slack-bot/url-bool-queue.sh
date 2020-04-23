@@ -9,9 +9,7 @@ set -e
 
 namespace="vscovid-crawler"
 
-for url in `cat urls.txt`; do
-    # URLの整形
-    url=${url:9:-1}l
+for url in `cat ./tmp/urls-uniq.txt`; do
     echo path $url
     domain=`get_domain_by_url $url`
     echo domain $domain
