@@ -28,4 +28,4 @@ for url in $urls; do
     echo "$url" >> ./tmp/urls.txt
 done
 
-uniq ./tmp/urls.txt > ./tmp/urls-uniq.txt
+uniq -d ./tmp/urls.txt > ./tmp/urls-uniq.txt

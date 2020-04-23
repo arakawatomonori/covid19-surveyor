@@ -312,7 +312,7 @@ header=`cat <<EOM
             情報収集整理ボランティアへの参加は <a href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
         </h3>
         <h3>
-            システム開発ボランティアへの参加は <a href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGithub</a> からできます
+            システム開発ボランティアへの参加は <a href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGitHub</a> からできます
         </h3>
         <div class="search">
             <form onsubmit="return false;">
