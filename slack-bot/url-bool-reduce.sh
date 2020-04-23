@@ -15,12 +15,7 @@ set -e
 
 # 依存lib
 . ./lib/url-helper.sh
-
-# 改行除去関数（極端に文字列幅が削られた？という報告もあるので挙動は運用しながら様子見）
-remove_newline_and_comma() {
-    result=$(echo $1|sed -z 's/\r//g'|sed -z 's/\n//g'|sed -z 's/,//g')
-    echo $result
-}
+. ./lib/string-helper.sh
 
 get_row_by_url() {
     url=$1
@@ -31,8 +26,7 @@ get_row_by_url() {
         return 1
     fi
     title=$(get_title_by_res "$res")
-    desc=$(get_desc_by_res "$res")
-    desc=$(remove_newline_and_comma "$desc")
+    desc=$(get_desc_by_res "$res" | remove_newline_and_comma)
     echo $orgname,$prefname,$url,$title,$desc
 }
 
