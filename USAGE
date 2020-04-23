@@ -8,15 +8,12 @@ USAGE
 
     make grep
         www-data/ 内のすべてのHTMLファイルに対してgrepを実行します
-        make wgetを先に実行しておく必要があります
 
     make aggregate
         grepした結果を集計します
-        make grepを先に実行しておく必要があります
 
     make publish
         集計結果を元にwww-data/index.htmlに出力します
-        make aggregateを先に実行しておく必要があります
 
     make release
         wget, grep, aggregate, publishを順に実行します
