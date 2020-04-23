@@ -17,7 +17,7 @@ set -e
 # ファイルを結合して一つにまとめる
 # ソートする
 # 重複を取り除く
-cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq -d > ./tmp/results.txt
+cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq > ./tmp/results.txt
 
 # result.txtからurlのみを抜き出す
 urls=$(cat ./tmp/results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
