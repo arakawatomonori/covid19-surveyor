@@ -1,31 +1,23 @@
 <template>
-  <div
-    id="app"
-    class="app"
-  >
+  <div id="app" class="app">
     <header class="site-header">
       <h1 class="site-title title is-3">
         新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
       </h1>
       <p class="site-description">
         全都道府県、全市区町村の新型コロナウイルス（COVID-19）関連の経済支援制度を
-        <a
-          class="description-link"
-          href="https://www.code4japan.org/"
-        >Code for Japan</a>
+        <a class="description-link" href="https://www.code4japan.org/">Code for Japan</a>
         のボランティアたちがまとめたウェブサイトです
       </p>
       <p class="site-description">
-        情報収集整理ボランティアへの参加は <a
-          class="description-link"
-          href="https://cfjslackin.herokuapp.com/"
-        >こちらのSlack</a> からできます
+        情報収集整理ボランティアへの参加は
+        <a class="description-link" href="https://cfjslackin.herokuapp.com/">こちらのSlack</a>
+        からできます
       </p>
       <p class="site-description">
-        システム開発ボランティアへの参加は <a
-          class="description-link"
-          href="https://github.com/arakawatomonori/covid19-surveyor"
-        >こちらのGitHub</a> からできます
+        システム開発ボランティアへの参加は
+        <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGitHub</a>
+        からできます
       </p>
     </header>
 
@@ -43,10 +35,7 @@
             キーワードで検索する
           </label>
           <transition name="showup">
-            <div
-              v-if="isSearchTypeString"
-              class="control search-box"
-            >
+            <div v-if="isSearchTypeString" class="control search-box">
               <input
                 v-model="searchString"
                 class="input"
@@ -69,15 +58,9 @@
       </div>
 
       <transition name="showup">
-        <div
-          v-show="isSearchTypeMap"
-          class="map-area"
-        >
+        <div v-show="isSearchTypeMap" class="map-area">
           <p>地図上の都道府県を選択してください</p>
-          <div
-            ref="map"
-            class="map"
-          />
+          <div ref="map" class="map" />
         </div>
       </transition>
 
@@ -86,14 +69,8 @@
           {{ resultTitle }}
         </h2>
             
-        <label
-          v-if="isSearchTypeMap"
-          class="checkbox cb-national"
-        >
-          <input
-            v-model="includesNationalOffers"
-            type="checkbox"
-          >
+        <label v-if="isSearchTypeMap" class="checkbox cb-national">
+          <input v-model="includesNationalOffers" type="checkbox">
           国からの支援制度も含める
         </label>
         <p class="num-items">
@@ -105,18 +82,11 @@
       </div>
 
       <div class="filtered-items">
-        <div
-          v-for="(item, i) in filteredItems"
-          :key="i"
-          class="card"
-        >
+        <div v-for="(item, i) in filteredItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
               <div class="media-content">
-                <span
-                  v-if="item.prefname"
-                  class="tag prefname"
-                >
+                <span v-if="item.prefname" class="tag prefname">
                   {{ item.prefname }}
                 </span>
                 <span class="tag orgname">{{ item.orgname }}</span>
@@ -130,10 +100,9 @@
                 {{ item.description }}
               </p>
               <p class="action-area">
-                <a
-                  class="button is-primary is-rounded"
-                  :href="item.url"
-                >{{ item.orgname }}のサイトへ</a>
+                <a class="button is-primary is-rounded" :href="item.url">
+                  {{ item.orgname }}のサイトへ
+                </a>
               </p>
             </div>
           </div>
