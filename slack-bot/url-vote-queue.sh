@@ -20,10 +20,10 @@ for path in `cat ./tmp/urls-uniq.txt`; do
     echo path $path
     domain=`echo $path| cut -d'/' -f1 `
     echo domain $domain
-    host_with_url_scheme=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
-    echo host_with_url_scheme $host_with_url_scheme
-    url=${url/$domain/$host_with_url_scheme}
-    echo url $url
+    top_url=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
+    echo top_url $top_url
+    schema=`echo $top_url | cut -d'/' -f 1`
+    url="$schema//$path"
     md5=`get_md5_by_url $url`
     echo $md5
     # redisに存在しないことを確認する

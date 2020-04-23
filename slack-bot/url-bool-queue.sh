@@ -11,11 +11,12 @@ namespace="vscovid-crawler"
 
 for url in `cat ./tmp/urls-uniq.txt`; do
     echo path $path
-    domain=`echo $path| cut -d'/' -f1 `
+    domain=`echo $path | cut -d'/' -f 1 `
     echo domain $domain
-    host_with_url_scheme=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
-    echo host_with_url_scheme $host_with_url_scheme 
-    url=${url/$domain/$host_with_url_scheme}
+    top_url=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
+    echo top_url $top_url
+    schema=`echo $top_url | cut -d'/' -f 1`
+    url="$schema//$path"
     echo url $url
     md5=`get_md5_by_url $url`
     echo $md5
