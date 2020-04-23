@@ -64,10 +64,10 @@ tmp/results.txt: grep
 .PHONY: publish
 publish: www-data/index.html
 
-www-data/index.html: reduce.csv
+www-data/map/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
-	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/index.json
 	cd map-client && npm run build
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 endif
