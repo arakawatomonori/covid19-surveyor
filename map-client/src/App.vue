@@ -30,7 +30,7 @@
               value="string"
               type="radio"
               class="radio"
-              @keypress.enter="changedSearchType"
+              @change="changedSearchType"
             >
             キーワードで検索する
           </label>
