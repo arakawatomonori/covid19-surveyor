@@ -100,8 +100,11 @@
                 {{ item.description }}
               </p>
               <p class="action-area">
-                <a class="button is-primary is-rounded" :href="item.url">
-                  {{ item.orgname }}のサイトへ
+                <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
+                  <span>{{ item.orgname }}のサイトへ</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-external-link-alt" aria-label="外部サイトに移動します"></i>
+                  </span>
                 </a>
               </p>
             </div>
@@ -121,7 +124,7 @@ export default {
     return {
       items: [],
       map: null,
-      selectedPref: null,
+      selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
       searchString: ''
@@ -157,7 +160,6 @@ export default {
     isSearchTypeMap() {
       return this.searchType === 'map'
     }
-
   },
   mounted() {
     this.setupMap()
