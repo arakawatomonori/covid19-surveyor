@@ -311,10 +311,6 @@ export default {
   justify-content: space-between;
 }
 
-.share-buttons {
-  float: left;
-}
-
 .share-button {
   display: inline-block;
   width: 48px;
