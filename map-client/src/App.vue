@@ -169,7 +169,7 @@ export default {
   methods: {
     filterItems(e) {
       const currentSearchString = e.target.value;
-      const filter = this.items.filter(i => {
+      const filteredItems = this.items.filter(i => {
         if (this.isSearchTypeString) {
           return !currentSearchString || this.isMatchPattern(i, currentSearchString)
         } else {
@@ -180,7 +180,7 @@ export default {
           )
         }
       })
-      return this.filteredItems = filter
+      return this.filteredItems = filteredItems
     },
     loadItems() {
       fetch(process.env.VUE_APP_JSON_PATH)
