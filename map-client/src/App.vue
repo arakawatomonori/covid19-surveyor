@@ -30,7 +30,7 @@
               value="string"
               type="radio"
               class="radio"
-              @change="changedSearchType"
+              @keypress.enter="changedSearchType"
             >
             キーワードで検索する
           </label>
@@ -68,7 +68,7 @@
         <h2 class="result-title title is-3">
           {{ resultTitle }}
         </h2>
-            
+
         <label v-if="isSearchTypeMap" class="checkbox cb-national">
           <input v-model="includesNationalOffers" type="checkbox">
           国からの支援制度も含める
