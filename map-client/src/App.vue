@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="app"
-    class="app"
-  >
+  <div id="app" class="app">
     <header class="site-header">
       <h1 class="site-title title is-3">
         新型コロナウイルス（COVID-19）各自治体の経済支援制度まとめ
@@ -13,48 +10,86 @@
         のボランティアたちがまとめたウェブサイトです
       </p>
       <p class="site-description">
-        情報収集整理ボランティアへの参加は <a class="description-link" href="https://cfjslackin.herokuapp.com/">こちらのSlack</a> からできます
+        情報収集整理ボランティアへの参加は
+        <a class="description-link" href="https://cfjslackin.herokuapp.com/">こちらのSlack</a>
+        からできます
       </p>
       <p class="site-description">
-        システム開発ボランティアへの参加は <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGitHub</a> からできます
+        システム開発ボランティアへの参加は
+        <a class="description-link" href="https://github.com/arakawatomonori/covid19-surveyor">こちらのGitHub</a>
+        からできます
       </p>
     </header>
 
     <main class="main">
-      <div
-        ref="map"
-        class="map"
-      />
+      <div class="search-area">
+        <div>
+          <label>
+            <input
+              v-model="searchType"
+              value="string"
+              type="radio"
+              class="radio"
+              @change="changedSearchType"
+            >
+            キーワードで検索する
+          </label>
+          <transition name="showup">
+            <div v-if="isSearchTypeString" class="control search-box">
+              <input
+                v-model="searchString"
+                class="input"
+                type="text"
+                placeholder="検索する単語をご入力ください"
+              >
+            </div>
+          </transition>
+        </div>
+        <label>
+          <input
+            v-model="searchType"
+            value="map"
+            type="radio"
+            class="radio"
+            @change="changedSearchType"
+          >
+          地図から検索する
+        </label>
+      </div>
+
+      <transition name="showup">
+        <div v-show="isSearchTypeMap" class="map-area">
+          <p>地図上の都道府県を選択してください</p>
+          <div ref="map" class="map" />
+        </div>
+      </transition>
 
       <div class="info-area">
-        <h2 class="selected-name title is-3">
-          {{ selected || '地図上の都道府県を選択してください' }}
+        <h2 class="result-title title is-3">
+          {{ resultTitle }}
         </h2>
-        <label class="checkbox cb-national">
-          <input
-            v-model="includesNationalOffers"
-            type="checkbox"
-          >
+            
+        <label v-if="isSearchTypeMap" class="checkbox cb-national">
+          <input v-model="includesNationalOffers" type="checkbox">
           国からの支援制度も含める
         </label>
         <p class="num-items">
           該当件数:
-          <span class="has-text-weight-bold">{{ filteredItems.length }}件</span>
+          <span class="has-text-weight-bold">
+            {{ filteredItems.length }}件
+          </span>
         </p>
       </div>
 
       <div class="filtered-items">
-        <div
-          v-for="(item, i) in filteredItems"
-          :key="i"
-          class="card"
-        >
+        <div v-for="(item, i) in filteredItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
-              <div class="media-left">
-                <span class="tag is-link is-large">{{ item.orgname }}</span>
-              </div>
               <div class="media-content">
+                <span v-if="item.prefname" class="tag prefname">
+                  {{ item.prefname }}
+                </span>
+                <span class="tag orgname">{{ item.orgname }}</span>
                 <h3 class="title is-4">
                   {{ item.title }}
                 </h3>
@@ -65,10 +100,12 @@
                 {{ item.description }}
               </p>
               <p class="action-area">
-                <a
-                  class="button is-primary is-rounded"
-                  :href="item.url"
-                >{{ item.orgname }}のサイトへ</a>
+                <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
+                  <span>{{ item.orgname }}のサイトへ</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-external-link-alt" aria-label="外部サイトに移動します"></i>
+                  </span>
+                </a>
               </p>
             </div>
           </div>
@@ -79,7 +116,7 @@
 </template>
 
 <script>
-import jpmap from "japan-map-js"
+import jpmap from 'japan-map-js'
 
 export default {
   name: "App",
@@ -87,18 +124,41 @@ export default {
     return {
       items: [],
       map: null,
-      selected: null,
-      includesNationalOffers: false
+      selectedPref: '',
+      includesNationalOffers: false,
+      searchType: 'string',
+      searchString: ''
     }
   },
   computed: {
     filteredItems() {
-      return this.items.filter(i =>
-        !this.selected ||
-        this.selected === i.orgname ||
-        this.selected === i.prefname ||
-        (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
-      )
+      return this.items.filter(i => {
+        if (this.isSearchTypeString) {
+          return !this.searchString || this.isMatchPattern(i)
+        } else {
+          return !this.selectedPref || (
+            this.selectedPref === i.orgname ||
+            this.selectedPref === i.prefname ||
+            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
+          )
+        }
+      })
+    },
+    resultTitle() {
+      if (this.isSearchTypeString) {
+        return this.searchString
+          ? `キーワード: ${this.searchString}`
+          : '検索結果'
+      }
+      return this.selectedPref
+        ? `地域: ${this.selectedPref}`
+        : '検索結果'
+    },
+    isSearchTypeString() {
+      return this.searchType === 'string'
+    },
+    isSearchTypeMap() {
+      return this.searchType === 'map'
     }
   },
   mounted() {
@@ -126,7 +186,15 @@ export default {
     },
     onSelect(data) {
       console.log(data.name)
-      this.selected = data.name
+      this.selectedPref = data.name
+    },
+    isMatchPattern(item) {
+      return (item.title + item.orgname + item.prefname + item.description)
+        .match(this.searchString)
+    },
+    changedSearchType() {
+      this.selectedPref = ''
+      this.searchString = ''
     }
   }
 }
@@ -196,18 +264,60 @@ export default {
   line-height: 1.5;
 }
 
+.card-content {
+  .tag {
+    background: transparent;
+    color: #3273dc;
+    border: solid 1px #3273dc;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+
+    &.prefname {
+      margin-right: 8px;
+    }
+  }
+}
+
 .action-area {
   text-align: right;
 }
 
+.text {
+  overflow: hidden;
+}
+
+.showup-enter-active, .showup-leave-active {
+  max-height: 1000px;
+  transition: max-height 1s ease-in-out;
+  overflow: hidden;
+}
+.showup-enter, .showup-leave-to {
+  max-height: 0;
+  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+  overflow: hidden;
+}
+
+.search-area {
+  margin-bottom: 16px;
+}
+.search-box {
+  margin: 8px 0 8px 1rem;
+}
+
+label {
+  cursor: pointer;
+}
+
 @media screen and (max-width:960px) {
   .info-area,
+  .search-area,
   .filtered-items {
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  .title.selected-name {
+  .title.result-title {
     font-size: 2rem;
   }
 
