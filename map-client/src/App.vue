@@ -278,6 +278,10 @@ export default {
   width: 100%;
 }
 
+.media-content {
+  overflow-x: unset;
+}
+
 .card-title {
   display: flex;
   align-items: baseline;
@@ -358,6 +362,13 @@ label {
 
   .card-content .media-left .tag {
     font-size: 1rem;
+  }
+
+  .share-button {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    margin-bottom: 8px;
   }
 }
 </style>
