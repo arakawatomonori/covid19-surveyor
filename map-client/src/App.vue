@@ -77,7 +77,7 @@
         <p class="num-items">
           該当件数:
           <span class="has-text-weight-bold">
-            {{ filteredItems.length}}件
+            {{ filteredItems.length }}件
           </span>
         </p>
       </div>
@@ -141,7 +141,7 @@ export default {
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
-      searchString: '',
+      searchString: ''
     }
   },
   computed: {
