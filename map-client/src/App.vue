@@ -38,6 +38,7 @@
             <div v-if="isSearchTypeString" class="control search-box">
               <input
                 v-model="searchString"
+                v-on:keydown.enter="filterItems"
                 class="input"
                 type="text"
                 placeholder="検索する単語をご入力ください"
@@ -76,12 +77,12 @@
         <p class="num-items">
           該当件数:
           <span class="has-text-weight-bold">
-            {{ filteredItems.length }}件
+            {{ filteredItems.length}}件
           </span>
         </p>
       </div>
 
-      <div class="filtered-items">
+      <div class="filtered-items" v-if="filteredItems">
         <div v-for="(item, i) in filteredItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
@@ -135,27 +136,15 @@ export default {
   data() {
     return {
       items: [],
+      filteredItems: [],
       map: null,
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
-      searchString: ''
+      searchString: '',
     }
   },
   computed: {
-    filteredItems() {
-      return this.items.filter(i => {
-        if (this.isSearchTypeString) {
-          return !this.searchString || this.isMatchPattern(i)
-        } else {
-          return !this.selectedPref || (
-            this.selectedPref === i.orgname ||
-            this.selectedPref === i.prefname ||
-            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
-          )
-        }
-      })
-    },
     resultTitle() {
       if (this.isSearchTypeString) {
         return this.searchString
@@ -178,11 +167,25 @@ export default {
     this.loadItems()
   },
   methods: {
+    filterItems() {
+      return this.filteredItems = this.items.filter(i => {
+        if (this.isSearchTypeString) {
+          return !this.searchString || this.isMatchPattern(i)
+        } else {
+          return !this.selectedPref || (
+            this.selectedPref === i.orgname ||
+            this.selectedPref === i.prefname ||
+            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
+          )
+        }
+      })
+    },
     loadItems() {
       fetch(process.env.VUE_APP_JSON_PATH)
         .then(resp => resp.json())
         .then(json => {
           this.items = json
+          this.filteredItems = json
         })
     },
     setupMap() {
@@ -197,8 +200,8 @@ export default {
       }
     },
     onSelect(data) {
-      console.log(data.name)
       this.selectedPref = data.name
+      this.filterItems()
     },
     isMatchPattern(item) {
       return (item.title + item.orgname + item.prefname + item.description)
