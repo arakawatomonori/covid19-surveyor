@@ -167,10 +167,11 @@ export default {
     this.loadItems()
   },
   methods: {
-    filterItems() {
-      return this.filteredItems = this.items.filter(i => {
+    filterItems(e) {
+      const currentSearchString = e.target.value;
+      const filter = this.items.filter(i => {
         if (this.isSearchTypeString) {
-          return !this.searchString || this.isMatchPattern(i)
+          return !currentSearchString || this.isMatchPattern(i, currentSearchString)
         } else {
           return !this.selectedPref || (
             this.selectedPref === i.orgname ||
@@ -179,6 +180,7 @@ export default {
           )
         }
       })
+      return this.filteredItems = filter
     },
     loadItems() {
       fetch(process.env.VUE_APP_JSON_PATH)
@@ -203,9 +205,9 @@ export default {
       this.selectedPref = data.name
       this.filterItems()
     },
-    isMatchPattern(item) {
+    isMatchPattern(item, searchString) {
       return (item.title + item.orgname + item.prefname + item.description)
-        .match(this.searchString)
+        .match(searchString)
     },
     changedSearchType() {
       this.selectedPref = ''
