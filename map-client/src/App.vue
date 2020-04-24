@@ -313,9 +313,9 @@ export default {
 
 .share-button {
   display: inline-block;
-  width: 48px;
-  height: 48px;
-  margin-right: 16px;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
 
   img:hover {
     opacity: 0.5;
@@ -361,8 +361,6 @@ label {
   }
 
   .share-button {
-    width: 40px;
-    height: 40px;
     margin-right: 8px;
     margin-bottom: 8px;
   }
