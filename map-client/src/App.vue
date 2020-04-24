@@ -99,14 +99,26 @@
               <p class="subtitle is-6">
                 {{ item.description }}
               </p>
-              <p class="action-area">
+              <div class="action-area">
+                <div class="share-buttons">
+                  <a class="share-button" :href="shareLineURL(item)" target="_blank" rel="noopener noreferrer">
+                    <img src="line.svg">
+                  </a>
+                  <a class="share-button" :href="shareTwitterURL(item)" target="_blank" rel="noopener noreferrer">
+                    <img src="twitter.svg">
+                  </a>
+                  <a class="share-button" :href="shareFBURL(item)" target="_blank" rel="noopener noreferrer">
+                    <img src="facebook.svg">
+                  </a>
+                </div>
+
                 <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
                   <span>{{ item.orgname }}のサイトへ</span>
                   <span class="icon is-small">
                     <i class="fas fa-external-link-alt" aria-label="外部サイトに移動します"></i>
                   </span>
                 </a>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -195,6 +207,15 @@ export default {
     changedSearchType() {
       this.selectedPref = ''
       this.searchString = ''
+    },
+    shareLineURL(item) {
+      return `https://social-plugins.line.me/lineit/share?url=${item.url}`
+    },
+    shareTwitterURL(item) {
+      return `https://twitter.com/intent/tweet?text=${item.orgname}がこんな支援制度をやってるよ！ ${item.url} 他の支援制度はこちらで探せるよ！ https://help.stopcovid19.jp &via=codeforJP&related=codeforJP`
+    },
+    shareFBURL(item) {
+      return `https://www.facebook.com/sharer.php?u=${item.url}`
     }
   }
 }
@@ -280,11 +301,25 @@ export default {
 }
 
 .action-area {
-  text-align: right;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.text {
-  overflow: hidden;
+.share-buttons {
+  float: left;
+}
+
+.share-button {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  margin-right: 16px;
+
+  img:hover {
+    opacity: 0.5;
+  }
 }
 
 .showup-enter-active, .showup-leave-active {
