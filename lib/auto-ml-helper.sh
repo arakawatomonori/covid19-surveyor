@@ -24,6 +24,7 @@ EOF
     echo $json
 }
 
+# TODO parseをかく
 parse_predict_json() {
     res=$1
     echo $result
