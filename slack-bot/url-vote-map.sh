@@ -7,6 +7,7 @@ ts=`date '+%s'`
 . ./lib/slack-helper.sh
 . ./lib/url-helper.sh
 . ./lib/redis-helper.sh
+. ./lib/auto-ml-helper.sh
 
 namespace="vscovid-crawler-vote"
 
@@ -20,13 +21,30 @@ send_message() {
     # キューから一件取り出す
     value=`redis_pop_value_from_queue $namespace`
     value=`echo $value| cut -d' ' -f 2`
-    echo $value
     url=`echo $value| cut -d',' -f 1`
+    echo $url
+    title=`get_title_by_url ${url}`
+
+    if [[ $title == "" ]];then
+        return 1
+    fi
+
+    predict=`get_predict_by_url $url`
+    predict_label=`echo $predict | cut -d',' -f 1`
+    echo $predict_label
+    predict_score=`echo $predict | cut -d',' -f 2`
+    predict_score=$(echo "$predict_score*100" | bc | cut -d'.' -f 1)
+    echo $predict_score
+    if [[ $predict_label == "\"not_covid19_help\"" ]];then
+        if [ $predict_score -gt 60 ];then
+            return 1
+        fi
+    fi
+
     user_id=`echo $value| cut -d',' -f 2`
     timestamp=`echo $value| cut -d',' -f 3`
     result=`echo $value| cut -d',' -f 4`
 
-    title=`get_title_by_url ${url}`
     orgname=`get_orgname_by_url ${url}`
 
     md5=`get_md5_by_url $url`
@@ -47,7 +65,7 @@ send_message() {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "新型コロナに関連する経済支援制度を収集しています！"
+                "text": "私はこのURLは$predict_score%自治体独自の新型コロナ経済支援制度だと思いますが、あなたはどう思いますか？"
             }
         },
         {
@@ -143,10 +161,10 @@ main() {
     # 一秒に一回でいい
     # 各メンバーにDMを送る
     # テスターのID
-    #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
+    members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
     for member in $members_list; do
         member_id=${member:1:-1}
-        send_message $member_id
+        echo `send_message $member_id`
     done
 }
 
