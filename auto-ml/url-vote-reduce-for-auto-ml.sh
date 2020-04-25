@@ -12,7 +12,7 @@ get_url_by_md5() {
     echo $url
 }
 
-get_row_by_url() {
+get_row_by_url_with_label() {
     url=$1
     label=$2
     res=$(wget -q -O - --timeout=5 $url)
@@ -28,11 +28,11 @@ main() {
     keys=$(redis-cli KEYS "vscovid-crawler-vote:result-*")
     for key in $keys; do
         md5=$(echo $key| cut -d'-' -f 4)
-        int=$(redis-cli GET $key)
+        score=$(redis-cli GET $key)
         label="covid19_help"
-        if [[ $int == "0" ]]; then
+        if [[ $score == "0" ]]; then
             label="unknown"
-        elif [[ $int == -* ]]; then
+        elif [[ $score == -* ]]; then
             label="not_covid19_help"
         fi
         url=`get_url_by_md5 $md5`
