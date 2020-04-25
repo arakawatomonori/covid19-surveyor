@@ -17,11 +17,10 @@ get_domain_by_url() {
 # tested
 get_orgname_by_url() {
     url=$1
-    files_prefixies='city gov pref'
-
+    target_file_names='city.csv gov.csv pref.csv'
     files=''
-    for prefix in $files_prefixies; do
-	    files=$files" ./data/$prefix.csv"
+    for file in $target_file_names; do
+	    files=$files" ./data/$file"
     done
     domain=`get_domain_by_url $url`
     orgname=`grep "$domain" $files | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
