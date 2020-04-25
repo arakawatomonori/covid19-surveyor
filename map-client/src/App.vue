@@ -115,7 +115,7 @@
                 <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
                   <span>{{ item.orgname }}のサイトへ</span>
                   <span class="icon is-small">
-                    <i class="fas fa-external-link-alt" aria-label="外部サイトに移動します"></i>
+                    <i class="fa fa-external-link" aria-label="外部サイトに移動します"></i>
                   </span>
                 </a>
               </div>
