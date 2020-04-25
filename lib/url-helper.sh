@@ -17,8 +17,13 @@ get_domain_by_url() {
 # tested
 get_orgname_by_url() {
     url=$1
+    target_file_names='city.csv gov.csv pref.csv'
+    files=''
+    for file in $target_file_names; do
+	    files=$files" ./data/$file"
+    done
     domain=`get_domain_by_url $url`
-    orgname=`grep "$domain" ./data/*.csv | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
+    orgname=`grep "$domain" $files | head -1 | cut -d',' -f 1 | cut -d':' -f 2`
     echo $orgname
     return 0
 }
@@ -51,6 +56,18 @@ get_desc_by_url() {
     desc=`get_desc_by_res "$res"`
     echo $desc
 }
+
+get_text_by_url(){
+    url=$1
+    res=$(wget -q -O - --timeout=5 $url)
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+    title=$(get_title_by_res "$res")
+    desc=$(get_desc_by_res "$res" | remove_newline_and_comma)
+    echo "$title $desc"
+}
+
 
 get_md5_by_url() {
     url=$1
