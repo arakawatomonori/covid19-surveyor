@@ -37,7 +37,6 @@
           <transition name="showup">
             <div v-if="isSearchTypeString" class="control search-box">
               <input
-                v-model="searchString"
                 class="input"
                 type="text"
                 placeholder="検索する単語をご入力ください"
