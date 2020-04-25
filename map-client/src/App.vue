@@ -38,10 +38,10 @@
             <div v-if="isSearchTypeString" class="control search-box">
               <input
                 v-model="searchString"
-                v-on:keydown.enter="filterItems"
                 class="input"
                 type="text"
                 placeholder="検索する単語をご入力ください"
+                @keydown.enter.13="updateSearchString"
               >
             </div>
           </transition>
@@ -136,15 +136,27 @@ export default {
   data() {
     return {
       items: [],
-      filteredItems: [],
       map: null,
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
-      searchString: ''
+      searchString: '',
     }
   },
   computed: {
+    filteredItems() {
+      return this.items.filter(i => {
+        if (this.isSearchTypeString) {
+          return !this.searchString || this.isMatchPattern(i)
+        } else {
+          return !this.selectedPref || (
+            this.selectedPref === i.orgname ||
+            this.selectedPref === i.prefname ||
+            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
+          )
+        }
+      })
+    },
     resultTitle() {
       if (this.isSearchTypeString) {
         return this.searchString
@@ -167,27 +179,14 @@ export default {
     this.loadItems()
   },
   methods: {
-    filterItems(e) {
-      const currentSearchString = e.target.value;
-      const filteredItems = this.items.filter(i => {
-        if (this.isSearchTypeString) {
-          return !currentSearchString || this.isMatchPattern(i, currentSearchString)
-        } else {
-          return !this.selectedPref || (
-            this.selectedPref === i.orgname ||
-            this.selectedPref === i.prefname ||
-            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
-          )
-        }
-      })
-      return this.filteredItems = filteredItems
+    updateSearchString(e) {
+      this.searchString = e.target.value;
     },
     loadItems() {
       fetch(process.env.VUE_APP_JSON_PATH)
         .then(resp => resp.json())
         .then(json => {
           this.items = json
-          this.filteredItems = json
         })
     },
     setupMap() {
@@ -203,11 +202,10 @@ export default {
     },
     onSelect(data) {
       this.selectedPref = data.name
-      this.filterItems()
     },
-    isMatchPattern(item, searchString) {
+    isMatchPattern(item) {
       return (item.title + item.orgname + item.prefname + item.description)
-        .match(searchString)
+        .match(this.searchString)
     },
     changedSearchType() {
       this.selectedPref = ''
