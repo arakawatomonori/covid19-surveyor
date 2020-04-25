@@ -33,7 +33,9 @@ send_message() {
     predict_label=`echo $predict | cut -d',' -f 1`
     echo $predict_label
     predict_score=`echo $predict | cut -d',' -f 2`
+    set +e
     predict_score=$(echo "$predict_score*100" | bc | cut -d'.' -f 1)
+    set -e
     echo $predict_score
     if [[ $predict_label == "\"not_covid19_help\"" ]];then
         if [ $predict_score -gt 60 ];then
@@ -65,7 +67,7 @@ send_message() {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "私はこのURLは$predict_score%自治体独自の新型コロナ経済支援制度だと思いますが、あなたはどう思いますか？"
+                "text": "私はこのURLは$predict_score%自治体独自の新型コロナ関連経済支援制度だと思いますが、あなたは自治体独自の新型コロナ関連経済支援制度だと思いますか？"
             }
         },
         {
