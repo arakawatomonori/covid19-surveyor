@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-
-gcp_token=$(gcloud auth application-default print-access-token)
+if which gcloud > /dev/null 2>&1; then
+    gcp_token=$(gcloud auth application-default print-access-token)
+fi
 
 . ./lib/url-helper.sh
 . ./lib/string-helper.sh
