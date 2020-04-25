@@ -32,7 +32,7 @@
               class="radio"
               @change="changedSearchType"
             >
-            キーワードで検索する
+            キーワードで検索する(エンターで絞り込み)
           </label>
           <transition name="showup">
             <div v-if="isSearchTypeString" class="control search-box">
@@ -41,7 +41,7 @@
                 class="input"
                 type="text"
                 placeholder="検索する単語をご入力ください"
-                @keydown.enter.13="updateSearchString"
+                @keydown.enter="updateSearchString"
               >
             </div>
           </transition>
@@ -75,7 +75,7 @@
           国からの支援制度も含める
         </label>
         <p class="num-items">
-          該当件数:
+          {{ searchString ? '該当件数' : '件数' }}:
           <span class="has-text-weight-bold">
             {{ filteredItems.length }}件
           </span>
@@ -161,11 +161,11 @@ export default {
       if (this.isSearchTypeString) {
         return this.searchString
           ? `キーワード: ${this.searchString}`
-          : '検索結果'
+          : '全ての経済支援制度'
       }
       return this.selectedPref
         ? `地域: ${this.selectedPref}`
-        : '検索結果'
+        : '全ての経済支援制度'
     },
     isSearchTypeString() {
       return this.searchType === 'string'
