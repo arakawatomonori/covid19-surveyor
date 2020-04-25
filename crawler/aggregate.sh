@@ -31,8 +31,8 @@ for url in $urls; do
     echo "$url" >> ./tmp/urls.txt
 done
 
-# uniqする
-uniq ./tmp/urls.txt > ./tmp/urls-uniq.txt
+# sortしてuniqする
+sort < ./tmp/urls.txt | uniq > ./tmp/urls-uniq.txt
 
 echo "" > ./urls-md5.csv
 
