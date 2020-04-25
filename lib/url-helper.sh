@@ -52,6 +52,18 @@ get_desc_by_url() {
     echo $desc
 }
 
+get_text_by_url(){
+    url=$1
+    res=$(wget -q -O - --timeout=5 $url)
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+    title=$(get_title_by_res "$res")
+    desc=$(get_desc_by_res "$res" | remove_newline_and_comma)
+    echo "$title $desc"
+}
+
+
 get_md5_by_url() {
     url=$1
     # URLからmd5を得る
