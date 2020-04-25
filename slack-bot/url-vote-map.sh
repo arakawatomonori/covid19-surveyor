@@ -158,8 +158,6 @@ main() {
     channels_id=`get_channels_id`
     members_list=`get_members_list $channels_id`
 
-    echo members num ${#members_list[@]}
-
     # 一秒に一回でいい
     # 各メンバーにDMを送る
     # テスターのID
