@@ -144,17 +144,15 @@ export default {
   },
   computed: {
     filteredItems() {
-      return this.items.filter(i => {
-        if (this.isSearchTypeString) {
-          return !this.searchString || this.isMatchPattern(i)
-        } else {
-          return !this.selectedPref || (
-            this.selectedPref === i.orgname ||
-            this.selectedPref === i.prefname ||
-            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
-          )
-        }
-      })
+      if (this.isSearchTypeString) {
+        return this.searchString
+          ? this.items.filter(i => this.isMatchPattern(i))
+          : this.items
+      } else {
+        return this.selectedPref
+          ? this.items.filter(i => this.isSelectedPref(i))
+          : this.items
+      }
     },
     resultTitle() {
       if (this.isSearchTypeString) {
@@ -203,6 +201,11 @@ export default {
     isMatchPattern(item) {
       return (item.title + item.orgname + item.prefname + item.description)
         .match(this.searchString)
+    },
+    isSelectedPref(item) {
+      return this.selectedPref === item.orgname ||
+        this.selectedPref === item.prefname ||
+        (this.includesNationalOffers && '省庁'.includes(item.orgname.slice(-1)))
     },
     changedSearchType() {
       this.selectedPref = ''
