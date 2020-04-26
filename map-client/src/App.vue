@@ -158,11 +158,11 @@ export default {
       if (this.isSearchTypeString) {
         return this.searchString
           ? `キーワード: ${this.searchString}`
-          : '検索結果'
+          : '全ての経済支援制度'
       }
       return this.selectedPref
         ? `地域: ${this.selectedPref}`
-        : '検索結果'
+        : '全ての経済支援制度'
     },
     isSearchTypeString() {
       return this.searchType === 'string'
