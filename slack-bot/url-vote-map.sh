@@ -22,7 +22,6 @@ send_message() {
     value=`redis_pop_value_from_queue $namespace`
     value=`echo $value| cut -d' ' -f 2`
     url=`echo $value| cut -d',' -f 1`
-    echo $url
     title=`get_title_by_url ${url}`
 
     if [[ $title == "" ]];then
@@ -36,7 +35,6 @@ send_message() {
     set +e
     predict_score=$(echo "$predict_score*100" | bc | cut -d'.' -f 1)
     set -e
-    echo $predict_score
     if [[ $predict_label == "\"not_covid19_help\"" ]];then
         if [ $predict_score -gt 60 ];then
             return 1
@@ -146,11 +144,10 @@ send_message() {
 }
 EOF
 `
-    echo $json | jq .
-    wget -q -O - --post-data "$json" \
+    wget -q -O /dev/null --post-data "$json" \
     --header="Content-type: application/json" \
     --header="Authorization: Bearer ${slack_token}" \
-    https://slack.com/api/chat.postMessage | jq .
+    https://slack.com/api/chat.postMessage
     echo ""
 }
 
@@ -164,7 +161,7 @@ main() {
     #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
     for member in $members_list; do
         member_id=${member:1:-1}
-        echo `send_message $member_id`
+        send_message $member_id
     done
 }
 
