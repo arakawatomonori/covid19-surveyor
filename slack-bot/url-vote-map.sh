@@ -20,16 +20,34 @@ send_message() {
     # キューから一件取り出す
     value=`redis_pop_value_from_queue $namespace`
     value=`echo $value| cut -d' ' -f 2`
-    echo $value
     url=`echo $value| cut -d',' -f 1`
     user_id=`echo $value| cut -d',' -f 2`
     timestamp=`echo $value| cut -d',' -f 3`
     result=`echo $value| cut -d',' -f 4`
 
+    md5=`get_md5_by_url $url`
+
+    # not_covid19_helpの可能性が60%以上ならスキップ
+    predict_json=`grep $md5 ./data/eval-results-md5.csv | head -n 1 | cut -d' ' -f 2-`
+    echo $predict_json
+    if [[ $predict_json != "" ]];then
+        not_covid19_help=`echo $predict_json | jq .not_covid19_help`
+        not_covid19_help=$(echo "$not_covid19_help*100" | bc | cut -d'.' -f 1)
+        threshold=60
+        echo $not_covid19_help
+        if [ $not_covid19_help -gt $threshold ];then
+            return 1
+        fi
+    fi
+
+    # タイトルが空ならスキップ
     title=`get_title_by_url ${url}`
+    if [[ $title == "" ]];then
+        return 1
+    fi
+
     orgname=`get_orgname_by_url ${url}`
 
-    md5=`get_md5_by_url $url`
     # unixtime
     timestamp=`date '+%s'`
 
@@ -126,11 +144,10 @@ send_message() {
 }
 EOF
 `
-    echo $json | jq .
     wget -q -O - --post-data "$json" \
     --header="Content-type: application/json" \
     --header="Authorization: Bearer ${slack_token}" \
-    https://slack.com/api/chat.postMessage | jq .
+    https://slack.com/api/chat.postMessage
     echo ""
 }
 
@@ -146,7 +163,7 @@ main() {
     #members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
     for member in $members_list; do
         member_id=${member:1:-1}
-        send_message $member_id
+        echo `send_message $member_id`
     done
 }
 
