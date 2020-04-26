@@ -97,10 +97,10 @@
             </div>
             <div class="content">
               <p class="subtitle is-6">
-                {{ item.description }}
+                {{ item.shortDesc }}
               </p>
-              <div class="action-area">
-                <div class="share-buttons">
+              <div class="action-area is-clearfix">
+                <div class="share-buttons is-pulled-left">
                   <a class="share-button" :href="shareLineURL(item)" target="_blank" rel="noopener noreferrer">
                     <img src="line.svg">
                   </a>
@@ -112,7 +112,7 @@
                   </a>
                 </div>
 
-                <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
+                <a class="jump-button button is-primary is-rounded is-pulled-right" :href="item.url" target="_blank" rel="noopener">
                   <span>{{ item.orgname }}のサイトへ</span>
                   <span class="icon is-small">
                     <i class="fa fa-external-link" aria-label="外部サイトに移動します"></i>
@@ -129,6 +129,8 @@
 
 <script>
 import jpmap from 'japan-map-js'
+
+const MAX_DESC_LENGTH = 200
 
 export default {
   name: "App",
@@ -180,7 +182,10 @@ export default {
       fetch(process.env.VUE_APP_JSON_PATH)
         .then(resp => resp.json())
         .then(json => {
-          this.items = json
+          this.items = json.map(item => ({
+            ...item,
+            shortDesc: this.clipDesc(item.description)
+          }))
         })
     },
     setupMap() {
@@ -219,6 +224,12 @@ export default {
     },
     shareFBURL(item) {
       return `https://www.facebook.com/sharer.php?u=${item.url}`
+    },
+    clipDesc(desc) {
+      let clipped = desc.replace(/&\w+;/g, ' ')
+      return clipped.length > MAX_DESC_LENGTH
+        ? clipped.slice(0, MAX_DESC_LENGTH) + '…'
+        : clipped
     }
   }
 }
@@ -230,32 +241,25 @@ export default {
   margin: 0 auto;
 }
 
-.site-header > .site-description {
-  color: white;
-}
-
-.site-header > .site-description > .description-link  {
-  text-decoration: underline;
-  color: white;
-  padding: 0 4px;
-}
-
-.site-header > .site-description > .description-link:hover {
-  text-decoration: none;
-}
-
 .site-header {
   background: #ac0027;
   padding: 24px;
-}
-
-.site-title {
   color: white;
-  line-height: 1.2;
-}
 
-.site-header .p {
-  color: white;
+  .site-title {
+    color: white;
+    line-height: 1.2;
+  }
+
+  .description-link {
+    text-decoration: underline;
+    color: white;
+    padding: 0 4px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .main {
@@ -270,10 +274,10 @@ export default {
 
 .info-area {
   margin: 32px 0;
-}
 
-.cb-national {
-  margin-bottom: 16px;
+  .cb-national {
+    margin-bottom: 16px;
+  }
 }
 
 .card {
@@ -286,15 +290,13 @@ export default {
 }
 
 .card-title {
-  display: flex;
-  align-items: baseline;
   font-size: 1.5rem;
   line-height: 1.5;
 }
 
 .card-content {
   .tag {
-    background: transparent;
+    background: white;
     color: #3273dc;
     border: solid 1px #3273dc;
     font-weight: bold;
@@ -308,20 +310,25 @@ export default {
 }
 
 .action-area {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  margin-top: 16px;
 
-.share-button {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
+  .share-buttons {
+    margin-top: 8px;
+  }
 
-  img:hover {
-    opacity: 0.5;
+  .share-button {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+
+    img:hover {
+      opacity: 0.5;
+    }
+  }
+
+  .jump-button {
+    margin-top: 8px;
   }
 }
 
@@ -338,9 +345,10 @@ export default {
 
 .search-area {
   margin-bottom: 16px;
-}
-.search-box {
-  margin: 8px 0 8px 1rem;
+
+  .search-box {
+    margin: 8px 0 8px 1rem;
+  }
 }
 
 label {
@@ -365,7 +373,6 @@ label {
 
   .share-button {
     margin-right: 8px;
-    margin-bottom: 8px;
   }
 }
 </style>
