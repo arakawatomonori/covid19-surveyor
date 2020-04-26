@@ -76,12 +76,17 @@
         <p class="num-items">
           該当件数:
           <span class="has-text-weight-bold">
-            {{ filteredItems.length }}件
+            {{ loadingID ? '--' : filteredItems.length }}件
           </span>
         </p>
       </div>
 
-      <div class="filtered-items">
+      <div v-if="loadingID" class="loading">
+        <div class="icon">
+          <i class="fa fa-spinner fa-pulse"></i>
+        </div>
+      </div>
+      <div v-else class="filtered-items">
         <div v-for="(item, i) in filteredItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
@@ -129,8 +134,10 @@
 
 <script>
 import jpmap from 'japan-map-js'
+import { debounce } from 'debounce'
 
-const MAX_DESC_LENGTH = 200
+const MAX_DESC_LENGTH = 200     // description の最大文字数
+const INPUT_DEBOUNCE_TIME = 300 // 検索欄の入力確定までの遅延時間(ms)
 
 export default {
   name: "App",
@@ -141,21 +148,12 @@ export default {
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
-      searchString: ''
+      searchString: '',
+      loadingID: 1,
+      filteredItems: []
     }
   },
   computed: {
-    filteredItems() {
-      if (this.isSearchTypeString) {
-        return this.searchString
-          ? this.items.filter(i => this.isMatchPattern(i))
-          : this.items
-      } else {
-        return this.selectedPref
-          ? this.items.filter(i => this.isSelectedPref(i))
-          : this.items
-      }
-    },
     resultTitle() {
       if (this.isSearchTypeString) {
         return this.searchString
@@ -186,6 +184,7 @@ export default {
             ...item,
             shortDesc: this.clipDesc(item.description)
           }))
+          this.updateFilteredItems()
         })
     },
     setupMap() {
@@ -230,6 +229,30 @@ export default {
       return clipped.length > MAX_DESC_LENGTH
         ? clipped.slice(0, MAX_DESC_LENGTH) + '…'
         : clipped
+    },
+    updateFilteredItems() {
+      if (this.loadingID) clearTimeout(this.loadingID)
+
+      this.loadingID = setTimeout(() => {
+        if (this.isSearchTypeString) {
+          this.filteredItems = this.searchString
+            ? this.items.filter(i => this.isMatchPattern(i))
+            : this.items
+        } else {
+          this.filteredItems = this.selectedPref
+            ? this.items.filter(i => this.isSelectedPref(i))
+            : this.items
+        }
+        this.loadingID = 0
+      }, 0)
+    }
+  },
+  watch: {
+    searchString: debounce(function() {
+      this.updateFilteredItems()
+    }, INPUT_DEBOUNCE_TIME),
+    selectedPref() {
+      this.updateFilteredItems()
     }
   }
 }
@@ -353,6 +376,11 @@ export default {
 
 label {
   cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  font-size: 2rem;
 }
 
 @media screen and (max-width:960px) {
