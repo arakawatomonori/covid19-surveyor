@@ -76,12 +76,17 @@
         <p class="num-items">
           該当件数:
           <span class="has-text-weight-bold">
-            {{ filteredItems.length }}件
+            {{ loadingID ? '--' : filteredItems.length }}件
           </span>
         </p>
       </div>
 
-      <div class="filtered-items">
+      <div v-if="loadingID" class="loading">
+        <div class="icon">
+          <i class="fa fa-spinner fa-pulse"></i>
+        </div>
+      </div>
+      <div v-else class="filtered-items">
         <div v-for="(item, i) in filteredItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
@@ -97,10 +102,10 @@
             </div>
             <div class="content">
               <p class="subtitle is-6">
-                {{ item.description }}
+                {{ item.shortDesc }}
               </p>
-              <div class="action-area">
-                <div class="share-buttons">
+              <div class="action-area is-clearfix">
+                <div class="share-buttons is-pulled-left">
                   <a class="share-button" :href="shareLineURL(item)" target="_blank" rel="noopener noreferrer">
                     <img src="line.svg">
                   </a>
@@ -112,10 +117,10 @@
                   </a>
                 </div>
 
-                <a class="button is-primary is-rounded" :href="item.url" target="_blank" rel="noopener">
+                <a class="jump-button button is-primary is-rounded is-pulled-right" :href="item.url" target="_blank" rel="noopener">
                   <span>{{ item.orgname }}のサイトへ</span>
                   <span class="icon is-small">
-                    <i class="fas fa-external-link-alt" aria-label="外部サイトに移動します"></i>
+                    <i class="fa fa-external-link" aria-label="外部サイトに移動します"></i>
                   </span>
                 </a>
               </div>
@@ -129,6 +134,10 @@
 
 <script>
 import jpmap from 'japan-map-js'
+import { debounce } from 'debounce'
+
+const MAX_DESC_LENGTH = 200     // description の最大文字数
+const INPUT_DEBOUNCE_TIME = 300 // 検索欄の入力確定までの遅延時間(ms)
 
 export default {
   name: "App",
@@ -139,32 +148,21 @@ export default {
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
-      searchString: ''
+      searchString: '',
+      loadingID: 1,
+      filteredItems: []
     }
   },
   computed: {
-    filteredItems() {
-      return this.items.filter(i => {
-        if (this.isSearchTypeString) {
-          return !this.searchString || this.isMatchPattern(i)
-        } else {
-          return !this.selectedPref || (
-            this.selectedPref === i.orgname ||
-            this.selectedPref === i.prefname ||
-            (this.includesNationalOffers && '省庁'.includes(i.orgname.slice(-1)))
-          )
-        }
-      })
-    },
     resultTitle() {
       if (this.isSearchTypeString) {
         return this.searchString
           ? `キーワード: ${this.searchString}`
-          : '検索結果'
+          : '全ての経済支援制度'
       }
       return this.selectedPref
         ? `地域: ${this.selectedPref}`
-        : '検索結果'
+        : '全ての経済支援制度'
     },
     isSearchTypeString() {
       return this.searchType === 'string'
@@ -182,7 +180,11 @@ export default {
       fetch(process.env.VUE_APP_JSON_PATH)
         .then(resp => resp.json())
         .then(json => {
-          this.items = json
+          this.items = json.map(item => ({
+            ...item,
+            shortDesc: this.clipDesc(item.description)
+          }))
+          this.updateFilteredItems()
         })
     },
     setupMap() {
@@ -204,6 +206,11 @@ export default {
       return (item.title + item.orgname + item.prefname + item.description)
         .match(this.searchString)
     },
+    isSelectedPref(item) {
+      return this.selectedPref === item.orgname ||
+        this.selectedPref === item.prefname ||
+        (this.includesNationalOffers && '省庁'.includes(item.orgname.slice(-1)))
+    },
     changedSearchType() {
       this.selectedPref = ''
       this.searchString = ''
@@ -216,6 +223,34 @@ export default {
     },
     shareFBURL(item) {
       return `https://www.facebook.com/sharer.php?u=${item.url}`
+    },
+    clipDesc(desc) {
+      const clipped = desc.replace(/&\w+;/g, ' ')
+      return clipped.length > MAX_DESC_LENGTH
+        ? clipped.slice(0, MAX_DESC_LENGTH) + '…'
+        : clipped
+    },
+    updateFilteredItems() {
+      this.loadingID = setTimeout(() => {
+        if (this.isSearchTypeString) {
+          this.filteredItems = this.searchString
+            ? this.items.filter(i => this.isMatchPattern(i))
+            : this.items
+        } else {
+          this.filteredItems = this.selectedPref
+            ? this.items.filter(i => this.isSelectedPref(i))
+            : this.items
+        }
+        this.loadingID = 0
+      }, 0)
+    }
+  },
+  watch: {
+    searchString: debounce(function() {
+      this.updateFilteredItems()
+    }, INPUT_DEBOUNCE_TIME),
+    selectedPref() {
+      this.updateFilteredItems()
     }
   }
 }
@@ -227,32 +262,25 @@ export default {
   margin: 0 auto;
 }
 
-.site-header > .site-description {
-  color: white;
-}
-
-.site-header > .site-description > .description-link  {
-  text-decoration: underline;
-  color: white;
-  padding: 0 4px;
-}
-
-.site-header > .site-description > .description-link:hover {
-  text-decoration: none;
-}
-
 .site-header {
   background: #ac0027;
   padding: 24px;
-}
-
-.site-title {
   color: white;
-  line-height: 1.2;
-}
 
-.site-header .p {
-  color: white;
+  .site-title {
+    color: white;
+    line-height: 1.2;
+  }
+
+  .description-link {
+    text-decoration: underline;
+    color: white;
+    padding: 0 4px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .main {
@@ -267,10 +295,10 @@ export default {
 
 .info-area {
   margin: 32px 0;
-}
 
-.cb-national {
-  margin-bottom: 16px;
+  .cb-national {
+    margin-bottom: 16px;
+  }
 }
 
 .card {
@@ -283,15 +311,13 @@ export default {
 }
 
 .card-title {
-  display: flex;
-  align-items: baseline;
   font-size: 1.5rem;
   line-height: 1.5;
 }
 
 .card-content {
   .tag {
-    background: transparent;
+    background: white;
     color: #3273dc;
     border: solid 1px #3273dc;
     font-weight: bold;
@@ -305,20 +331,25 @@ export default {
 }
 
 .action-area {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  margin-top: 16px;
 
-.share-button {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
+  .share-buttons {
+    margin-top: 8px;
+  }
 
-  img:hover {
-    opacity: 0.5;
+  .share-button {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+
+    img:hover {
+      opacity: 0.5;
+    }
+  }
+
+  .jump-button {
+    margin-top: 8px;
   }
 }
 
@@ -335,13 +366,19 @@ export default {
 
 .search-area {
   margin-bottom: 16px;
-}
-.search-box {
-  margin: 8px 0 8px 1rem;
+
+  .search-box {
+    margin: 8px 0 8px 1rem;
+  }
 }
 
 label {
   cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  font-size: 2rem;
 }
 
 @media screen and (max-width:960px) {
@@ -362,7 +399,6 @@ label {
 
   .share-button {
     margin-right: 8px;
-    margin-bottom: 8px;
   }
 }
 </style>
