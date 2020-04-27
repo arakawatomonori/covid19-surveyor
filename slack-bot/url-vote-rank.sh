@@ -39,7 +39,7 @@ done
 
 for k in "${!users[@]}"; do
     echo $k,${users["$k"]}
-done | sort -t , -rn -k2 | head -n 20 > tmp/rank.txt
+done | sort -t , -rn -k2 | head -n 50 > tmp/rank.txt
 
 
 # tmp/rank.txt を元にポスト用ランキング文字列を構築 -> $rank
