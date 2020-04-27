@@ -45,7 +45,7 @@ remove-large-files:
 	./crawler/remove-large-files.sh
 
 ###
-### wgetで収集したwww-data内のHTMLとPDFをgrepで検索する
+### wgetで収集したwww-data内のHTMLとPDFをgrepで検索しgrep_コロナ.txt.tmpを生成する
 ###
 .PHONY: grep
 grep: tmp/grep_コロナ.txt.tmp
@@ -55,7 +55,7 @@ tmp/grep_コロナ.txt.tmp: remove-large-files
 
 ###
 ### grepの結果を集計する
-### 複数のキーワードでgrepしているので重複があったりするのをuniqする
+### 複数のキーワードでgrepしているので重複があったりするのをuniqしgrep_aggregate.txtを生成する
 ###
 .PHONY: grep-aggregate
 aggregate: tmp/grep_aggregate.txt
@@ -64,7 +64,7 @@ tmp/grep_aggregate.txt: grep
 	./crawler/grep-aggregate.sh
 
 ###
-### grepの結果からURLのみを収集しmd5を計算する
+### grepの結果からURLのみを収集しmd5を計算しurls-md5.csvを生成する
 ###
 .PHONY: urls-md5
 urls-md5: data/urls-md5.csv
@@ -75,14 +75,25 @@ data/urls-md5.csv: tmp/grep_aggregate.txt
 ###
 ### URLの一覧すべてをwgetし機械学習できるテキストファイル形式にする
 ###
-tmp/eval.csv: data/urls-md5.csv
+data/eval.csv: data/urls-md5.csv
 	./auto-ml/urls-md5-csv-to-eval-csv.sh
 
 ###
-### テキストファイルを機械学習で評価し結果を出力する
+### これまでの回答を使って機械学習の訓練をしてモデルをつくる
 ###
-tmp/eval-result.csv: tmp/eval.csv
-	sudo docker run --rm -v $(pwd)/../tmp:/tmp covid19surveyorml:latest eval /tmp/model.pkl --input_file /tmp/eval.csv > ../tmp/eval-result.csv
+data/model.pkl:
+	cd scripts-ml
+	sudo docker run --rm -v $(pwd)/../data:/data covid19surveyorml:latest -v train /data/auto-ml-vote.csv /data/model.pkl
+	cd -
+
+
+###
+### URLの一覧から生成したテキストファイルを機械学習で評価し結果を出力する
+###
+data/eval-result.csv: data/eval.csv
+	cd scripts-ml
+	sudo docker run --rm -v $(pwd)/../data:/data covid19surveyorml:latest eval /data/model.pkl --input_file /data/eval.csv > ../data/eval-result.csv
+	cd -
 
 ###
 ### 機械学習で評価した結果とURLのmd5を対応付けたファイルを生成する

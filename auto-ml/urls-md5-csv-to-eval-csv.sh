@@ -32,5 +32,5 @@ while read line;do
     if [[ $text == "" ]]; then
         continue
     fi
-    echo "$md5,$text" >> ./tmp/eval.csv
+    echo "$md5,$text" >> ./data/eval.csv
 done < ./data/urls-md5.csv
