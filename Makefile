@@ -21,9 +21,8 @@ clean:
 	rm -f www-data/index.json
 
 ###
-### crawler
+### 一番最初にwgetでクローリングをする
 ###
-
 .PHONY: wget
 wget:
 	# csv内の全ドメインをwww-data以下にミラーリングする
@@ -38,27 +37,62 @@ endif
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
 
-# www-data内の巨大なファイルを削除する
+###
+### wgetで収集したwww-data内の巨大なファイルを削除する
+###
 .PHONY: remove-large-files
 remove-large-files:
 	./crawler/remove-large-files.sh
 
-# www-data内のHTMLとPDFをgrepで検索する
-# tmp/grep_コロナ.txt.tmp を生成する
+###
+### wgetで収集したwww-data内のHTMLとPDFをgrepで検索する
+###
 .PHONY: grep
 grep: tmp/grep_コロナ.txt.tmp
 
+# tmp/grep_コロナ.txt.tmp を生成する
 tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
-# grep結果を集計する
-# 複数のキーワードでgrepしているので重複があったりするのをuniqする
-# tmp/results.txt, tmp/urls.txt を生成する
-.PHONY: aggregate
-aggregate: tmp/results.txt
+###
+### grepの結果を集計する
+### 複数のキーワードでgrepしているので重複があったりするのをuniqする
+###
+.PHONY: grep-aggregate
+aggregate: tmp/grep_aggregate.txt
 
-tmp/results.txt: grep
-	./crawler/aggregate.sh
+# tmp/grep_results.txt を生成する
+tmp/grep_aggregate.txt: grep
+	./crawler/grep-aggregate.sh
+
+###
+### grepの結果からURLのみを収集しmd5を計算する
+###
+.PHONY: urls-md5
+urls-md5: data/urls-md5.csv
+
+# tmp/urls-md5.csv を生成する
+data/urls-md5.csv: tmp/grep_aggregate.txt
+	./crawler/urls-md5.sh
+
+###
+### URLの一覧すべてをwgetし機械学習できるファイルにする
+###
+tmp/eval.csv: data/urls-md5.csv
+	./auto-ml/urls-md5-csv-to-eval-csv.sh
+
+###
+### 機械学習で評価し結果を出力する
+###
+tmp/eval-result.csv: tmp/eval.csv
+	sudo docker run --rm -v $(pwd)/../tmp:/tmp covid19surveyorml:latest eval /tmp/model.pkl --input_file /tmp/eval.csv > ../tmp/eval-result.csv
+
+###
+### 機械学習で評価した結果とURLのmd5を対応付ける
+###
+data/eval-results-md5.csv: tmp/eval-result.csv
+	cat tmp/eval.csv|cut -d',' -f 1 > tmp/md5.csv
+	paste -d ' ' tmp/md5.csv tmp/eval-result.csv > data/eval-results-md5.csv
 
 # www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
@@ -75,6 +109,14 @@ www-data/map/index.json: www-data/map/index.html reduce.csv
 
 www-data/search/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
+
+###
+### machine-larning
+###
+
+
+
+
 
 ###
 ### slack-bot
