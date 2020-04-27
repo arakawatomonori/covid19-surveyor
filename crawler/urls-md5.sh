@@ -16,13 +16,9 @@ set -e
 # 依存lib
 . ./lib/url-helper.sh
 
-# ファイルを結合して一つにまとめる
-# ソートする
-# 重複を取り除く
-cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq > ./tmp/results.txt
 
 # result.txtからURLのみを抜き出す
-urls=$(cat ./tmp/results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
+urls=$(cat ./tmp/grep-aggregate.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
 
 echo "" > ./tmp/urls.txt
 
@@ -34,7 +30,7 @@ done
 # sortしてuniqする
 sort < ./tmp/urls.txt | uniq > ./tmp/urls-uniq.txt
 
-echo "" > ./urls-md5.csv
+echo "" > ./data/urls-md5.csv
 
 for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     # domain=example.com
@@ -51,5 +47,5 @@ for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     # url=https://example.com/foo/bar.html
     url="$schema//$domain/$path"
     md5=`get_md5_by_url $url`
-    echo "$md5,$url" >> ./urls-md5.csv
+    echo "$md5,$url" >> ./data/urls-md5.csv
 done
