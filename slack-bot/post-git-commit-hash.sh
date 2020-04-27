@@ -15,9 +15,11 @@ set -e
 
 source .env
 
+echo -e "environment: $environment"
+
 . ./lib/slack-helper.sh
 
-channels_id=`get_channels_id ${slack_channel_develop}`
+channels_id=`get_channels_id $slack_channel_develop`
 echo -e "channels_id: $channels_id"
 
 git_commit_hash=`git rev-list --max-count=1 HEAD`
@@ -58,11 +60,15 @@ EOF
 `
 
 echo -e "json: $json"
-wget -q -O - --post-data "$json" \
+
+if [ x"$environment" == x"production" ]; then
+    wget -q -O - --post-data "$json" \
     --header="Content-type: application/json" \
     --header="Authorization: Bearer ${slack_token}" \
     https://slack.com/api/chat.postMessage | jq .
-echo ""
+    echo ""
+fi
+
 
 
 
