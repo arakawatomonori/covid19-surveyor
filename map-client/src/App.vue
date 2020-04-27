@@ -225,14 +225,12 @@ export default {
       return `https://www.facebook.com/sharer.php?u=${item.url}`
     },
     clipDesc(desc) {
-      let clipped = desc.replace(/&\w+;/g, ' ')
+      const clipped = desc.replace(/&\w+;/g, ' ')
       return clipped.length > MAX_DESC_LENGTH
         ? clipped.slice(0, MAX_DESC_LENGTH) + '…'
         : clipped
     },
     updateFilteredItems() {
-      if (this.loadingID) clearTimeout(this.loadingID)
-
       this.loadingID = setTimeout(() => {
         if (this.isSearchTypeString) {
           this.filteredItems = this.searchString
