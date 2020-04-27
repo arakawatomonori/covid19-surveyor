@@ -50,7 +50,6 @@ remove-large-files:
 .PHONY: grep
 grep: tmp/grep_コロナ.txt.tmp
 
-# tmp/grep_コロナ.txt.tmp を生成する
 tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
@@ -61,7 +60,6 @@ tmp/grep_コロナ.txt.tmp: remove-large-files
 .PHONY: grep-aggregate
 aggregate: tmp/grep_aggregate.txt
 
-# tmp/grep_results.txt を生成する
 tmp/grep_aggregate.txt: grep
 	./crawler/grep-aggregate.sh
 
@@ -71,24 +69,23 @@ tmp/grep_aggregate.txt: grep
 .PHONY: urls-md5
 urls-md5: data/urls-md5.csv
 
-# tmp/urls-md5.csv を生成する
 data/urls-md5.csv: tmp/grep_aggregate.txt
 	./crawler/urls-md5.sh
 
 ###
-### URLの一覧すべてをwgetし機械学習できるファイルにする
+### URLの一覧すべてをwgetし機械学習できるテキストファイル形式にする
 ###
 tmp/eval.csv: data/urls-md5.csv
 	./auto-ml/urls-md5-csv-to-eval-csv.sh
 
 ###
-### 機械学習で評価し結果を出力する
+### テキストファイルを機械学習で評価し結果を出力する
 ###
 tmp/eval-result.csv: tmp/eval.csv
 	sudo docker run --rm -v $(pwd)/../tmp:/tmp covid19surveyorml:latest eval /tmp/model.pkl --input_file /tmp/eval.csv > ../tmp/eval-result.csv
 
 ###
-### 機械学習で評価した結果とURLのmd5を対応付ける
+### 機械学習で評価した結果とURLのmd5を対応付けたファイルを生成する
 ###
 data/eval-results-md5.csv: tmp/eval-result.csv
 	cat tmp/eval.csv|cut -d',' -f 1 > tmp/md5.csv
@@ -109,14 +106,6 @@ www-data/map/index.json: www-data/map/index.html reduce.csv
 
 www-data/search/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
-
-###
-### machine-larning
-###
-
-
-
-
 
 ###
 ### slack-bot
