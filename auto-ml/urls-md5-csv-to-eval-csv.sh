@@ -7,6 +7,7 @@ set -e
 . ./lib/string-helper.sh
 
 get_text_by_url() {
+    set +e
     url=$1
     res=$(wget -q -O - --tries=1 --timeout=5 --dns-timeout=5 --connect-timeout=5 --read-timeout=5 $url)
     if [ $? -ne 0 ]; then
@@ -14,6 +15,7 @@ get_text_by_url() {
     fi
     title=$(get_title_by_res "$res"|sed "s/\"/ /g")
     desc=$(get_desc_by_res "$res" | remove_newline_and_comma | sed "s/\"/ /g")
+    set -e
     echo "$title $desc"
 }
 
@@ -26,9 +28,7 @@ while read line;do
     if [[ $url == "" ]]; then
         continue
     fi
-    set +e
     text=$(get_text_by_url $url)
-    set -e
     if [[ $text == "" ]]; then
         continue
     fi
