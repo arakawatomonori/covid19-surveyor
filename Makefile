@@ -16,9 +16,8 @@ test:
 
 .PHONY: clean
 clean:
-	rm -f tmp/*
-	rm -f www-data/index.html
-	rm -f www-data/index.json
+	rm -f www-data/map/index.html
+	rm -f www-data/map/index.json
 
 ###
 ### 一番最初にwgetでクローリングをする
