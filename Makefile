@@ -89,13 +89,19 @@ slack-bool-queue:
 slack-bool-map:
 	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
 
-# redisのデータを集計しreduce.csvを生成する
 .PHONY: slack-bool-reduce
-slack-bool-reduce: reduce.csv
+slack-bool-reduce: data/reduce-bool.csv
 
-reduce.csv:
-	./slack-bot/url-bool-reduce.sh > reduce.csv
+data/reduce-bool.csv:
+	./slack-bot/url-bool-reduce.sh > ./data/reduce-bool.csv
 
+# redisのデータを集計しreduce.csvを生成する
+.PHONY: slack-vote-reduce
+slack-vote-reduce: data/reduce-vote.csv
+
+data/reduce-vote.csv:
+	./slack-bot/url-vote-reduce.sh > ./data/reduce.csv
+	cp reduce.csv ./data/reduce-vote.csv
 
 # clear
 .PHONY: slack-bool-clear-offer
