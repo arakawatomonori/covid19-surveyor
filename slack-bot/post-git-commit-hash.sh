@@ -25,33 +25,43 @@ echo -e "channels_id: $channels_id"
 git_commit_hash=`git rev-list --max-count=1 HEAD`
 echo -e "git_commit_hash: $git_commit_hash"
 
+git_commit_log=`git log -1`
+echo -e "git_commit_log: $git_commit_log"
 
-commit_hash=$git_commit_hash
+json_escape() {
+    while read line
+    do
+        echo -e $(echo $line | sed -z 's/"/”/g')
+    done
+    echo ""
+}
 
-echo -e "commit_hash: $commit_hash"
-commit_hash='```'
-commit_hash=$commit_hash"\r\n"
-commit_hash=$commit_hash"$git_commit_hash"
-commit_hash=$commit_hash"\r\n"
-commit_hash=$commit_hash'```'
+commit_log='```'
+commit_log=$commit_log"\r\n"
+commit_log=$commit_log"`echo $git_commit_log | json_escape`"
+commit_log=$commit_log"\r\n"
+commit_log=$commit_log'```'
+echo -e "commit_log: $commit_log"
+
+
 
 json=`cat <<EOF
 {
     "channel": "${channels_id}",
-    "text": "現在のコミットハッシュ",
+    "text": "現在のコミットログ",
     "blocks": [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "現在のコミットハッシュです！"
+                "text": "現在のコミットログです！"
             }
         },
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "${commit_hash}"
+                "text": "$commit_log"
             }
         }
     ]
@@ -68,9 +78,3 @@ if [ x"$environment" == x"production" ]; then
     https://slack.com/api/chat.postMessage | jq .
     echo ""
 fi
-
-
-
-
-
-
