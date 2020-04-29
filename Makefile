@@ -65,6 +65,7 @@ tmp/results.txt: grep
 publish: www-data/search/index.html www-data/map/index.json
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
+	./slack-bot/post-git-commit-log.sh
 endif
 
 www-data/map/index.html:
