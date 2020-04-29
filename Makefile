@@ -63,10 +63,7 @@ tmp/results.txt: grep
 # www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
 publish: www-data/search/index.html www-data/map/index.json
-ifeq ($(ENV),production)
-	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
-	./slack-bot/post-git-commit-log.sh
-endif
+	@echo index files are generated
 
 www-data/map/index.html:
 	cd map-client && npm run build
@@ -76,6 +73,17 @@ www-data/map/index.json: www-data/map/index.html reduce.csv
 
 www-data/search/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
+
+.PHONY: deploy
+deploy:
+	rm -f www-data/map/index.html www-data/map/index.json
+	make publish
+ifeq ($(ENV),production)
+	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
+	./slack-bot/post-git-commit-log.sh
+else
+	@echo "environment isn't production."
+endif
 
 ###
 ### slack-bot
