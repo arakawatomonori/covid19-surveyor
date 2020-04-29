@@ -67,7 +67,7 @@ ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
 	./slack-bot/post-git-commit-log.sh
 else
-	echo "environment isn't production."
+	@echo "environment isn't production."
 endif
 
 www-data/map/index.html:
