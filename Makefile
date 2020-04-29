@@ -69,7 +69,7 @@ ifeq ($(ENV),production)
 endif
 
 www-data/map/index.html:
-	cd map-client && npm run build
+	make -C map-client
 
 www-data/map/index.json: www-data/map/index.html reduce.csv
 	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
