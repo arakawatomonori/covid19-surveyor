@@ -41,7 +41,9 @@ commit_log=$commit_log"\r\n"
 commit_log=$commit_log"`echo $git_commit_log | json_escape`"
 commit_log=$commit_log"\r\n"
 commit_log=$commit_log'```'
+echo -e ""
 echo -e "commit_log: $commit_log"
+echo -e ""
 
 
 
