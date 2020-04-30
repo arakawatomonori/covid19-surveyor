@@ -68,8 +68,8 @@ publish: www-data/search/index.html www-data/map/index.json
 www-data/map/index.html:
 	cd map-client && npm run build
 
-www-data/map/index.json: www-data/map/index.html reduce.csv
-	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
+www-data/map/index.json: www-data/map/index.html data/reduce-vote.csv
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < data/reduce-vote.csv > ./www-data/map/index.json
 
 www-data/search/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
