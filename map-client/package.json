@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "@vue/cli-plugin-babel": "4.1.1",
-    "vue": "^2.6.11",
-    "japan-map-js": "chrome-cgi/japan-map-js#fix-pointer-pos"
+    "debounce": "^1.2.0",
+    "japan-map-js": "chrome-cgi/japan-map-js#fix-pointer-pos",
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "4.1.1",

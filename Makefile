@@ -104,9 +104,7 @@ data/eval-results-md5.csv: tmp/eval-result.csv
 # www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish
 publish: www-data/search/index.html www-data/map/index.json
-ifeq ($(ENV),production)
-	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
-endif
+	@echo index files are generated
 
 www-data/map/index.html:
 	cd map-client && npm run build
@@ -116,6 +114,17 @@ www-data/map/index.json: www-data/map/index.html reduce.csv
 
 www-data/search/index.html: reduce.csv
 	./crawler/publish.sh > ./www-data/search/index.html
+
+.PHONY: deploy
+deploy:
+	rm -f www-data/map/index.html www-data/map/index.json
+	make publish
+ifeq ($(ENV),production)
+	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'
+	./slack-bot/post-git-commit-log.sh
+else
+	@echo "environment isn't production."
+endif
 
 ###
 ### slack-bot
@@ -130,13 +139,19 @@ slack-bool-queue:
 slack-bool-map:
 	while true; do ./slack-bot/url-bool-map.sh; sleep 1; done
 
-# redisのデータを集計しreduce.csvを生成する
 .PHONY: slack-bool-reduce
-slack-bool-reduce: reduce.csv
+slack-bool-reduce: data/reduce-bool.csv
 
-reduce.csv:
-	./slack-bot/url-bool-reduce.sh > reduce.csv
+data/reduce-bool.csv:
+	./slack-bot/url-bool-reduce.sh > ./data/reduce-bool.csv
 
+# redisのデータを集計しreduce.csvを生成する
+.PHONY: slack-vote-reduce
+slack-vote-reduce: data/reduce-vote.csv
+
+data/reduce-vote.csv:
+	./slack-bot/url-vote-reduce.sh > ./data/reduce.csv
+	cp reduce.csv ./data/reduce-vote.csv
 
 # clear
 .PHONY: slack-bool-clear-offer

@@ -8,6 +8,10 @@ ts=`date '+%s'`
 # 一日に一回でいい
 # tested
 get_channels_id() {
+    channel_name=$slack_channel
+    if [ $# -eq 1 ]; then
+        channel_name=$1
+    fi
     channels_list_file="tmp/channels_list.json"
     channels_list_ts=0
     if [ -e $channels_list_file ]; then
@@ -25,7 +29,7 @@ get_channels_id() {
         channels_list=`cat $channels_list_file`
     fi
     # channels_listをslack_channelで絞り込んでchannels_idを得る
-    channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${slack_channel}'")' | jq .id`
+    channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channel_name}'")' | jq .id`
     channels_id=${channels_id:1:-1}
     echo $channels_id
     return 0
