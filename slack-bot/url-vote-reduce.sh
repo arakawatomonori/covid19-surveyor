@@ -1,8 +1,26 @@
 #!/bin/bash
 set -e
 
+#
+# Summary:
+#   Redis に貯まった回答結果をもとに、スコアが 1 以上であるものだけを抽出し、
+#   csv を出力する (Makefile 経由で data/reduce-vote.csv というファイルが生成される)
+#
+# CSV出力例:
+#   --------------------------------------------------------------------------------
+#   # Summary: 投票結果により有効とみなされたページ一覧
+#   # Generated: 2020-05-02 01:26:36 +0900, in /home/ubuntu/vscovid-crawler
+#   #
+#   # 市区町村名,都道府県名,ページURL,ページタイトル,ページ内文章
+#   札幌市,北海道,https://www.city.sapporo.jp/kinkyu/seikatsushien/202003/index.html,生活支援ガイド／札幌市,ホーム&gt;新型コロナウイルス感染症について&gt;生活支援ガイド 生活支援ガイドは、新
+#   村山市,山形県,https://www.city.murayama.lg.jp/jigyosha/shoukougyousien/tokunaisikinnaruhuxa.html,利子補給融資制度『徳内資金α』について　村山市,新型コロナウイルス感染症に関連する商工業支援 市は、新型コロナウイルス感染症の影響により、
+#   ....
+#   ....
+#   --------------------------------------------------------------------------------
+#
 
-
+# 依存lib
+. ./lib/_common.sh
 . ./lib/url-helper.sh
 . ./lib/string-helper.sh
 
@@ -27,6 +45,12 @@ get_url_by_md5() {
 }
 
 main() {
+    # ヘッダ行
+    echo "# Summary: 投票結果により有効とみなされたページ一覧"
+    echo "# Generated: `tokyo_datetime`, in `pwd`"
+    echo "#"
+    echo "# 市区町村名,都道府県名,ページURL,ページタイトル,ページ内文章"
+
     keys=$(redis-cli KEYS "vscovid-crawler-vote:result-*")
     for key in $keys; do
         md5=$(echo $key| cut -d'-' -f 4)
