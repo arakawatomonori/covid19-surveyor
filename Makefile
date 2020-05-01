@@ -16,14 +16,12 @@ test:
 
 .PHONY: clean
 clean:
-	rm -f tmp/*
-	rm -f www-data/index.html
-	rm -f www-data/index.json
+	rm -f www-data/map/index.html
+	rm -f www-data/map/index.json
 
 ###
-### crawler
+### 一番最初にwgetでクローリングをする
 ###
-
 .PHONY: wget
 wget:
 	# csv内の全ドメインをwww-data以下にミラーリングする
@@ -38,27 +36,70 @@ endif
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
 
-# www-data内の巨大なファイルを削除する
+###
+### wgetで収集したwww-data内の巨大なファイルを削除する
+###
 .PHONY: remove-large-files
 remove-large-files:
 	./crawler/remove-large-files.sh
 
-# www-data内のHTMLとPDFをgrepで検索する
-# tmp/grep_コロナ.txt.tmp を生成する
+###
+### wgetで収集したwww-data内のHTMLとPDFをgrepで検索しgrep_コロナ.txt.tmpを生成する
+###
 .PHONY: grep
 grep: tmp/grep_コロナ.txt.tmp
 
 tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
-# grep結果を集計する
-# 複数のキーワードでgrepしているので重複があったりするのをuniqする
-# tmp/results.txt, tmp/urls.txt を生成する
-.PHONY: aggregate
-aggregate: tmp/results.txt
+###
+### grepの結果を集計する
+### 複数のキーワードでgrepしているので重複があったりするのをuniqしgrep_aggregate.txtを生成する
+###
+.PHONY: grep-aggregate
+aggregate: tmp/grep_aggregate.txt
 
-tmp/results.txt: grep
-	./crawler/aggregate.sh
+tmp/grep_aggregate.txt: grep
+	./crawler/grep-aggregate.sh
+
+###
+### grepの結果からURLのみを収集しmd5を計算しurls-md5.csvを生成する
+###
+.PHONY: urls-md5
+urls-md5: data/urls-md5.csv
+
+data/urls-md5.csv: tmp/grep_aggregate.txt
+	./crawler/urls-md5.sh
+
+###
+### URLの一覧すべてをwgetし機械学習できるテキストファイル形式にする
+###
+data/eval.csv: data/urls-md5.csv
+	./auto-ml/urls-md5-csv-to-eval-csv.sh
+
+###
+### これまでの回答を使って機械学習の訓練をしてモデルをつくる
+###
+data/model.pkl:
+	cd scripts-ml
+	sudo docker run --rm -v $(pwd)/../data:/data covid19surveyorml:latest -v train /data/auto-ml-vote.csv /data/model.pkl
+	cd -
+
+
+###
+### URLの一覧から生成したテキストファイルを機械学習で評価し結果を出力する
+###
+data/eval-result.csv: data/eval.csv
+	cd scripts-ml
+	sudo docker run --rm -v $(pwd)/../data:/data covid19surveyorml:latest eval /data/model.pkl --input_file /data/eval.csv > ../data/eval-result.csv
+	cd -
+
+###
+### 機械学習で評価した結果とURLのmd5を対応付けたファイルを生成する
+###
+data/eval-results-md5.csv: tmp/eval-result.csv
+	cat tmp/eval.csv|cut -d',' -f 1 > tmp/md5.csv
+	paste -d ' ' tmp/md5.csv tmp/eval-result.csv > data/eval-results-md5.csv
 
 # www-data/index.html, www-data/index.jsonを生成する
 .PHONY: publish

@@ -19,8 +19,8 @@ get_row_by_url_with_label() {
     if [ $? -ne 0 ]; then
         return 1
     fi
-    title=$(get_title_by_res "$res")
-    desc=$(get_desc_by_res "$res" | remove_newline_and_comma)
+    title=$(get_title_by_res "$res"|sed "s/\"/ /g")
+    desc=$(get_desc_by_res "$res" | remove_newline_and_comma | sed "s/\"/ /g")
     echo "$title $desc, $label"
 }
 

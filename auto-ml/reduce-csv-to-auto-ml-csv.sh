@@ -11,8 +11,8 @@ main() {
         orgname=`echo $line| cut -d',' -f 1`
         prefname=`echo $line| cut -d',' -f 2`
         url=`echo $line| cut -d',' -f 3`
-        title=`echo $line| cut -d',' -f 4|sed s/\"/ /g`
-        desc=`echo $line| cut -d',' -f 5|sed s/\"/ /g`
+        title=`echo $line| cut -d',' -f 4|sed "s/\"/ /g"`
+        desc=`echo $line| cut -d',' -f 5|sed "s/\"/ /g"`
         echo "$title $desc, covid19_help"
     done < reduce.csv
 }

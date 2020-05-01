@@ -9,13 +9,25 @@ ts=`date '+%s'`
 
 namespace="vscovid-crawler-vote"
 
-keys=`redis-cli KEYS "vscovid-crawler:result-*"`
-for key in $keys; do
-    value=`redis-cli GET $key`
-    url=`echo $value| cut -d',' -f 1`
+while read line; do
+    url=`echo $line| cut -d',' -f 2`
     md5=`get_md5_by_url $url`
-    redis-cli SET "$namespace:queue-$md5" $value
-done
+    # not_covid19_helpの可能性が60%以上ならスキップ
+    predict_json=`grep $md5 ./data/eval-results-md5.csv | head -n 1 | cut -d' ' -f 2-`
+    echo $predict_json
+    if [[ $predict_json != "" ]];then
+        not_covid19_help=`echo $predict_json | jq .not_covid19_help`
+        not_covid19_help=$(echo "$not_covid19_help*100" | bc | cut -d'.' -f 1)
+        threshold=60
+        echo $not_covid19_help
+        if [ $not_covid19_help -gt $threshold ];then
+            continue
+        fi
+    fi
+    redis-cli SET "$namespace:queue-$md5" $url
+done < ./data/urls-md5.csv
+
+exit 1
 
 # http://example.com/foo/bar.html のとき
 # domain_and_path=example.com/foo/bar.html
