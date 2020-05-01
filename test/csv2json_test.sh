@@ -8,6 +8,9 @@ set -e
 echo test csv2json
 
 csv=`cat <<EOM
+# header
+#
+# a,b,c
 foo,0,true
 bar,1,false
 EOM

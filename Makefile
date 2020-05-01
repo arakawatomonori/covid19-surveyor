@@ -68,10 +68,10 @@ publish: www-data/search/index.html www-data/map/index.json
 www-data/map/index.html:
 	cd map-client && npm run build
 
-www-data/map/index.json: www-data/map/index.html reduce.csv
-	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < reduce.csv > ./www-data/map/index.json
+www-data/map/index.json: www-data/map/index.html data/reduce-vote.csv
+	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < data/reduce-vote.csv > ./www-data/map/index.json
 
-www-data/search/index.html: reduce.csv
+www-data/search/index.html: data/reduce-vote.csv
 	./crawler/publish.sh > ./www-data/search/index.html
 
 .PHONY: deploy
@@ -104,13 +104,12 @@ slack-bool-reduce: data/reduce-bool.csv
 data/reduce-bool.csv:
 	./slack-bot/url-bool-reduce.sh > ./data/reduce-bool.csv
 
-# redisのデータを集計しreduce.csvを生成する
+# redis のデータを集計し data/reduce-vote.csv を生成する
 .PHONY: slack-vote-reduce
 slack-vote-reduce: data/reduce-vote.csv
 
 data/reduce-vote.csv:
-	./slack-bot/url-vote-reduce.sh > ./data/reduce.csv
-	cp reduce.csv ./data/reduce-vote.csv
+	./slack-bot/url-vote-reduce.sh > ./data/reduce-vote.csv
 
 # clear
 .PHONY: slack-bool-clear-offer
