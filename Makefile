@@ -66,7 +66,7 @@ publish: www-data/search/index.html www-data/map/index.json
 	@echo index files are generated
 
 www-data/map/index.html:
-	cd map-client && npm run build
+	make -C map-client
 
 www-data/map/index.json: www-data/map/index.html data/reduce-vote.csv
 	./lib/csv2json.sh "orgname" "prefname" "url" "title" "description" < data/reduce-vote.csv > ./www-data/map/index.json
