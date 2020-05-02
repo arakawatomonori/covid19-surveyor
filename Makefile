@@ -32,8 +32,13 @@ ifeq ($(ENV),production)
 else
 	./crawler/wget.sh data/test.csv
 endif
-	# tmp/urls.txt内の全URLをwww-data以下にミラーリングする
-	# tmp/urls.txtは「経済支援制度ですか？」に「はい」と答えられたURLのみ
+	# TODO:
+	#   tmp/urls.txt は aggregate.sh の準成果物であるはずだが、
+	#   コマンド実行の順序は wget, grep, aggregate であるため、wget が tmp/urls.txt に依存する構造は破綻している.
+	#   ここの処理内容については要改修と思われる.
+	#
+	# tmp/urls.txt 内の全URLを www-data 以下にミラーリングする
+	# tmp/urls.txt は「経済支援制度ですか？」に「はい」と答えられた URL のみ (TODO: このコメントはおそらく間違っている. 要修正検討.)
 	cd www-data
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
@@ -52,12 +57,13 @@ tmp/grep_コロナ.txt.tmp: remove-large-files
 	./crawler/grep.sh
 
 # grep結果を集計する
-# 複数のキーワードでgrepしているので重複があったりするのをuniqする
-# tmp/results.txt, tmp/urls.txt を生成する
+#   複数のキーワードで grep しているので重複があったりするのを uniq し、URL の MD5 ハッシュも求める
+#     成果物: data/urls-md5.csv, tmp/urls.txt を生成する
+#     (TODO: tmp/urls.txt の利用用途が wget の入力値となっているが、これはコマンドの依存関係を破綻させているので、要改修検討)
 .PHONY: aggregate
-aggregate: tmp/results.txt
+aggregate: data/urls-md5.csv
 
-tmp/results.txt: grep
+data/urls-md5.csv: grep
 	./crawler/aggregate.sh
 
 # www-data/index.html, www-data/index.jsonを生成する

@@ -2,8 +2,23 @@
 set -e
 
 ###
-### About
-### grep.shで./tmpに収集した情報を結合し、ソートし、重複を取り除くスクリプト
+### About:
+###   grep.sh で ./tmp に収集した情報を結合し、ソートし、重複を取り除くスクリプト
+###
+### Input:
+###   tmp/grep_コロナ_*.txt.tmp
+###
+### Output:
+###   data/urls-md5.csv
+###
+### Secondary output:
+###   ※ 本来はこれを正式な成果物とみなすべきではない.
+###      wget がこのファイルに依存しているようだが、コマンド実行順からすると依存関係が破綻している.
+###   tmp/urls.txt
+###
+### Temporary:
+###   以下のファイルは aggregate.sh 内でしか用いられない一時ファイルであるため、正式な成果物とはみなさい.
+###   - tmp/results.txt
 ###
 ### Dependency
 ### - make wget
@@ -21,7 +36,7 @@ set -e
 # 重複を取り除く
 cat ./tmp/grep_コロナ_*.txt.tmp | sort | uniq > ./tmp/results.txt
 
-# result.txtからURLのみを抜き出す
+# tmp/results.txt から URL のみを抜き出す
 urls=$(cat ./tmp/results.txt | cut -d':' -f 1 | sed -z 's/\.\/www-data\///g')
 
 echo "" > ./tmp/urls.txt
@@ -34,7 +49,7 @@ done
 # sortしてuniqする
 sort < ./tmp/urls.txt | uniq > ./tmp/urls-uniq.txt
 
-echo "" > ./urls-md5.csv
+echo "" > ./data/urls-md5.csv
 
 for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     # domain=example.com
@@ -51,5 +66,5 @@ for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     # url=https://example.com/foo/bar.html
     url="$schema//$domain/$path"
     md5=`get_md5_by_url $url`
-    echo "$md5,$url" >> ./urls-md5.csv
+    echo "$md5,$url" >> ./data/urls-md5.csv
 done

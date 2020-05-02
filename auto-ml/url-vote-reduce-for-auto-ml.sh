@@ -8,7 +8,7 @@ set -e
 
 get_url_by_md5() {
     md5=$1
-    url=$(grep "$md5" ./urls-md5.csv | head -1 | cut -d',' -f 2)
+    url=$(grep "$md5" ./data/urls-md5.csv | head -1 | cut -d',' -f 2)
     echo $url
 }
 

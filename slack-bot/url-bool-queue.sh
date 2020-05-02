@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# urls.txtの内容をredisのqueueとして投入する
+# tmp/urls-uniq.txt の内容をredisのqueueとして投入する
 # すでに投入済みの場合はスキップする
 
 . ./lib/redis-helper.sh
