@@ -53,14 +53,17 @@
             class="radio"
             @change="changedSearchType"
           >
-          地図から検索する
+          地域から検索する
         </label>
       </div>
 
       <transition name="showup">
         <div v-show="isSearchTypeMap" class="map-area">
           <p>地図上の都道府県を選択してください</p>
-          <div ref="map" class="map" />
+          <vue-simple-map-selector
+            class="map"
+            @selected="onSelect"
+          />
         </div>
       </transition>
 
@@ -70,7 +73,11 @@
         </h2>
             
         <label v-if="isSearchTypeMap" class="checkbox cb-national">
-          <input v-model="includesNationalOffers" type="checkbox">
+          <input
+            v-model="includesNationalOffers"
+            type="checkbox"
+            @change="updateFilteredItems"
+          >
           国からの支援制度も含める
         </label>
         <p class="num-items">
@@ -133,7 +140,7 @@
 </template>
 
 <script>
-import jpmap from 'japan-map-js'
+import VueSimpleMapSelector from 'vue-simple-map-selector'
 import { debounce } from 'debounce'
 
 const MAX_DESC_LENGTH = 200     // description の最大文字数
@@ -141,10 +148,12 @@ const INPUT_DEBOUNCE_TIME = 300 // 検索欄の入力確定までの遅延時間
 
 export default {
   name: "App",
+  components: {
+    VueSimpleMapSelector
+  },
   data() {
     return {
       items: [],
-      map: null,
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
@@ -172,7 +181,6 @@ export default {
     }
   },
   mounted() {
-    this.setupMap()
     this.loadItems()
   },
   methods: {
@@ -187,20 +195,13 @@ export default {
           this.updateFilteredItems()
         })
     },
-    setupMap() {
-      if (!this.map) {
-        this.map = new jpmap.japanMap(this.$refs.map, {
-          showsPrefectureName: true,
-          width: 960,
-          movesIslands: true,
-          lang: "ja",
-          onSelect: this.onSelect
-        })
+    onSelect(pref) {
+      const prefName = pref && pref.name
+      console.log(prefName)
+      if (this.selectedPref !== prefName) {
+        this.selectedPref = prefName
+        this.updateFilteredItems()
       }
-    },
-    onSelect(data) {
-      console.log(data.name)
-      this.selectedPref = data.name
     },
     isMatchPattern(item) {
       return (item.title + item.orgname + item.prefname + item.description)
@@ -248,10 +249,7 @@ export default {
   watch: {
     searchString: debounce(function() {
       this.updateFilteredItems()
-    }, INPUT_DEBOUNCE_TIME),
-    selectedPref() {
-      this.updateFilteredItems()
-    }
+    }, INPUT_DEBOUNCE_TIME)
   }
 }
 </script>
@@ -287,10 +285,16 @@ export default {
   margin: 32px auto;
   width: 100%;
   max-width: 960px;
+}
 
-  canvas {
-    width: 100%;
-  }
+.map {
+  margin: 4px auto 32px;
+  width: 100%;
+  max-width: 960px;
+  height: 75vw;
+  max-height: 720px;
+  border: solid 1px gray;
+  padding: 1vw;
 }
 
 .info-area {
@@ -379,6 +383,7 @@ label {
 .loading {
   text-align: center;
   font-size: 2rem;
+  min-height: 320px;
 }
 
 @media screen and (max-width:960px) {

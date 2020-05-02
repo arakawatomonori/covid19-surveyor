@@ -1,4 +1,5 @@
 .env
+.ipynb_checkpoints
 web.*
 www-data/www*
 www-data/*.com
