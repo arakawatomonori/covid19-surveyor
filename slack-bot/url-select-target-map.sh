@@ -61,25 +61,13 @@ send_message() {
         },
         {
             "type":"section",
-            "text":{
-                "type":"mrkdwn",
-                "text":" *このURLの制度は、以下の誰を対象とした経済支援制度ですか？* "
-            }
-        },
-        {
-            "type":"section",
-            "block_id":"section678",
-            "text":{
-                "type":"mrkdwn",
-                "text":"制度対象"
+            "text": {
+                "type": "mrkdwn",
+                "text": " *このURLの制度は、以下の誰を対象とした経済支援制度ですか？* "
             },
             "accessory":{
                 "action_id":"vscovid-crawler-select-target",
-                "type":"static_select",
-                "placeholder":{
-                    "type":"plain_text",
-                    "text":"Select an item"
-                },
+                "type":"multi_static_select",
                 "options":[
                     {
                         "text":{
@@ -105,30 +93,23 @@ send_message() {
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"あらゆる個人"
+                            "text":"個人"
                         },
                         "value":"4"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"子育て世帯"
+                            "text":"子育て世帯限定"
                         },
                         "value":"5"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"介護世帯"
+                            "text":"介護世帯限定"
                         },
                         "value":"6"
-                    },
-                    {
-                        "text":{
-                            "type":"plain_text",
-                            "text":"複数該当する"
-                        },
-                        "value":"0"
                     },
                     {
                         "text":{
