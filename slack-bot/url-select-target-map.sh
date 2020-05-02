@@ -105,16 +105,23 @@ send_message() {
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"子育て世帯"
+                            "text":"個人"
                         },
                         "value":"4"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"個人"
+                            "text":"子育て世帯"
                         },
-                        "value":"4"
+                        "value":"5"
+                    },
+                    {
+                        "text":{
+                            "type":"plain_text",
+                            "text":"介護世帯"
+                        },
+                        "value":"6"
                     },
                     {
                         "text":{
