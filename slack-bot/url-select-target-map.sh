@@ -126,6 +126,13 @@ send_message() {
                     {
                         "text":{
                             "type":"plain_text",
+                            "text":"複数該当する"
+                        },
+                        "value":"0"
+                    },
+                    {
+                        "text":{
+                            "type":"plain_text",
                             "text":"いずれでもない/わからない"
                         },
                         "value":"0"
