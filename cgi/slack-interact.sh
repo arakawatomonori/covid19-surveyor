@@ -50,7 +50,7 @@ if [ "$event_type" == "block_actions" ]; then
             value=`redis-cli DECR "$namespace:result-$md5"`
         fi
         remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
-    elif [[ $action_id == vscovid-crawler-select-target ]; then
+    elif [[ $action_id == vscovid-crawler-select-target ]]; then
         namespace="vscovid-crawler-select-target"
         # offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
