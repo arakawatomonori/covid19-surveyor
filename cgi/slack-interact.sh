@@ -37,9 +37,10 @@ if [ "$event_type" == "block_actions" ]; then
     action_id=${action_id:1:-1}
     echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
     namespace="vscovid-crawler"
+    remain=""
     if [[ $action_id == vscovid-crawler-vote-* ]]; then
         namespace="vscovid-crawler-vote"
-        # vscovid-crawler:offered-membersからIDをDEL
+        # offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
         # 回答回数をカウント
         redis-cli INCR "$namespace:count-$user_id" > /dev/null
@@ -48,6 +49,16 @@ if [ "$event_type" == "block_actions" ]; then
         else
             value=`redis-cli DECR "$namespace:result-$md5"`
         fi
+        remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
+    elif [[ $action_id == vscovid-crawler-select-target ]]; then
+        namespace="vscovid-crawler-select-target"
+        # offered-membersからIDをDEL
+        redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
+        # 回答回数をカウント
+        redis-cli INCR "$namespace:count-$user_id" > /dev/null
+        # result-{URLのMD5ハッシュ} をSET
+        redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
     elif [ "$action_id" = "vscovid-crawler-select-type" ]; then
         namespace="vscovid-crawler-select-type"
         # vscovid-crawler:offered-membersからIDをDEL
@@ -58,6 +69,7 @@ if [ "$event_type" == "block_actions" ]; then
         redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
         redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
     else
         namespace="vscovid-crawler"
         # vscovid-crawler:offered-membersからIDをDEL
@@ -66,13 +78,14 @@ if [ "$event_type" == "block_actions" ]; then
         redis-cli DEL "$namespace:job-$md5" > /dev/null
         # vscovid-crawler:result-{URLのMD5ハッシュ} をSET
         redis-cli SET "$namespace:result-$md5" "${url},${user_id},${timestamp},${result}" > /dev/null
+        remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
     fi
     res=`cat <<EOF
 {
     "token": "${slack_token}",
     "channel": "${channel_id}",
     "ts": "${ts}",
-    "text": "回答ありがとうございます！",
+    "text": "回答ありがとうございます！残り件数：${remain}",
     "blocks": null,
     "attachments": null
 }

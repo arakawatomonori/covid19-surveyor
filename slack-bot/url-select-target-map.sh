@@ -8,7 +8,7 @@ ts=`date '+%s'`
 . ./lib/url-helper.sh
 . ./lib/redis-helper.sh
 
-namespace="vscovid-crawler-select-type"
+namespace="vscovid-crawler-select-target"
 
 send_message() {
     member_id=$1
@@ -17,10 +17,9 @@ send_message() {
     if [ $already_offered = "1" ]; then
         return 0
     fi
-    redis_offer $namespace $member_id
     # キューから一件取り出す
     value=`redis_pop_value_from_queue $namespace`
-    url=`echo $value| cut -d',' -f 1`
+    url=`echo $value| cut -d' ' -f 2 | cut -d',' -f 1`
     orgname=`echo $value| cut -d',' -f 2`
     title=`echo $value| cut -d',' -f 3`
     desc=`echo $value| cut -d',' -f 4`
@@ -28,14 +27,16 @@ send_message() {
     # unixtime
     timestamp=`date '+%s'`
 
+    redis_offer $namespace $member_id
     redis_push_job $namespace $md5 $url $member_id $timestamp
 
     # Slack DM送信
+    echo $member_id
     im_id=`open_im $member_id`
     json=`cat <<EOF
 {
     "channel":"${im_id}",
-    "text":"<${url}>",
+    "text":"",
     "blocks":[
         {
             "type":"section",
@@ -62,7 +63,7 @@ send_message() {
             "type":"section",
             "text":{
                 "type":"mrkdwn",
-                "text":" *このURLの制度は、以下のいずれの経済支援ですか？* "
+                "text":" *このURLの制度は、以下の誰を対象とした経済支援制度ですか？* "
             }
         },
         {
@@ -70,10 +71,10 @@ send_message() {
             "block_id":"section678",
             "text":{
                 "type":"mrkdwn",
-                "text":"制度種別"
+                "text":"制度対象"
             },
             "accessory":{
-                "action_id":"vscovid-crawler-select-type",
+                "action_id":"vscovid-crawler-select-target",
                 "type":"static_select",
                 "placeholder":{
                     "type":"plain_text",
@@ -83,28 +84,35 @@ send_message() {
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"お金が貰える"
+                            "text":"中小企業"
                         },
                         "value":"1"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"お金が借りられる"
+                            "text":"会社員"
                         },
                         "value":"2"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"支払いや返済が猶予される"
+                            "text":"個人事業主"
                         },
                         "value":"3"
                     },
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"相談窓口"
+                            "text":"子育て世帯"
+                        },
+                        "value":"4"
+                    },
+                    {
+                        "text":{
+                            "type":"plain_text",
+                            "text":"個人"
                         },
                         "value":"4"
                     },
@@ -122,7 +130,7 @@ send_message() {
 }
 EOF
 `
-    echo $json
+    echo $json | jq .
     wget -q -O - --post-data "$json" \
     --header="Content-type: application/json" \
     --header="Authorization: Bearer ${slack_token}" \
@@ -139,7 +147,7 @@ main() {
     # 一秒に一回でいい
     # 各メンバーにDMを送る
     # テスターのID
-    members_list="xUUL8QC8BUx xU011H85CM0Wx xUUQ99JY5Rx xU011C3YGDABx"
+    #members_list="xUUL8QC8BUx"
     for member in $members_list; do
         member_id=${member:1:-1}
         send_message $member_id

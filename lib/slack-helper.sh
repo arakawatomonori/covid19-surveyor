@@ -66,6 +66,7 @@ get_members_list() {
 open_im() {
     member_id=$1
     im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
+    echo $im_open > ./tmp/im_open.json
     im_id=`echo $im_open | jq .channel.id`
     im_id=${im_id:1:-1}
     echo $im_id
