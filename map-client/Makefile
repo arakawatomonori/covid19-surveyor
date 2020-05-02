@@ -1,10 +1,11 @@
+.PHONY: all generate
+
 all:	node_modules
-	make publish
+	make generate
 
 node_modules:
 	npm install
 
-.PHONY: publish
-data/map/index.html:
+generate:
 	npm run build
 
