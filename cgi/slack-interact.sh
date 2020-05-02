@@ -51,7 +51,7 @@ if [ "$event_type" == "block_actions" ]; then
         fi
         remain=`redis-cli KEYS $namespace:queue-*  | wc -l`
     elif [[ $action_id == vscovid-crawler-select-target ]]; then
-        result=`echo $json | jq -r '.actions[0].selected_options|map(.value)|join(",")'`
+        result=`echo $json | jq -r '.actions[0].selected_options|map(.value)|join(" ")'`
         namespace="vscovid-crawler-select-target"
         # offered-membersからIDをDEL
         redis-cli SREM "$namespace:offered-members" $user_id > /dev/null
