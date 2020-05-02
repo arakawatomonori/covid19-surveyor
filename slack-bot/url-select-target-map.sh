@@ -105,7 +105,7 @@ send_message() {
                     {
                         "text":{
                             "type":"plain_text",
-                            "text":"個人"
+                            "text":"あらゆる個人"
                         },
                         "value":"4"
                     },
