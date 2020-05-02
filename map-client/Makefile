@@ -1,11 +1,11 @@
-.PHONY: all generate
+.PHONY: all build
 
 all:	node_modules
-	make generate
+	make build
 
 node_modules:
 	npm install
 
-generate:
+build:
 	npm run build
 
