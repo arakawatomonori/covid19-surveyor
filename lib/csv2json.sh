@@ -32,9 +32,12 @@ create_jq_mapper() {
 #   args: key1[:type1] key2[:type2] ... keyN[:typeN]
 #     - key: CSV の n 番目の要素に対応する JSON key名
 #     - type: key の型。number か boolean を指定できる。省略した場合は string として扱う。
+#
+#   Note: 「#」で始まる行はコメントとしてスキップする
 csv2json() {
+    >&2 echo "<<<@>>>: $@"
     mapper=`create_jq_mapper "$@"`
-    tr '\r\n' '\n' | jq -csR "
+    tr '\r\n' '\n' | sed 's/^#.*$//g' | jq -csR "
         split(\"\n\") |
         map(if length > 0 then . else empty end) |
         map(split(\",\")) |

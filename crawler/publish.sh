@@ -358,6 +358,11 @@ echo $wrapper_start
 . ./lib/url-helper.sh
 
 while read line; do
+    # 「#」で始まる csv 行はコメントとみなしスキップする
+    if [[ $line =~ ^\# ]]; then
+        continue
+    fi
+
     orgname=`echo $line| cut -d',' -f 1`
     prefname=`echo $line| cut -d',' -f 2`
     url=`echo $line| cut -d',' -f 3`
@@ -399,7 +404,7 @@ while read line; do
 EOM
 `
     echo $li
-done < reduce.csv
+done < ./data/reduce-vote.csv
 
 wrapper_end=`cat <<EOM
                     </ul>

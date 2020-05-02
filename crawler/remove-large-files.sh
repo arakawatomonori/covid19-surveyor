@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPOS_DIR=$(dirname $(dirname "$0"))
+. ./lib/_common.sh
 
 # 削除対象の拡張子
 images=png,jpg,jpeg,gif
@@ -25,12 +25,12 @@ do
 
     # 検索の確認用（必要に応じてコメント外して実験）
     # echo ""
-    # find $REPOS_DIR/www-data/*/. -name "*.$ext"
-    # find $REPOS_DIR/www-data/*/. -name "*.$ext\?*"
+    # find $REPOS_ROOT/www-data/*/. -name "*.$ext"
+    # find $REPOS_ROOT/www-data/*/. -name "*.$ext\?*"
 
     # 実際の削除
-    find $REPOS_DIR/www-data/*/. -name "*.$ext"    -exec rm -rf {} \;
-    find $REPOS_DIR/www-data/*/. -name "*.$ext\?*" -exec rm -rf {} \;
+    find $REPOS_ROOT/www-data/*/. -name "*.$ext"    -exec rm -rf {} \;
+    find $REPOS_ROOT/www-data/*/. -name "*.$ext\?*" -exec rm -rf {} \;
 
     echo " done"
 done
