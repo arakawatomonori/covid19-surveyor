@@ -50,9 +50,13 @@ main() {
     # ダウンロード対象の拡張子
     ext=$(jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev)
 
+    depth=2
+    if [ $environment = "test" ]; then
+        depth=1
+    fi
     pushd www-data
     # urls配列の中身をwgetに渡している
-    echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget -l 2 -r --accept-regex "\.(${ext})$" --no-check-certificate {}
+    echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget -l $depth -r --accept-regex "\.(${ext})$" --no-check-certificate {}
     echo ${domains} | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
     popd
 }
