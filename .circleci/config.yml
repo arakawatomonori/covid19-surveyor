@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: echo $DOTENV | base64 --decode > .env
-      - run: apt-get update && apt-get install -y wget jq redis-tools
+      - run: apt-get update && apt-get install -y make wget jq redis-tools
       - run: ./test/test.sh
       - run: make wget
       - run: make grep
