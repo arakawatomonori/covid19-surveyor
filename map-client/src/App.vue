@@ -76,25 +76,25 @@
           <input
             v-model="includesNationalOffers"
             type="checkbox"
-            @change="updateFilteredItems"
+            @change="initDisplayItems"
           >
           国からの支援制度も含める
         </label>
         <p class="num-items">
           該当件数:
           <span class="has-text-weight-bold">
-            {{ loadingID ? '--' : filteredItems.length }}件
+            {{ isLoading ? '--' : filteredItems.length }}件
           </span>
         </p>
       </div>
 
-      <div v-if="loadingID" class="loading">
+      <div v-if="isLoading" class="loading">
         <div class="icon">
           <i class="fa fa-spinner fa-pulse"></i>
         </div>
       </div>
       <div v-else class="filtered-items">
-        <div v-for="(item, i) in filteredItems" :key="i" class="card">
+        <div v-for="(item, i) in displayItems" :key="i" class="card">
           <div class="card-content">
             <div class="media">
               <div class="media-content">
@@ -102,15 +102,14 @@
                   {{ item.prefname }}
                 </span>
                 <span class="tag orgname">{{ item.orgname }}</span>
-                <h3 class="title is-4">
-                  {{ item.title }}
-                </h3>
+                <span class="item-index">
+                  {{ i + 1 }} / {{ filteredItems.length }}
+                </span>
+                <h3 class="title is-4" v-html="highlight(item.title)"></h3>
               </div>
             </div>
             <div class="content">
-              <p class="subtitle is-6">
-                {{ item.shortDesc }}
-              </p>
+              <p class="subtitle is-6" v-html="highlight(clipDesc(item.description))"></p>
               <div class="action-area is-clearfix">
                 <div class="share-buttons is-pulled-left">
                   <a class="share-button" :href="shareLineURL(item)" target="_blank" rel="noopener noreferrer">
@@ -134,14 +133,26 @@
             </div>
           </div>
         </div>
+        <infinite-loading
+          @infinite="infiniteHandler"
+          :identifier="searchString + selectedPref"
+          spinner="circles"
+        >
+          <div slot="no-more">一致した全ての支援制度を表示しました</div>
+          <div slot="no-results">一致する支援制度は見つかりませんでした</div>
+        </infinite-loading>
       </div>
     </main>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import InfiniteLoading from 'vue-infinite-loading';
 import VueSimpleMapSelector from 'vue-simple-map-selector'
 import { debounce } from 'debounce'
+
+Vue.use(InfiniteLoading)
 
 const MAX_DESC_LENGTH = 200     // description の最大文字数
 const INPUT_DEBOUNCE_TIME = 300 // 検索欄の入力確定までの遅延時間(ms)
@@ -153,13 +164,15 @@ export default {
   },
   data() {
     return {
-      items: [],
+      allItems: [],
       selectedPref: '',
       includesNationalOffers: false,
       searchType: 'string',
       searchString: '',
-      loadingID: 1,
-      filteredItems: []
+      isLoading: true,
+      displayItems: [],
+      page: 0,
+      perPage: 10
     }
   },
   computed: {
@@ -178,6 +191,17 @@ export default {
     },
     isSearchTypeMap() {
       return this.searchType === 'map'
+    },
+    filteredItems() {
+      if (this.isSearchTypeString) {
+        return this.searchString
+          ? this.allItems.filter(i => this.isMatchPattern(i))
+          : this.allItems
+      } else {
+        return this.selectedPref
+          ? this.allItems.filter(i => this.isSelectedPref(i))
+          : this.allItems
+      }
     }
   },
   mounted() {
@@ -185,14 +209,13 @@ export default {
   },
   methods: {
     loadItems() {
+      this.isLoading = true
       fetch(process.env.VUE_APP_JSON_PATH)
         .then(resp => resp.json())
         .then(json => {
-          this.items = json.map(item => ({
-            ...item,
-            shortDesc: this.clipDesc(item.description)
-          }))
-          this.updateFilteredItems()
+          this.allItems = json
+          this.initDisplayItems()
+          this.isLoading = false
         })
     },
     onSelect(pref) {
@@ -200,7 +223,7 @@ export default {
       console.log(prefName)
       if (this.selectedPref !== prefName) {
         this.selectedPref = prefName
-        this.updateFilteredItems()
+        this.initDisplayItems()
       }
     },
     isMatchPattern(item) {
@@ -226,29 +249,39 @@ export default {
       return `https://www.facebook.com/sharer.php?u=${item.url}`
     },
     clipDesc(desc) {
-      const clipped = desc.replace(/&\w+;/g, ' ')
-      return clipped.length > MAX_DESC_LENGTH
-        ? clipped.slice(0, MAX_DESC_LENGTH) + '…'
-        : clipped
+      const sanitized = desc.replace(/&\w+;/g, ' ')
+      return sanitized.length > MAX_DESC_LENGTH
+        ? sanitized.slice(0, MAX_DESC_LENGTH) + '…'
+        : sanitized
     },
-    updateFilteredItems() {
-      this.loadingID = setTimeout(() => {
-        if (this.isSearchTypeString) {
-          this.filteredItems = this.searchString
-            ? this.items.filter(i => this.isMatchPattern(i))
-            : this.items
-        } else {
-          this.filteredItems = this.selectedPref
-            ? this.items.filter(i => this.isSelectedPref(i))
-            : this.items
-        }
-        this.loadingID = 0
-      }, 0)
+    infiniteHandler($state) {
+      this.appendItems()
+
+      if (this.displayItems.length > 0) $state.loaded()
+      if (this.displayItems.length >= this.filteredItems.length) $state.complete()
+    },
+    initDisplayItems() {
+      this.page = 0
+      this.displayItems = []
+      this.appendItems()
+    },
+    appendItems() {
+      const index = this.page * this.perPage
+      if (this.filteredItems.length > index) {
+        const slice = this.filteredItems.slice(index, index + this.perPage)
+        this.displayItems.push(...slice)
+        this.page += 1
+      }
+    },
+    highlight(str) {
+      if (!this.searchString) return str
+      const re = new RegExp(`(${this.searchString})`, 'gi')
+      return str.replace(re, '<em>$1</em>')
     }
   },
   watch: {
     searchString: debounce(function() {
-      this.updateFilteredItems()
+      this.initDisplayItems()
     }, INPUT_DEBOUNCE_TIME)
   }
 }
@@ -331,6 +364,16 @@ export default {
     &.prefname {
       margin-right: 8px;
     }
+  }
+
+  .item-index {
+    float: right;
+    color: #ddd;
+  }
+
+  em {
+    background: #ffa;
+    font-style: normal;
   }
 }
 
