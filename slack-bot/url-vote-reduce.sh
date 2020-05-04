@@ -51,8 +51,20 @@ main() {
     echo "#"
     echo "# 市区町村名,都道府県名,ページURL,ページタイトル,ページ内文章"
 
-    keys=$(redis-cli KEYS "vscovid-crawler-vote:result-*")
-    for key in $keys; do
+    # 走査対象キー配列
+    keys=($(redis-cli KEYS "vscovid-crawler-vote:result-*"))
+
+    # 進捗表示準備
+    total=${#keys[@]}
+    i=0
+
+    # 走査
+    for key in ${keys[@]}; do
+        # 進捗表示
+        i=$((i+1))
+        >&2 echo "... url-vote-reduce $i/$total $key"
+
+        # 判定
         md5=$(echo $key| cut -d'-' -f 4)
         score=$(redis-cli GET $key)
         if [[ $score == "0" ]]; then
@@ -64,6 +76,11 @@ main() {
         if [[ $url == "" ]]; then
             continue
         fi
+
+        # 進捗表示
+        >&2 echo "... -> url = $url"
+
+        # 出力
         echo `get_row_by_url $url $label`
         bool=$(echo ${result}| cut -d',' -f 4)
         if [ "${bool}" = "true" ]; then
