@@ -38,8 +38,8 @@ get_target_urls() {
     urls=()
     # $#は引数の個数
     while (( $# > 0 )); do
-        # $1は1つ目の引数
-        urls=("${urls[@]} $(cat $1 | cut -d',' -f 3)")
+        # $1は1つ目の引数 (※「grep -v '^#'」でコメント行は除外)
+        urls=("${urls[@]} $(cat $1 | grep -v '^#' | cut -d',' -f 3)")
         # shiftで次の引数を$1に入れている
         shift
     done
