@@ -29,8 +29,7 @@ get_channels_id() {
         channels_list=`cat $channels_list_file`
     fi
     # channels_listをslack_channelで絞り込んでchannels_idを得る
-    channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channel_name}'")' | jq .id`
-    channels_id=${channels_id:1:-1}
+    channels_id=`echo $channels_list | jq '.channels[] | select(.name == "'${channel_name}'")' | jq -r .id`
     echo $channels_id
     return 0
 }
@@ -67,7 +66,6 @@ open_im() {
     member_id=$1
     im_open=`wget -q -O - --post-data "token=${slack_token}&user=${member_id}" https://slack.com/api/im.open`
     echo $im_open > ./tmp/im_open.json
-    im_id=`echo $im_open | jq .channel.id`
-    im_id=${im_id:1:-1}
+    im_id=`echo $im_open | jq -r .channel.id`
     echo $im_id
 }
