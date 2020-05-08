@@ -35,7 +35,6 @@ create_jq_mapper() {
 #
 #   Note: 「#」で始まる行はコメントとしてスキップする
 csv2json() {
-    >&2 echo "<<<@>>>: $@"
     mapper=`create_jq_mapper "$@"`
     tr '\r\n' '\n' | sed 's/^#.*$//g' | jq -csR "
         split(\"\n\") |
