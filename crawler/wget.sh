@@ -30,6 +30,7 @@ set -e
 ###     抽象度を上げた名前にリネームしたほうがほうが良さそう。
 ###
 
+. ./lib/string-helper.sh
 . ./lib/url-helper.sh
 
 # tested
@@ -39,7 +40,7 @@ get_target_urls() {
     # $#は引数の個数
     while (( $# > 0 )); do
         # $1は1つ目の引数 (※「grep -v '^#'」でコメント行は除外)
-        urls=("${urls[@]} $(cat $1 | grep -v '^#' | cut -d',' -f 3)")
+        urls=("${urls[@]} $(cat $1 | remove_comment_lines | cut -d',' -f 3)")
         # shiftで次の引数を$1に入れている
         shift
     done
