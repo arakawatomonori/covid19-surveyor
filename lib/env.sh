@@ -18,7 +18,7 @@ fi
 
 
 # 必要値の存在チェック
-keys=("environment" "slack_token" "slack_channel")
+keys=("environment" "slack_token" "slack_channel" "slack_channel_develop")
 for key in "${keys[@]}"; do
     if [ "${!key}" == "" ]; then
         >&2 echo -e "ENV ERROR: $env_filename parameter '$key' is required. See .env.sample, README, or Wiki of Repository."
