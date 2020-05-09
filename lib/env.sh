@@ -25,3 +25,9 @@ for key in "${keys[@]}"; do
         exit 1
     fi
 done
+
+
+# slack_channel_develop は Optional だが、利便性を考え、指定がなかった場合のデフォルト値を入れておく
+if [ "$slack_channel_develop" = "" ]; then
+    slack_channel_develop="covid19-surveyor-dev"
+fi
