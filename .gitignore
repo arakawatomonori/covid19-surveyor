@@ -1,4 +1,5 @@
 .env
+.env-test
 .ipynb_checkpoints
 web.*
 www-data/www*
@@ -18,3 +19,4 @@ grep_*
 *.log
 tmp/*
 node_modules/
+
