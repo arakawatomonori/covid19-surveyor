@@ -13,7 +13,7 @@
 
 set -e
 
-source .env
+. ./lib/env.sh
 
 # 依存lib
 . ./lib/slack-helper.sh

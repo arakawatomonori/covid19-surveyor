@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
 
+. ./lib/env.sh
+
 . ./lib/url-helper.sh
 . ./lib/redis-helper.sh
 
-source .env
 ts=`date '+%s'`
 
 namespace="vscovid-crawler-vote"
