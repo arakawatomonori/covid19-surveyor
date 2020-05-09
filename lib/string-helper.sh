@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source .env
+. ./lib/env.sh
 
 
 #

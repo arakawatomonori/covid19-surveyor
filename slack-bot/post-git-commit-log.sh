@@ -13,7 +13,7 @@
 
 set -e
 
-source .env
+. ./lib/env.sh
 
 echo -e "environment: $environment"
 
