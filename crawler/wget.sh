@@ -83,8 +83,6 @@ main() {
         #  –-no-parent \
     # ページ表示のために必要な関連ファイルもダウンロードする
         # --page-requisites \
-    # リンクを相対リンクにする
-        #  --convert-links \
     # 既にダウンロード済みのファイルは再取得しない
     # --timestampingとは同時に指定できない
         #  –-no-clobber \
@@ -106,7 +104,6 @@ main() {
       --level 2 \
       –-no-parent \
       --page-requisites \
-      --convert-links \
       --timestamping \
       --random-wait \
       --quiet \
