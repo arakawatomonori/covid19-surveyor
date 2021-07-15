@@ -1,7 +1,7 @@
 .env
 .env-test
-.accept-ext.json
 .ipynb_checkpoints
+accept-ext.json
 web.*
 www-data/www*
 www-data/*.com
