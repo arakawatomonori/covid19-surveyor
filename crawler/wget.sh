@@ -107,7 +107,7 @@ main() {
       –-no-parent \
       --page-requisites \
       --convert-links \
-      –-no-clobber \
+      --timestamping \
       --random-wait \
       --quiet \
       --show-progress \
