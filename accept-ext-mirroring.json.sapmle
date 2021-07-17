@@ -1,0 +1,18 @@
+{
+  "ext": [
+    "htm",
+    "html",
+    "aspx",
+    "cgi",
+    "php",
+    "css",
+    "js",
+    "json",
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp",
+    "svg"
+  ]
+}
