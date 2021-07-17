@@ -23,6 +23,7 @@ send_message() {
     orgname=`echo $value| cut -d',' -f 2`
     title=`echo $value| cut -d',' -f 3`
     desc=`echo $value| cut -d',' -f 4`
+    desc=${desc:0:1000}
     md5=`get_md5_by_url $url`
     # unixtime
     timestamp=`date '+%s'`

@@ -29,9 +29,6 @@ wget:
 	# csv内の全ドメインをwww-data以下にミラーリングする
 ifeq ($(ENV),production)
 	./crawler/wget.sh data/gov.csv data/pref.csv data/city.csv
-else
-	./crawler/wget.sh data/test.csv
-endif
 	# TODO:
 	#   tmp/urls.txt は aggregate.sh の準成果物であるはずだが、
 	#   コマンド実行の順序は wget, grep, aggregate であるため、wget が tmp/urls.txt に依存する構造は破綻している.
@@ -42,6 +39,9 @@ endif
 	cd www-data
 	cat ../tmp/urls.txt |xargs -I{} wget --force-directories --no-check-certificate {}
 	cd -
+else
+	./crawler/wget.sh data/test.csv
+endif
 
 # www-data内の巨大なファイルを削除する
 .PHONY: remove-large-files

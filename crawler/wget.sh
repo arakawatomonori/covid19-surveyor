@@ -71,6 +71,10 @@ main() {
     # e.g.) ext="aspx|cgi|htm|html|pdf|php"
     ext=$(jq -r .ext[] ./accept-ext.json | tr '\n' '|' | rev | cut -c 2- | rev)
 
+    depth=2
+    if [ $environment = "test" ]; then
+        depth=1
+    fi
     pushd www-data
     # xargsでurls配列の中身をwgetに渡している
     # wgetのオプション
@@ -101,8 +105,8 @@ main() {
         #  --no-check-certificate \
     echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget \
       --recursive \
-      --level 2 \
-      –-no-parent \
+      --level $depth \
+      --no-parent \
       --page-requisites \
       --timestamping \
       --random-wait \
