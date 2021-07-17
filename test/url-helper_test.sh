@@ -25,7 +25,7 @@ assert_equal "首相官邸ホームページ" "$title"
 echo test get_title_by_res
 res=`wget -q -O - https://www.city.funabashi.lg.jp/jigyou/shoukou/002/corona-jigyosha.html`
 title=`get_title_by_res "$res"`
-assert_equal "新型コロナウィルス感染症に関する中小企業者（農林漁業者を含む）・労働者への支援｜船橋市公式ホームページ" "$title"
+assert_equal "【事業者向け】新型コロナウイルス感染症に係る支援制度のご案内｜船橋市公式ホームページ" "$title"
 
 echo test get_title_by_res
 res=`wget -q -O - https://www.pref.oita.jp/soshiki/14040/sodanmadoguti1.html`
