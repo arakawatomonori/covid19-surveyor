@@ -108,7 +108,7 @@ main() {
     echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget \
       --recursive \
       --level 2 \
-      –-no-parent \
+      --no-parent \
       --page-requisites \
       --timestamping \
       --random-wait \
