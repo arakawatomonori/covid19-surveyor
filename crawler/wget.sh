@@ -76,8 +76,6 @@ main() {
         depth=1
     fi
     pushd www-data
-    # urls配列の中身をwgetに渡している
-    echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget -l $depth -r --accept-regex "\.(${ext})$" --no-check-certificate {}
     # xargsでurls配列の中身をwgetに渡している
     # wgetのオプション
     # https://www.hariguchi.org/info/ja/wget-1.5.3/wget-ja.html
@@ -107,7 +105,7 @@ main() {
         #  --no-check-certificate \
     echo ${urls} | xargs -n 1 echo | xargs -P 16 -I{} wget \
       --recursive \
-      --level 2 \
+      --level $depth \
       --no-parent \
       --page-requisites \
       --timestamping \
