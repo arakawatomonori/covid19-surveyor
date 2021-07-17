@@ -69,7 +69,7 @@ main() {
 
     # ダウンロード対象の拡張子 -> ext
     # e.g.) ext="aspx|cgi|htm|html|pdf|php"
-    ext=$(jq -r .ext[] ./accepted-file-extensions.json | tr '\n' '|' | rev | cut -c 2- | rev)
+    ext=$(jq -r .ext[] ./accept-ext.json | tr '\n' '|' | rev | cut -c 2- | rev)
 
     pushd www-data
     # xargsでurls配列の中身をwgetに渡している

@@ -39,6 +39,7 @@ sudo service squid restart
 
 ```
 cp .wgetrc ~/
+cp accept-ext.json.example accept-ext.json
 ```
 
 ## Setup for macOS
