@@ -145,7 +145,7 @@ main() {
     # テスターのID
     #members_list="xUUL8QC8BUx"
     for member in $members_list; do
-        member_id=${member:1:-1}
+        member_id=`echo $member`
         send_message $member_id
     done
 }
