@@ -58,7 +58,7 @@ for domain_and_path in `cat ./tmp/urls-uniq.txt`; do
     path=`echo $domain_and_path | cut -d'/' -f 2-`
     # top_url=https://example.com/index.html
     top_url=`grep $domain --include="*.csv" ./data/*|cut -d',' -f 3`
-    if [ $top_url = "" ]; then
+    if [ x"$top_url" = x"" ]; then
             continue
     fi
     # schema=https:
