@@ -39,6 +39,7 @@ sudo service squid restart
 
 ```
 cp .wgetrc ~/
+cp accept-ext.json.example accept-ext.json
 ```
 
 ## Setup for macOS
@@ -52,14 +53,14 @@ $ brew install findutils
 $ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 ```
 
-### Intall GNU grep in macOS
+### Install GNU grep in macOS
 
 ```
 $ brew install grep
 $ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 ```
 
-### Intall GNU sed in macOS
+### Install GNU sed in macOS
 
 ```
 $ brew install gnu-sed

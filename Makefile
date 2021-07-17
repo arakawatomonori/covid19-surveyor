@@ -83,6 +83,8 @@ www-data/search/index.html: data/reduce-vote.csv
 .PHONY: deploy
 deploy:
 	rm -f www-data/map/index.html www-data/map/index.json
+	git checkout master
+	git pull origin master
 	make publish
 ifeq ($(ENV),production)
 	aws cloudfront create-invalidation --distribution-id E2JGL0B7V4XZRW --paths '/*'

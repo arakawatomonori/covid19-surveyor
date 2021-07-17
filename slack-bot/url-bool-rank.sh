@@ -26,7 +26,7 @@ for line in `cat tmp/rank.txt`; do
     rank=$rank"\r\n<@$user_id> さん、 $count 回"
 done
 
-source .env
+. ./lib/env.sh
 
 . ./slack-bot/url-map.sh
 channels_id=`get_channels_id`
