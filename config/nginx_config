@@ -4,7 +4,7 @@ server {
 
     server_name help.stopcovid19.jp;
 
-    root /home/ubuntu/vscovid-crawler/www-data/map/;
+    root /home/ubuntu/covid19-surveyor/www-data/map/;
 
     autoindex on;
     autoindex_exact_size off;
@@ -17,7 +17,7 @@ server {
         try_files $uri $uri/ =404;
     }
     location ~ \.sh$ {
-        root            /home/ubuntu/vscovid-crawler/cgi;
+        root            /home/ubuntu/covid19-surveyor/cgi;
         fastcgi_pass    unix:/var/run/fcgiwrap.socket;
         include         /etc/nginx/fastcgi_params;
         fastcgi_param   SCRIPT_FILENAME   $document_root$fastcgi_script_name;
@@ -30,7 +30,7 @@ server {
 
     server_name ~^(?<domain>.+)\.help\.stopcovid19\.jp$;
 
-    root /home/ubuntu/vscovid-crawler/www-data/$domain;
+    root /home/ubuntu/covid19-surveyor/www-data/$domain;
 
     location / {
         try_files $uri $uri/ =404;

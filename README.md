@@ -17,21 +17,23 @@
 ### Requirements
 
 ```
-sudo apt install make wget jq nginx fcgiwrap squid poppler-utils
+sudo apt update
+sudo apt install make wget jq nodejs npm nginx fcgiwrap squid poppler-utils -y
 ```
 
 ### copy nginx config
 
 ```
-cp nginx_config /etc/nginx/site-available/
-ln -s /etc/nginx/site-available/nginx_config /etc/nginx/site-enabled/nginx_config
+sudo cp config/nginx_config /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/nginx_config /etc/nginx/sites-enabled/nginx_config
+sudo rm /etc/nginx/site-enabled/default
 sudo service nginx restart
 ```
 
 ### copy squid config
 
 ```
-cp -f squid.conf /etc/squid/
+sudo cp -f config/squid.conf /etc/squid/
 sudo service squid restart
 ```
 
@@ -40,6 +42,12 @@ sudo service squid restart
 ```
 cp .wgetrc ~/
 cp accept-ext.json.example accept-ext.json
+```
+
+### release
+
+```
+make release
 ```
 
 ## Setup for macOS
