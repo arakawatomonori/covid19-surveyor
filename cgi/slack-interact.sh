@@ -14,27 +14,20 @@ decoded_data=$(urldecode $formdata)
 json=${decoded_data:8:-1}}
 echo $json > /home/ubuntu/vscovid-crawler/tmp/slack-interact.json.log
 
-token=`echo $json | jq .token`
-token=${token:1:-1}
-event_type=`echo $json | jq .type`
-event_type=${event_type:1:-1}
+token=`echo $json | jq -r .token`
+event_type=`echo $json | jq -r .type`
 echo $event_type > /home/ubuntu/vscovid-crawler/tmp/slack-interact.event-type.log
 
 if [ "$event_type" == "block_actions" ]; then
-    channel_id=`echo $json | jq .channel.id`
-    channel_id=${channel_id:1:-1}
-    ts=`echo $json | jq .container.message_ts`
-    ts=${ts:1:-1}
-    user_id=`echo $json | jq .user.id`
-    user_id=${user_id:1:-1}
-    url=`echo $json | jq .message.blocks[2].text.text`
-    url=${url:7:-2}
+    channel_id=`echo $json | jq -r .channel.id`
+    ts=`echo $json | jq -r .container.message_ts`
+    user_id=`echo $json | jq -r .user.id`
+    url=`echo $json | jq -r .message.blocks[2].text.text`
+    url=`echo ${url:6}`
     md5=`get_md5_by_url $url`
     timestamp=`date '+%s'`
-    result=`echo $json | jq .actions[0].value`
-    result=${result:1:-1}
-    action_id=`echo $json | jq .actions[0].action_id`
-    action_id=${action_id:1:-1}
+    result=`echo $json | jq -r .actions[0].value`
+    action_id=`echo $json | jq -r .actions[0].action_id`
     echo $action_id > /home/ubuntu/vscovid-crawler/tmp/slack-interact.action-id.log
     namespace="vscovid-crawler"
     remain=""

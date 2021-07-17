@@ -9,15 +9,12 @@ set -e
 formdata=`cat`
 echo $event_type > /home/ubuntu/wget/tmp/slack-event.formdata.log
 json=$formdata
-token=`echo $json | jq .token`
-token=${token:1:-1}
-event_type=`echo $json | jq .type`
-event_type=${event_type:1:-1}
+token=`echo $json | jq -r .token`
+event_type=`echo $json | jq -r .type`
 echo $event_type > /home/ubuntu/wget/tmp/slack-event.event-type.log
 
 if [ "$event_type" == "url_verification" ]; then
-    challenge=`echo $json | jq .challenge`
-    challenge=${challenge:1:-1}
+    challenge=`echo $json | jq -r .challenge`
     echo 'Content-type: text/plain'
     echo ''
     echo $challenge
