@@ -117,7 +117,6 @@ main() {
       --accept-regex "\.(${ext})$" \
       --no-check-certificate \
       {}
->>>>>>> master
     echo ${domains} | xargs -n 1 echo | xargs -I{} cp -f ../robots.txt {}
     popd
 }
